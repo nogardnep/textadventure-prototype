@@ -1,0 +1,20 @@
+<div>
+  <p *ngFor="let paragraph of paragraphs">
+    {{paragraph.text|text}}
+  </p>
+</div>
+<div>
+  <ng-container *ngIf="actions && actions.length > 0; then thenBlock else elseBlock"></ng-container>
+  <ng-template #thenBlock>
+    <ul>
+      <ng-container *ngFor="let action of actions">
+        <li *ngIf="!action.condition || action.condition()">
+          <button (click)="onClickOption(action)">{{action.text|text}}</button>
+        </li>
+      </ng-container>
+    </ul>
+  </ng-template>
+  <ng-template #elseBlock>
+    <button *ngIf="!(actions && actions.length > 0)" (click)="onClickOption()">{{text.close|text}}</button>
+  </ng-template>
+</div>

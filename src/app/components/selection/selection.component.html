@@ -1,0 +1,18 @@
+<div *ngIf="entity">
+  <b>{{ entity.getName()|name }}</b>
+  <entity-paragraphs [paragraphs]="entity.getExteriorDescription()"></entity-paragraphs>
+  <div>
+    <ul>
+      <ng-container *ngFor="let childId of entity.getChildrenId()">
+        <li>
+          <app-entity [entityId]="childId"></app-entity>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+
+  <app-actions [entity]="entity"></app-actions>
+</div>
+<div *ngIf="!entity">
+  <p>Nothing selected</p>
+</div>

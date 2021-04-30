@@ -1,0 +1,61 @@
+<div *ngIf="player">
+  <div>name: {{player.getName()|name}}</div>
+  <div>
+    <h3>Caracteristics</h3>
+    <ul>
+      <li *ngFor="let caracteristic of player.caracteristics | keyvalue">
+        {{caracteristicNames[caracteristic.key]|name}}:
+        {{player.caracteristics[caracteristic.key]}}({{getModifier(caracteristic.key) < 0 ? ''
+          :'+'}}{{getModifier(caracteristic.key)}}) </li>
+    </ul>
+  </div>
+  <div>
+    <h3>Inventory</h3>
+    <div *ngIf="getInventoryObjects(); then inventoryThenBlock else inventoryElseBlock"></div>
+    <ng-template #inventoryThenBlock>
+      <ul>
+        <li *ngFor="let id of getInventoryObjects()">
+          <app-entity-preview [entityId]="id"></app-entity-preview>
+        </li>
+      </ul>
+    </ng-template>
+    <ng-template #inventoryElseBlock>
+      <span>(nothing)</span>
+    </ng-template>
+  </div>
+  <div>
+    <h3>Worn objects</h3>
+    <div *ngIf="getWornObjects(); then wornThenBlock else wornElseBlock"></div>
+    <ng-template #wornThenBlock>
+      <ul>
+        <li *ngFor="let id of getWornObjects()">
+          <app-entity-preview [entityId]="id"></app-entity-preview>
+        </li>
+      </ul>
+    </ng-template>
+    <ng-template #wornElseBlock>
+      <span>(nothing)</span>
+    </ng-template>
+  </div>
+  <div>
+    <h3>Spells</h3>
+    <ul *ngIf="player.spellsId.length > 0">
+      <li *ngFor="let id of player.spellsId">
+        <app-entity-preview [entityId]="id"></app-entity-preview>
+      </li>
+    </ul>
+    <div *ngIf="player.spellsId.length === 0">(nothing)</div>
+  </div>
+  <div>
+    <h3>Effects</h3>
+    <ul *ngIf="player.effectsId.length > 0">
+      <li *ngFor="let id of player.effectsId">
+        <app-entity-preview [entityId]="id"></app-entity-preview>
+      </li>
+    </ul>
+    <div *ngIf="player.effectsId.length === 0">(nothing)</div>
+  </div>
+</div>
+<div *ngIf="!player">
+  <p>No player is loaded</p>
+</div>

@@ -1,0 +1,12 @@
+<ion-content>
+  <h1>Config</h1>
+  <div *ngIf="data">
+    <div>
+      <label>Volume</label>
+      <input name="volume" type="range" min="0" max="1" step="0.01" [(ngModel)]="data.audio.volume"
+        (ngModelChange)="onValueChange()">
+    </div>
+  </div>
+
+  <button (click)="onClickBack()">Back</button>
+</ion-content>

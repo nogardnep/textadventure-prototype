@@ -1,0 +1,17 @@
+<div *ngIf="entity">
+  <button (click)="onClickEntity()"><b>{{ entity.getName()|name }}</b></button>
+  <entity-paragraphs [paragraphs]="entity.getInteriorDescription() "></entity-paragraphs>
+
+  <div>
+    <ul>
+      <ng-container *ngFor="let childId of entity.getChildrenId()">
+        <li>
+          <app-entity-preview [entityId]="childId"></app-entity-preview>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>
+<div *ngIf="!entity">
+  <p>(entity not found)</p>
+</div>

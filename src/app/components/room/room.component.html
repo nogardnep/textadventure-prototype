@@ -1,0 +1,34 @@
+<div *ngIf="entity">
+  <div><b>{{ entity.getName()|name }}</b></div>
+  <entity-paragraphs [paragraphs]="entity.getInteriorDescription()"></entity-paragraphs>
+  <div>
+    <div *ngIf="test()"></div>
+    <ul>
+      <ng-container *ngFor="let childId of entity.getChildrenId()">
+        !
+        <li *ngIf="!isThePlayer(childId)">
+          <app-entity-preview [entityId]="childId"></app-entity-preview>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+
+  <app-actions [entity]="entity"></app-actions>
+
+
+  <div>
+    <ng-container *ngFor="let exit of getExits()">
+      <li>
+        <span>{{ exit.text}}</span>
+        <ul>
+          <li>
+            <button (click)="onClickExit(exit)">go</button>
+          </li>
+        </ul>
+      </li>
+    </ng-container>
+  </div>
+</div>
+<div *ngIf="!entity">
+  <p>Entity not found</p>
+</div>

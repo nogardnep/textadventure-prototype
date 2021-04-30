@@ -1,0 +1,12 @@
+<div *ngIf="entity">
+  <button (click)="onClickEntity()">
+    <b>{{ entity.getName()|name }}</b>
+    <span *ngIf="isSelected()">(selected)</span>
+    <span *ngIf="isWorn()">(on {{getEmplacement()|name}})</span>
+  </button>
+  <p>{{ entity.getInteriorDescription() }}</p>
+  <app-actions [entity]="entity"></app-actions>
+</div>
+<div *ngIf="!entity">
+  <p>(entity not found)</p>
+</div>

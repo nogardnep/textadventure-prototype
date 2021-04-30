@@ -1,0 +1,9 @@
+<div>
+  <ul>
+    <ng-container *ngFor="let action of getActions()">
+      <li *ngIf="isVisible(action)">
+        <button (click)="onClickAction(action)">{{action.text|text}}</button>
+      </li>
+    </ng-container>
+  </ul>
+</div>
