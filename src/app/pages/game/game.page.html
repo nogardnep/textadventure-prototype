@@ -9,6 +9,18 @@
     <ion-grid>
       <ion-row>
         <ion-col>
+          <h2>Prompter</h2>
+          <app-prompter></app-prompter>
+        </ion-col>
+        <ion-col>
+          <h2>Narration</h2>
+          <app-narration [narration]="play.narration"></app-narration>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
           <div>
             <h2>Position</h2>
             <app-position *ngIf="getPlayer()" [player]="getPlayer()"></app-position>
@@ -25,8 +37,6 @@
       </ion-row>
     </ion-grid>
     <div>
-      <h2>Narration</h2>
-      <app-narration [narration]="play.narration"></app-narration>
     </div>
   </div>
 

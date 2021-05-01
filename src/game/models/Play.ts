@@ -1,18 +1,15 @@
-import { Narration } from './Narration';
+import { StoredNarration } from './Narration';
 import { EntityId, StoredEntity } from './Entity';
 
 export class Play {
   storedEntities: { [id: string]: StoredEntity };
   playerId: EntityId;
-  narration: Narration;
+  narration: StoredNarration;
   time: number;
 
   constructor() {
     this.storedEntities = {};
-    this.playerId = null;
-    this.narration = {
-      sections: [],
-    };
     this.time = 0;
+    this.narration = { chapters: [] };
   }
 }

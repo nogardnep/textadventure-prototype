@@ -1,3 +1,4 @@
+import { PrompterComponent } from './components/prompter/prompter.component';
 import { NewPlayPage } from './pages/new-play/new-play.page';
 import { GamePage } from './pages/game/game.page';
 import { ConfigPage } from './pages/config/config.page';
@@ -44,6 +45,7 @@ import { PlayerComponent } from './components/player/player.component';
     ConfigPage,
     GamePage,
     NewPlayPage,
+    PrompterComponent,
   ],
   entryComponents: [],
   imports: [

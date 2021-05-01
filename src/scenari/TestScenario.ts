@@ -1,3 +1,4 @@
+import { Box } from './models/objects/Box';
 import { InvocationSpell } from './models/spells/InvocationSpell';
 import { IllusionSpell } from './models/spells/IllustionSpell';
 import { GameController } from '../game/GameController';
@@ -22,6 +23,7 @@ export const entityConstructors = {
   PoisonEffect,
   IllusionSpell,
   InvocationSpell,
+  Box,
 };
 
 export class TestScenario implements Scenario {
@@ -35,7 +37,7 @@ export class TestScenario implements Scenario {
       entityConstructors.IllusionSpell.name,
       entityConstructors.InvocationSpell.name,
     ],
-    askForName: false
+    askForName: false,
   };
 
   getInitialPlayer(): Character {

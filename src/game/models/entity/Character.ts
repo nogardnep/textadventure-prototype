@@ -1,7 +1,6 @@
 import { GameController } from 'src/game/GameController';
 import { EntityId, EntityType } from 'src/game/models/Entity';
 import { UsableObject } from 'src/game/models/entity/UsableObject';
-import { WearableObject } from 'src/game/models/entity/WearableObject';
 import { Entity } from '../Entity';
 import { Caracteristics } from '../../enums/Caracteristic';
 import { Spell } from './Spell';
@@ -55,16 +54,16 @@ export abstract class Character extends Entity {
 
   isWorn(id: EntityId): boolean {
     const object = GameController.getEntity(id);
-    return object instanceof WearableObject && object.worn;
+    return object instanceof UsableObject && object.worn;
   }
 
-  getWornObject(emplacementKey: string): WearableObject {
-    let found: WearableObject = null;
+  getWornObject(emplacementKey: string): UsableObject {
+    let found: UsableObject = null;
 
     this.childrenId.forEach((id: EntityId) => {
       const object = GameController.getEntity(id);
 
-      if (object instanceof WearableObject) {
+      if (object instanceof UsableObject) {
         if (object.worn && object.getEmplacement() === emplacementKey) {
           found = object;
         }

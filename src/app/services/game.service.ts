@@ -20,7 +20,7 @@ const PLAY_STORAGE_KEY = 'play';
 })
 export class GameService {
   private selection: Entity;
-  private play: Play
+  private play: Play;
 
   playSubject = new Subject<Play>();
   playerSubject = new Subject<Character>();
@@ -30,28 +30,26 @@ export class GameService {
     private storageService: StorageService,
     private modalController: ModalController,
     private router: Router,
-    private configService:ConfigService
+    private configService: ConfigService
   ) {
     this.configService.load();
 
     GameController.init({
       onInform: (paragraphs: Paragraph[], actions?: Action[]) => {
-        this.inform(paragraphs, actions)
+        this.inform(paragraphs, actions);
       },
-      onLoaded: (play : Play) => {
-        this.play = play
+      onLoaded: (play: Play) => {
+        this.play = play;
         this.emitPlay();
       },
       onSave: (play: Play) => {
-        this.savePlay(play)
+        this.savePlay(play);
       },
-      onStart: () => {
-
-      }
+      onStart: () => {},
     });
 
     // this.loadLastPlay().then(() => {
-      // this.startNewPlay();
+    // this.startNewPlay();
     // });
   }
 
@@ -69,6 +67,10 @@ export class GameService {
   emitPlay(): void {
     // this.playSubject.next(GameController.getPlay());
     this.playSubject.next(this.play);
+  }
+
+  getPlay(): Play {
+    return this.play;
   }
 
   // emitPlayer(): void {

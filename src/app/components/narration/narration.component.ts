@@ -1,4 +1,4 @@
-import { Narration } from './../../../game/models/Narration';
+import { Narration, StoredNarration } from './../../../game/models/Narration';
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +7,10 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./narration.component.scss'],
 })
 export class NarrationComponent implements OnInit {
-  @Input() narration: Narration;
+  @Input() narration: StoredNarration;
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 }

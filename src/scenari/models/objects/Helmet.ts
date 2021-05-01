@@ -1,9 +1,15 @@
-import { WearableObject } from 'src/game/models/entity/WearableObject';
 import { emplacementKeys } from 'src/game/enums/Emplacement';
-import { Name } from '../../../game/models/Name';
-import { WithModifiers } from './../../../game/models/entity/WithModifiers';
+import { UsableObject } from 'src/game/models/entity/UsableObject';
+import { Name } from 'src/game/models/Name';
+import { WithModifiers } from 'src/game/models/entity/WithModifiers';
 
-export class Helmet extends WearableObject implements WithModifiers {
+export class Helmet extends UsableObject implements WithModifiers {
+  constructor() {
+    super();
+
+    this.wearable = true;
+  }
+
   getName() {
     return { fr: new Name('Helmet') };
   }

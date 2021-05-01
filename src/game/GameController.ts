@@ -1,3 +1,5 @@
+import { TextWrapper } from './models/Text';
+import { Narration, StoredNarration } from './models/Narration';
 import { EntityId } from 'src/game/models/Entity';
 import { TestScenario } from '../scenari/TestScenario';
 import { Action } from './models/Action';
@@ -32,8 +34,26 @@ export class GameController {
     this.callbacks.onInform(paragraphs, actions);
   }
 
+  static interpret(prompt: string): void {
+    let response: TextWrapper;
+
+    if (!response) {
+      response = { en: '(nothing happens) ' };
+    }
+
+    GameController.getNarration().addSection({
+      title: { fr: prompt },
+      paragraphs: [{
+        text: response
+      }],
+    });
+  }
+
   static startNewPlay(player: Character): void {
     this.play = new Play();
+
+    console.log('this.play');
+    console.log(this.play);
 
     const entities: { [key: string]: Entity } = this.scenario.initPlay(player);
 
@@ -45,11 +65,13 @@ export class GameController {
   }
 
   static savePlay(): void {
+    console.log(this.play);
     this.callbacks.onSave(this.play);
   }
 
   static loadPlay(play: Play): void {
     this.play = play;
+
     this.callbacks.onLoaded(this.play);
   }
 
@@ -71,8 +93,8 @@ export class GameController {
     return player;
   }
 
-  static narrate(paragraphs: string[]): void {
-    this.play.narration.sections.push(paragraphs);
+  static narrate(paragraphs: Paragraph[]): void {
+    this.getNarration().addSection({ paragraphs });
   }
 
   static useAction(action: Action): void {
@@ -91,6 +113,18 @@ export class GameController {
     this.storeEntity(newEntity);
 
     return newEntity;
+  }
+
+  static storeNarration(narration: Narration): void {
+    const stored = {};
+
+    Object.getOwnPropertyNames(narration).forEach((item) => {
+      stored[item] = narration[item];
+    });
+
+    this.play.narration = stored as StoredNarration;
+
+    this.savePlay();
   }
 
   static storeEntity(entity: Entity): void {
@@ -130,9 +164,20 @@ export class GameController {
     return entity;
   }
 
+  static getNarration(): Narration {
+    const stored = this.play.narration;
+
+    let narration: Narration = null;
+
+    narration = new Narration();
+    Object.assign(narration, stored);
+
+    return narration;
+  }
+
   static getEntity(id: string): Entity {
     const stored = this.play.storedEntities[id];
-    let entity = null;
+    let entity: Entity = null;
 
     if (stored) {
       const constructor = this.scenario.entityConstructors[stored.type];

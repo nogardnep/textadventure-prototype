@@ -1,6 +1,6 @@
+import { UsableObject } from 'src/game/models/entity/UsableObject';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { Entity, EntityId } from 'src/game/models/Entity';
-import { WearableObject } from 'src/game/models/entity/WearableObject';
 import { GameController } from './../../../../game/GameController';
 import { emplacementNames } from '../../../../game/enums/Emplacement';
 import { NameWrapper } from './../../../../game/models/Text';
@@ -35,10 +35,10 @@ export class EntityPreviewComponent implements OnInit, OnChanges {
   }
 
   isWorn(): boolean {
-    return (GameController.getEntity(this.entityId) as WearableObject).worn;
+    return (GameController.getEntity(this.entityId) as UsableObject).worn;
   }
 
   getEmplacement(): NameWrapper {
-    return emplacementNames[(this.entity as WearableObject).getEmplacement()];
+    return emplacementNames[(this.entity as UsableObject).getEmplacement()];
   }
 }

@@ -1,3 +1,4 @@
+import { Narration } from './../../../game/models/Narration';
 import { Router } from '@angular/router';
 
 import { Component, OnInit } from '@angular/core';
@@ -68,6 +69,10 @@ export class GamePage implements OnInit {
 
   getPlayer(): Character {
     return GameController.getEntity(this.play.playerId) as Character;
+  }
+
+  getNarration(): Narration {
+    return GameController.getNarration();
   }
 
   ngOnDestroy(): void {
