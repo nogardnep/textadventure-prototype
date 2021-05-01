@@ -1,3 +1,5 @@
+import { Play } from 'src/game/models/Play';
+import { Entity } from 'src/game/models/Entity';
 import { Box } from './models/objects/Box';
 import { InvocationSpell } from './models/spells/InvocationSpell';
 import { IllusionSpell } from './models/spells/IllustionSpell';
@@ -46,26 +48,40 @@ export class TestScenario implements Scenario {
     return player;
   }
 
-  initPlay(player: Player) {
-    const entities = {
-      player,
+  init(play: Play) {
+    const entities: { [key: string]: Entity } = {
+      player: new entityConstructors.Player(),
       chamber: new entityConstructors.Chamber(),
       hemlet: new entityConstructors.Helmet(),
       boots: new entityConstructors.Boots(),
       destructionSpell: new entityConstructors.DestructionSpell(),
+      box: new entityConstructors.Box(),
       // poisonEffect: new entityConstructors.PoisonEffect(),
     };
 
+    for (let item in entities) {
+      play.addEntity(entities[item]);
+    }
+
     entities.player.moveTo(entities.chamber);
-    entities.hemlet.moveTo(entities.player);
-    entities.boots.moveTo(entities.player);
-    entities.player.giveSpell(entities.destructionSpell.getId());
+    entities.box.moveTo(entities.chamber);
+    entities.hemlet.moveTo(entities.chamber);
+    entities.boots.moveTo(entities.box);
+    (entities.player as Character).giveSpell(entities.destructionSpell.getId());
     // entities.player.giveEffect(entities.poisonEffect.getId());
 
-    GameController.setPlayer(entities.player);
+    // GameController.setPlayer(entities.player);
 
-    console.log(entities.player.getCaracteristicValue(caracteristicKeys.life));
+    play.setPlayer(entities.player as Character);
+
+    for (let item in entities) {
+      entities[item].save();
+    }
 
     return entities;
+  }
+
+  start(): void {
+    GameController.inform([{ text: { fr: "L'histoire comment ici" } }]);
   }
 }

@@ -17,7 +17,7 @@ export class EntityComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   ngOnChanges() {
-    this.entity = GameController.getEntity(this.entityId);
+    this.entity = GameController.getPlay().getEntity(this.entityId);
   }
 
   onClickEntity(): void {

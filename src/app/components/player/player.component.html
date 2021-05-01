@@ -14,8 +14,8 @@
     <div *ngIf="getInventoryObjects(); then inventoryThenBlock else inventoryElseBlock"></div>
     <ng-template #inventoryThenBlock>
       <ul>
-        <li *ngFor="let id of getInventoryObjects()">
-          <app-entity-preview [entityId]="id"></app-entity-preview>
+        <li *ngFor="let entity of getInventoryObjects()">
+          <app-entity-preview [entity]="entity"></app-entity-preview>
         </li>
       </ul>
     </ng-template>
@@ -28,8 +28,8 @@
     <div *ngIf="getWornObjects(); then wornThenBlock else wornElseBlock"></div>
     <ng-template #wornThenBlock>
       <ul>
-        <li *ngFor="let id of getWornObjects()">
-          <app-entity-preview [entityId]="id"></app-entity-preview>
+        <li *ngFor="let entity of getWornObjects()">
+          <app-entity-preview [entity]="entity"></app-entity-preview>
         </li>
       </ul>
     </ng-template>
@@ -40,8 +40,8 @@
   <div>
     <h3>Spells</h3>
     <ul *ngIf="player.spellsId.length > 0">
-      <li *ngFor="let id of player.spellsId">
-        <app-entity-preview [entityId]="id"></app-entity-preview>
+      <li *ngFor="let entity of player.getSpells()">
+        <app-entity-preview [entity]="entity"></app-entity-preview>
       </li>
     </ul>
     <div *ngIf="player.spellsId.length === 0">(nothing)</div>
@@ -49,8 +49,8 @@
   <div>
     <h3>Effects</h3>
     <ul *ngIf="player.effectsId.length > 0">
-      <li *ngFor="let id of player.effectsId">
-        <app-entity-preview [entityId]="id"></app-entity-preview>
+      <li *ngFor="let entity of player.getEffects()">
+        <app-entity-preview [entity]="entity"></app-entity-preview>
       </li>
     </ul>
     <div *ngIf="player.effectsId.length === 0">(nothing)</div>

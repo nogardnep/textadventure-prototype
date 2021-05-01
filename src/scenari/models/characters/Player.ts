@@ -1,3 +1,5 @@
 import { Character } from "src/game/models/entity/Character";
 
-export class Player extends Character {}
+export class Player extends Character {
+  name ="Jean"
+}

@@ -1,6 +1,6 @@
 import { ConfigService } from './config.service';
 import { GameController } from 'src/game/GameController';
-import { Play } from './../../game/models/Play';
+import { Play, StoredPlay } from './../../game/models/Play';
 import { Player } from './../../scenari/models/characters/Player';
 import { Router } from '@angular/router';
 import { InformComponent } from './../components/inform/inform.component';
@@ -32,20 +32,26 @@ export class GameService {
     private router: Router,
     private configService: ConfigService
   ) {
-    this.configService.load();
+    this.configService.load(); // TODO: move?
 
     GameController.init({
+      onLoad: () => {
+        return this.loadLastPlay();
+      },
       onInform: (paragraphs: Paragraph[], actions?: Action[]) => {
         this.inform(paragraphs, actions);
       },
       onLoaded: (play: Play) => {
         this.play = play;
         this.emitPlay();
+        this.setSelection(null);
       },
-      onSave: (play: Play) => {
-        this.savePlay(play);
+      onSave: (storedPlay: StoredPlay) => {
+        this.savePlay(storedPlay);
       },
-      onStart: () => {},
+      onStart: () => {
+        this.setSelection(null);
+      },
     });
 
     // this.loadLastPlay().then(() => {
@@ -90,35 +96,30 @@ export class GameService {
     return this.selection;
   }
 
-  savePlay(play: Play): void {
-    this.storageService.set(PLAY_STORAGE_KEY, play);
+  savePlay(storedPlay: StoredPlay): void {
+    this.storageService.set(PLAY_STORAGE_KEY, storedPlay);
   }
 
-  startNewPlay(player: Player): Promise<Play> {
-    this.setSelection(null);
+  // startNewPlay(player: Player): Promise<Play> {
+  // this.setSelection(null);
 
-    return new Promise((resolve, reject) => {
-      GameController.startNewPlay(player);
-      resolve(this.play);
-      // resolve(GameController.getPlay());
-    });
-  }
+  //   return new Promise((resolve, reject) => {
+  //     GameController.startNewPlay(player);
+  //     resolve(this.play);
+  //   });
+  // }
 
-  loadLastPlay(): Promise<Play> {
+  loadLastPlay(): Promise<StoredPlay> {
     return new Promise((resolve, reject) => {
-      this.storageService.get(PLAY_STORAGE_KEY).then((playData: {}) => {
-        if (playData) {
-          const play = Object.assign(new Play(), playData);
-          GameController.loadPlay(play);
-          // GameController.setPlay(play);
-          resolve(play);
-        } else {
-          GameController.loadPlay(null);
-          // GameController.setPlay(null);
-          console.error('no play found');
-          reject();
-        }
-      });
+      this.storageService
+        .get(PLAY_STORAGE_KEY)
+        .then((storedPlay: StoredPlay) => {
+          if (storedPlay) {
+            resolve(storedPlay);
+          } else {
+            reject('no play found');
+          }
+        });
     });
   }
 }

@@ -24,7 +24,7 @@ export abstract class Spell extends Entity {
 
   cast(): void {
     let response = null;
-    const location: Entity = GameController.getPlayersLocation();
+    const location: Entity = GameController.getPlay().getPlayer().getParent();
 
     if (location.getResponseToSpell) {
       response = location.getResponseToSpell(this.constructor.name);

@@ -1,13 +1,13 @@
-import { EntityId, EntityType } from './../../../game/models/Entity';
-import { GameController } from './../../../game/GameController';
-import { Router } from '@angular/router';
-import { GameService } from './../../services/game.service';
-import { caracteristicNames } from '../../../game/enums/Caracteristic';
-import { TextWrapper } from './../../../game/models/Text';
-import { Spell } from 'src/game/models/entity/Spell';
-import { Scenario } from './../../../game/models/Scenario';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Character } from 'src/game/models/entity/Character';
+import { Spell } from 'src/game/models/entity/Spell';
+import { caracteristicNames } from '../../../game/enums/Caracteristic';
+import { GameController } from './../../../game/GameController';
+import { EntityType } from './../../../game/models/Entity';
+import { Scenario } from './../../../game/models/Scenario';
+import { TextWrapper } from './../../../game/models/Text';
+import { GameService } from './../../services/game.service';
 
 @Component({
   selector: 'app-new-play',
@@ -18,7 +18,7 @@ export class NewPlayPage implements OnInit {
   selectedSpells: Spell[] = [];
   usedPoints: number = 0;
   scenario: Scenario;
-  text: { [key: string]: TextWrapper } = {
+  readonly text: { [key: string]: TextWrapper } = {
     validate: { fr: 'Valider', en: 'Validate' },
     cancel: { fr: 'Annuler', en: 'Cancel' },
     spells: { fr: 'Sorts', en: 'Spells' },
@@ -34,8 +34,10 @@ export class NewPlayPage implements OnInit {
   constructor(private gameService: GameService, private router: Router) {}
 
   ngOnInit(): void {
-    this.scenario = GameController.getScenario();
-    this.player = this.scenario.getInitialPlayer();
+    GameController.startNewPlay();
+
+    this.player = GameController.getPlay().getPlayer() as Character;
+    this.scenario = GameController.getPlay().getScenario();
 
     for (let key in this.player.caracteristics) {
       this.caracteristicModifiers[key] = 0;
@@ -53,12 +55,10 @@ export class NewPlayPage implements OnInit {
 
     if (this.scenario.starting.askForName && !this.name) {
       valid = false;
-      this.gameService.inform([{ text: { fr: 'please enter a name' } }]);
+      this.gameService.inform([{ text: { en: 'please enter a name' } }]);
     }
 
     if (valid) {
-      this.gameService.startNewPlay(this.player);
-
       this.selectedSpells.forEach((item: Spell) => {
         this.player.giveSpell(item.getId());
       });
@@ -69,6 +69,7 @@ export class NewPlayPage implements OnInit {
         caracteristic.current = caracteristic.max;
       }
 
+      GameController.getPlay().getScenario().start()
       this.router.navigate(['/game']);
     }
   }

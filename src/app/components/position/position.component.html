@@ -1,4 +1,4 @@
 <div *ngIf="player">
-  <app-room *ngIf="player.parentId" [entityId]="player.parentId"></app-room>
+  <app-location *ngIf="player.parentId" [entityId]="player.parentId"></app-location>
   <div *ngIf="!player.parentId">(nowhere)</div>
 </div>

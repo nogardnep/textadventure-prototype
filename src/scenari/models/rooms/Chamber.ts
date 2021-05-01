@@ -21,20 +21,19 @@ export class Chamber extends Room {
       {
         text: { fr: 'go to corridor' },
         proceed: () => {
-          const corridor = GameController.getFirstEntityOfType(
-            entityConstructors.Corridor.name
-          );
-          GameController.getPlayer().moveTo(corridor);
+          this.exitTo(entityConstructors.Corridor.name);
         },
       },
       {
         text: { fr: 'set fire' },
         proceed: () => {
           // this.fire = true;
-          GameController.getPlayer().giveSpellOfType(
-            entityConstructors.InvocationSpell.name,
-            true
-          );
+          GameController.getPlay()
+            .getPlayer()
+            .giveSpellOfType(entityConstructors.InvocationSpell.name, true);
+          GameController.getPlay()
+            .getPlayer()
+            .giveEffectOfType(entityConstructors.PoisonEffect.name);
         },
         condition: () => {
           return !this.fire;

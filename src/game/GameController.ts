@@ -1,33 +1,27 @@
-import { TextWrapper } from './models/Text';
-import { Narration, StoredNarration } from './models/Narration';
-import { EntityId } from 'src/game/models/Entity';
 import { TestScenario } from '../scenari/TestScenario';
 import { Action } from './models/Action';
-import { Entity, EntityType, StoredEntity } from './models/Entity';
-import { Character } from './models/entity/Character';
+import { Entity, EntityType } from './models/Entity';
 import { Paragraph } from './models/Paragraph';
-import { Play } from './models/Play';
-import { Scenario } from './models/Scenario';
+import { Play, StoredPlay } from './models/Play';
+import { TextWrapper } from './models/Text';
 
 type Callbacks = {
   onInform: (paragraphs: Paragraph[], actions?: Action[]) => void;
   onLoaded: (play: Play) => void;
   onStart: () => void;
-  onSave: (play: Play) => void;
+  onSave: (storedPlay: StoredPlay) => void;
+  onLoad: () => Promise<StoredPlay>;
 };
 
+const SCENARIO = TestScenario; // TODO: move
+
 export class GameController {
-  static play: Play;
-  static scenario: Scenario;
+  private static play: Play;
+  private static storedPlay: StoredPlay;
   private static callbacks: Callbacks;
 
   static init(callbacks: Callbacks): void {
-    this.scenario = new TestScenario(); // TODO: move
     this.callbacks = callbacks;
-  }
-
-  static getScenario(): Scenario {
-    return this.scenario;
   }
 
   static inform(paragraphs: Paragraph[], actions?: Action[]) {
@@ -41,162 +35,70 @@ export class GameController {
       response = { en: '(nothing happens) ' };
     }
 
-    GameController.getNarration().addSection({
+    this.play.getNarration().addSection({
       title: { fr: prompt },
-      paragraphs: [{
-        text: response
-      }],
+      paragraphs: [
+        {
+          text: response,
+        },
+      ],
     });
   }
 
-  static startNewPlay(player: Character): void {
-    this.play = new Play();
+  static startNewPlay(): void {
+    this.storedPlay = {
+      narration: null,
+      playerId: null,
+      storedEntities: {},
+      time: null,
+    };
 
-    console.log('this.play');
-    console.log(this.play);
+    this.play = new Play(new SCENARIO());
+    this.play.init();
 
-    const entities: { [key: string]: Entity } = this.scenario.initPlay(player);
-
-    for (let key in entities) {
-      this.storeEntity(entities[key]);
-    }
     this.savePlay();
     this.callbacks.onLoaded(this.play);
   }
 
-  static savePlay(): void {
-    console.log(this.play);
-    this.callbacks.onSave(this.play);
+  static getStoredPlay(): StoredPlay {
+    return this.storedPlay;
   }
 
-  static loadPlay(play: Play): void {
-    this.play = play;
+  static savePlay(): void {
+    this.callbacks.onSave(this.storedPlay);
+  }
 
-    this.callbacks.onLoaded(this.play);
+  static loadPlay(): void {
+    this.callbacks
+      .onLoad()
+      .then((storedPlay: StoredPlay) => {
+        this.storedPlay = storedPlay;
+
+        this.play = new Play(new SCENARIO());
+        this.play.load(storedPlay);
+
+        this.callbacks.onLoaded(this.play);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   static getPlay(): Play {
     return this.play;
   }
 
-  static setPlayer(entity: Entity): void {
-    this.getPlay().playerId = entity.getId();
-  }
-
-  static getPlayer(): Character {
-    let player: Character = null;
-
-    if (this.getPlay()) {
-      player = this.getEntity(this.getPlay().playerId) as Character;
-    }
-
-    return player;
-  }
-
   static narrate(paragraphs: Paragraph[]): void {
-    this.getNarration().addSection({ paragraphs });
+    this.play.getNarration().addSection({ paragraphs });
   }
 
   static useAction(action: Action): void {
     action.proceed();
-
-    this.play.time += action.duration !== undefined ? action.duration : 1;
+    this.play.increaseTime(action.duration !== undefined ? action.duration : 1);
     this.savePlay();
   }
 
-  static getPlayersLocation(): Entity {
-    return this.getEntity(this.getPlayer().parentId);
-  }
-
-  static createEntityOfType(type: EntityType): Entity {
-    const newEntity = new this.scenario.entityConstructors[type]();
-    this.storeEntity(newEntity);
-
-    return newEntity;
-  }
-
-  static storeNarration(narration: Narration): void {
-    const stored = {};
-
-    Object.getOwnPropertyNames(narration).forEach((item) => {
-      stored[item] = narration[item];
-    });
-
-    this.play.narration = stored as StoredNarration;
-
-    this.savePlay();
-  }
-
-  static storeEntity(entity: Entity): void {
-    const stored = {};
-
-    Object.getOwnPropertyNames(entity).forEach((item) => {
-      stored[item] = entity[item];
-    });
-
-    this.play.storedEntities[entity.getId()] = stored as StoredEntity;
-
-    this.savePlay();
-  }
-
-  static getFirstEntityOfType(
-    type: EntityType,
-    createIfNotExists = true
-  ): Entity {
-    let foundId: string = null;
-    let entity = null;
-
-    for (let id in this.play.storedEntities) {
-      if (this.play.storedEntities[id].type === type) {
-        foundId = id;
-      }
-    }
-
-    if (!foundId && createIfNotExists) {
-      const newEntity = this.createEntityOfType(type);
-      foundId = newEntity.getId();
-    }
-
-    if (foundId) {
-      entity = this.getEntity(foundId);
-    }
-
-    return entity;
-  }
-
-  static getNarration(): Narration {
-    const stored = this.play.narration;
-
-    let narration: Narration = null;
-
-    narration = new Narration();
-    Object.assign(narration, stored);
-
-    return narration;
-  }
-
-  static getEntity(id: string): Entity {
-    const stored = this.play.storedEntities[id];
-    let entity: Entity = null;
-
-    if (stored) {
-      const constructor = this.scenario.entityConstructors[stored.type];
-
-      if (constructor) {
-        entity = new constructor();
-
-        // TODO
-        // Utils.assignWithModel(entity, stored);
-        Object.assign(entity, stored);
-      } else {
-        console.error(
-          stored.type + ' constructor not found (check in the list)'
-        );
-      }
-    } else {
-      console.error('Entity not found (id: ' + id + ')');
-    }
-
-    return entity;
+  static saveEntity(entity: Entity): void {
+    this.getPlay().saveEntity(entity);
   }
 }

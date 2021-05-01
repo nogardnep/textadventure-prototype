@@ -23,6 +23,20 @@ export class Narration implements StoredNarration {
     this.chapters = [];
   }
 
+  load(storedNarration: StoredNarration): void {
+    this.chapters = storedNarration.chapters;
+  }
+
+  getStored(): StoredNarration {
+    const stored = {};
+
+    Object.getOwnPropertyNames(this).forEach((item) => {
+      stored[item] = this[item];
+    });
+
+    return stored as StoredNarration;
+  }
+
   addChapter(title?: TextWrapper): Chapter {
     const chapter = {
       title,
@@ -51,6 +65,7 @@ export class Narration implements StoredNarration {
   }
 
   save(): void {
-    GameController.storeNarration(this);
+    GameController.getStoredPlay().narration = this.getStored();
+    GameController.savePlay();
   }
 }

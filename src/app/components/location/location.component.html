@@ -3,9 +3,9 @@
   <entity-paragraphs [paragraphs]="entity.getInteriorDescription()"></entity-paragraphs>
   <div>
     <ul>
-      <ng-container *ngFor="let childId of entity.getChildrenId()">
-        <li *ngIf="!isThePlayer(childId)">
-          <app-entity-preview [entityId]="childId"></app-entity-preview>
+      <ng-container *ngFor="let item of entity.getChildren()">
+        <li *ngIf="!isThePlayer(item)">
+          <app-entity-preview [entity]="item"></app-entity-preview>
         </li>
       </ng-container>
     </ul>
@@ -14,7 +14,7 @@
   <app-actions [entity]="entity"></app-actions>
 
 
-  <div>
+  <!-- <div>
     <ng-container *ngFor="let exit of getExits()">
       <li>
         <span>{{ exit.text}}</span>
@@ -25,7 +25,7 @@
         </ul>
       </li>
     </ng-container>
-  </div>
+  </div> -->
 </div>
 <div *ngIf="!entity">
   <p>Entity not found</p>

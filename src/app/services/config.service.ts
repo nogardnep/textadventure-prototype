@@ -33,7 +33,7 @@ export class ConfigService {
 
   save(): void {
     this.storageService.set(CONFIG_STORAGE_KEY, this.data);
-    this.apply()
+    this.apply();
   }
 
   apply(): void {
@@ -41,7 +41,6 @@ export class ConfigService {
   }
 
   load(): void {
-    console.log('LOAD')
     this.storageService.get(CONFIG_STORAGE_KEY).then((result: {}) => {
       this.data = this.getDefault();
 

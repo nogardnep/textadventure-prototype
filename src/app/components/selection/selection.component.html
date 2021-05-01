@@ -1,4 +1,5 @@
 <div *ngIf="entity">
+  <button (click)="onClickUnselect()">Unselect</button>
   <b>{{ entity.getName()|name }}</b>
   <entity-paragraphs [paragraphs]="entity.getExteriorDescription()"></entity-paragraphs>
   <div>
@@ -10,7 +11,6 @@
       </ng-container>
     </ul>
   </div>
-
   <app-actions [entity]="entity"></app-actions>
 </div>
 <div *ngIf="!entity">

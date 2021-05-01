@@ -41,6 +41,22 @@ export class Entity implements StoredEntity {
     // this.presentation = data ? data : {};
   }
 
+  init(): void {}
+
+  getStored(): StoredEntity {
+    const stored = {};
+
+    Object.getOwnPropertyNames(this).forEach((item) => {
+      stored[item] = this[item];
+    });
+
+    return stored as StoredEntity;
+  }
+
+  save(): void {
+    GameController.saveEntity(this);
+  }
+
   getType(): string {
     return this.type;
   }
@@ -72,6 +88,20 @@ export class Entity implements StoredEntity {
     return additionnal ? additionnal : {};
   }
 
+  getParent(): Entity {
+    return GameController.getPlay().getEntity(this.parentId);
+  }
+
+  getChildren(): Entity[] {
+    const children: Entity[] = [];
+
+    this.childrenId.forEach((id: EntityId) => {
+      children.push(GameController.getPlay().getEntity(id));
+    });
+
+    return children;
+  }
+
   getId(): string {
     return this.id;
   }
@@ -100,15 +130,15 @@ export class Entity implements StoredEntity {
     return this.getId() === entity.getId();
   }
 
-  owns(id: EntityId): boolean {
-    let entity = GameController.getEntity(id);
+  owns(entity: Entity): boolean {
+    // TODO: deep search
     let found = false;
 
-    this.childrenId.forEach((item: EntityId) => {
-      if (id === item) {
+    this.getChildren().forEach((item: Entity) => {
+      if (item.isSameAs(entity)) {
         found = true;
       }
-    })
+    });
 
     return found;
   }
@@ -117,7 +147,9 @@ export class Entity implements StoredEntity {
     const previousParentId = this.parentId;
 
     if (previousParentId) {
-      const previousParent = GameController.getEntity(previousParentId);
+      const previousParent = GameController.getPlay().getEntity(
+        previousParentId
+      );
 
       previousParent.childrenId.forEach((item, index) => {
         if (item === this.id) {
@@ -137,11 +169,14 @@ export class Entity implements StoredEntity {
     this.save();
   }
 
-  isInstanceOf(type: EntityType): boolean {
-    return this instanceof GameController.scenario.entityConstructors[type];
+  inheritsFrom(type: EntityType): boolean {
+    return (
+      this instanceof
+      GameController.getPlay().getScenario().entityConstructors[type]
+    );
   }
 
-  save(): void {
-    GameController.storeEntity(this);
+  isOfType(type: EntityType): boolean {
+    return this.type === type;
   }
 }

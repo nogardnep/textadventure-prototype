@@ -15,10 +15,7 @@ export class Corridor extends Room {
       {
         text: { fr: 'go to chamber' },
         proceed: () => {
-          const corridor = GameController.getFirstEntityOfType(
-            entityConstructors.Chamber.name
-          );
-          GameController.getPlayer().moveTo(corridor);
+          this.exitTo(entityConstructors.Chamber.name);
         },
       },
     ]);

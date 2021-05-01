@@ -1,3 +1,4 @@
+import { DebugComponent } from './components/debug/debug.component';
 import { PrompterComponent } from './components/prompter/prompter.component';
 import { NewPlayPage } from './pages/new-play/new-play.page';
 import { GamePage } from './pages/game/game.page';
@@ -8,7 +9,7 @@ import { SelectionComponent } from './components/selection/selection.component';
 import { HomePage } from './pages/home/home.page';
 import { EntityComponent } from './components/entity/entity.component';
 import { ActionsComponent } from './components/entity/actions/actions.component';
-import { RoomComponent } from './components/room/room.component';
+import { LocationComponent } from './components/location/location.component';
 import { EntityPreviewComponent } from './components/entity/entity-preview/entity-preview.component';
 import { NarrationComponent } from './components/narration/narration.component';
 import { PositionComponent } from './components/position/position.component';
@@ -31,7 +32,7 @@ import { PlayerComponent } from './components/player/player.component';
     HomePage,
     EntityComponent,
     ActionsComponent,
-    RoomComponent,
+    LocationComponent,
     SelectionComponent,
     EntityPreviewComponent,
     NarrationComponent,
@@ -46,6 +47,7 @@ import { PlayerComponent } from './components/player/player.component';
     GamePage,
     NewPlayPage,
     PrompterComponent,
+    DebugComponent
   ],
   entryComponents: [],
   imports: [

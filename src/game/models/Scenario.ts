@@ -1,3 +1,4 @@
+import { Play } from 'src/game/models/Play';
 import { Entity, EntityId, EntityType } from './Entity';
 import { Character } from './entity/Character';
 
@@ -7,8 +8,9 @@ export interface Scenario {
     maxSpells: number;
     caracteristicsPoints: number;
     availableSpells: EntityType[];
-    askForName: boolean
+    askForName: boolean;
   };
-  getInitialPlayer(): Character
-  initPlay(player: Character): { [key: string]: Entity };
+  // getInitialPlayer(): Character;
+  init(play: Play): { [key: string]: Entity };
+  start(): void;
 }

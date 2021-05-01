@@ -1,3 +1,4 @@
+import { Effect } from 'src/game/models/entity/Effect';
 import { GameController } from 'src/game/GameController';
 import { EntityId, EntityType } from 'src/game/models/Entity';
 import { UsableObject } from 'src/game/models/entity/UsableObject';
@@ -24,28 +25,24 @@ export abstract class Character extends Entity {
     return this.caracteristics[key];
   }
 
-  getWornObjects(): EntityId[] {
-    let found: EntityId[] = [];
+  getWornObjects(): UsableObject[] {
+    let found: UsableObject[] = [];
 
-    this.childrenId.forEach((id: EntityId) => {
-      const object = GameController.getEntity(id) as UsableObject;
-
-      if (this.isWorn(object.getId())) {
-        found.push(object.getId());
+    this.getChildren().forEach((item: Entity) => {
+      if (item instanceof UsableObject && this.isWorn(item.getId())) {
+        found.push(item);
       }
     });
 
     return found;
   }
 
-  getNotWornObjects(): EntityId[] {
-    let found: EntityId[] = [];
+  getNotWornObjects(): UsableObject[] {
+    let found: UsableObject[] = [];
 
-    this.childrenId.forEach((id: EntityId) => {
-      const object = GameController.getEntity(id) as UsableObject;
-
-      if (!this.isWorn(object.getId())) {
-        found.push(object.getId());
+    this.getChildren().forEach((item: Entity) => {
+      if (item instanceof UsableObject && !this.isWorn(item.getId())) {
+        found.push(item);
       }
     });
 
@@ -53,7 +50,7 @@ export abstract class Character extends Entity {
   }
 
   isWorn(id: EntityId): boolean {
-    const object = GameController.getEntity(id);
+    const object = GameController.getPlay().getEntity(id);
     return object instanceof UsableObject && object.worn;
   }
 
@@ -61,16 +58,40 @@ export abstract class Character extends Entity {
     let found: UsableObject = null;
 
     this.childrenId.forEach((id: EntityId) => {
-      const object = GameController.getEntity(id);
+      const entity = GameController.getPlay().getEntity(id);
 
-      if (object instanceof UsableObject) {
-        if (object.worn && object.getEmplacement() === emplacementKey) {
-          found = object;
-        }
+      if (
+        entity instanceof UsableObject &&
+        entity.worn &&
+        entity.getEmplacement() === emplacementKey
+      ) {
+        found = entity;
       }
     });
 
     return found;
+  }
+
+  getSpells(): Spell[] {
+    const entities: Spell[] = [];
+
+    this.spellsId.forEach((id: EntityId) => {
+      const entity = GameController.getPlay().getEntity(id);
+      entities.push(entity as Spell);
+    });
+
+    return entities;
+  }
+
+  getEffects(): Effect[] {
+    const entities: Effect[] = [];
+
+    this.effectsId.forEach((id: EntityId) => {
+      const entity = GameController.getPlay().getEntity(id);
+      entities.push(entity as Effect);
+    });
+
+    return entities;
   }
 
   getEffectiveCaracteristics(): { [key: string]: number } {
@@ -102,7 +123,7 @@ export abstract class Character extends Entity {
     let value = 0;
 
     from.forEach((item: EntityId) => {
-      const entity = (GameController.getEntity(
+      const entity = (GameController.getPlay().getEntity(
         item
       ) as unknown) as WithModifiers;
 
@@ -163,9 +184,9 @@ export abstract class Character extends Entity {
     let spell: Spell = null;
 
     this.spellsId.forEach((id: EntityId) => {
-      const item = GameController.getEntity(id);
+      const item = GameController.getPlay().getEntity(id);
 
-      if (item.type === type) {
+      if (item.inheritsFrom(type)) {
         spell = item as Spell;
       }
     });
@@ -179,19 +200,19 @@ export abstract class Character extends Entity {
     doNotCreateNew = false
   ): void {
     if (!doNotCreateNew || this.getEntitiesOfType(type, list).length === 0) {
-      const newEntity = GameController.createEntityOfType(type);
-
+      const newEntity = GameController.getPlay().addEntityOfType(type);
       this.addTo(newEntity.getId(), list);
     }
   }
 
+  // TODO: move
   private getEntitiesOfType(type: EntityType, list: EntityId[]): Entity[] {
     const found: Entity[] = [];
 
     list.forEach((id: EntityId) => {
-      const item = GameController.getEntity(id);
+      const item = GameController.getPlay().getEntity(id);
 
-      if (item.isInstanceOf(type)) {
+      if (item.inheritsFrom(type)) {
         found.push(item);
       }
     });
@@ -199,11 +220,13 @@ export abstract class Character extends Entity {
     return found;
   }
 
+  // TODO: move
   private addTo(key: EntityId, list: EntityId[]): void {
     list.push(key);
     this.save();
   }
 
+  // TODO: move
   private removeFrom(key: EntityId, list: EntityId[]): void {
     list.forEach((item: EntityId, index: number) => {
       if (item === key) {

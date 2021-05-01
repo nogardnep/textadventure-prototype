@@ -12,15 +12,15 @@ import { GameService } from './../../../services/game.service';
   styleUrls: ['./entity-preview.component.scss'],
 })
 export class EntityPreviewComponent implements OnInit, OnChanges {
-  @Input() entityId: EntityId;
-  entity: Entity;
+  // @Input() entityId: EntityId;
+  @Input() entity: Entity;
 
   constructor(private gameService: GameService) {}
 
   ngOnInit() {}
 
   ngOnChanges() {
-    this.entity = GameController.getEntity(this.entityId);
+    // this.entity = GameController.getPlay().getEntity(this.entityId);
   }
 
   onClickEntity(): void {
@@ -30,12 +30,12 @@ export class EntityPreviewComponent implements OnInit, OnChanges {
   isSelected(): boolean {
     return (
       this.gameService.getSelection() &&
-      this.gameService.getSelection().getId() === this.entityId
+      this.gameService.getSelection().isSameAs(this.entity)
     );
   }
 
   isWorn(): boolean {
-    return (GameController.getEntity(this.entityId) as UsableObject).worn;
+    return (this.entity as UsableObject).worn;
   }
 
   getEmplacement(): NameWrapper {

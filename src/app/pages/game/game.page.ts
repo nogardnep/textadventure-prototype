@@ -16,16 +16,13 @@ import { GameController } from 'src/game/GameController';
 })
 export class GamePage implements OnInit {
   play: Play;
-  // playerId: Entity;
-  selectionId: EntityId;
-  // player: Character;
+  selection: Entity;
 
   private playSubscription: Subscription;
-  // private playerSubscription: Subscription;
   private selectionSubscription: Subscription;
 
   constructor(private gameService: GameService, private router: Router) {
-    this.gameService.loadLastPlay()
+    GameController.loadPlay();
   }
 
   ngOnInit(): void {
@@ -39,45 +36,30 @@ export class GamePage implements OnInit {
       }
     );
 
-    // this.playerSubscription = this.gameService.playerSubject.subscribe(
-    //   (player: Character) => {
-    //     console.log(player);
-    //     if (player) {
-    //       this.player = player;
-    //     }
-    //   }
-    // );
-
     this.selectionSubscription = this.gameService.selectionSubject.subscribe(
       (selection: Entity) => {
         if (selection) {
-          this.selectionId = selection.getId();
+          this.selection = selection;
         } else {
-          this.selectionId = null;
+          this.selection = null;
         }
       }
     );
 
     this.gameService.emitPlay();
-    // this.gameService.emitPlayer();
     this.gameService.emitSelection();
   }
 
-  // getPlayerPosition(): EntityId {
-
-  // }
-
   getPlayer(): Character {
-    return GameController.getEntity(this.play.playerId) as Character;
+    return GameController.getPlay().getPlayer() as Character;
   }
 
   getNarration(): Narration {
-    return GameController.getNarration();
+    return GameController.getPlay().getNarration();
   }
 
   ngOnDestroy(): void {
     this.playSubscription.unsubscribe();
-    // this.playerSubscription.unsubscribe();
     this.selectionSubscription.unsubscribe();
   }
 
