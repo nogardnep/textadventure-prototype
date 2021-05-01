@@ -1,11 +1,10 @@
-import { emplacementNames } from './../../../../game/models/Emplacement';
-import { NameWrapper } from './../../../../game/models/Text';
-import { Name } from './../../../../game/models/Name';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Entity, EntityId } from 'src/game/models/Entity';
 import { WearableObject } from 'src/game/models/entity/WearableObject';
 import { GameController } from './../../../../game/GameController';
+import { emplacementNames } from '../../../../game/enums/Emplacement';
+import { NameWrapper } from './../../../../game/models/Text';
 import { GameService } from './../../../services/game.service';
-import { Component, OnInit, OnChanges, Input } from '@angular/core';
-import { Entity, EntityId } from 'src/game/models/Entity';
 
 @Component({
   selector: 'app-entity-preview',

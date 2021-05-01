@@ -1,10 +1,10 @@
-import { TextManager } from 'src/game/Printer';
-import { EmplacementKey, emplacementNames } from './../Emplacement';
+import { TextManager } from 'src/game/TextManager';
 import { GameController } from 'src/game/GameController';
 import { Action } from 'src/game/models/Action';
 import { Entity } from 'src/game/models/Entity';
 import { UsableObject } from 'src/game/models/entity/UsableObject';
 import { Character } from './Character';
+import { emplacementNames } from '../../enums/Emplacement';
 
 export abstract class WearableObject extends UsableObject {
   worn: boolean = false;
@@ -21,7 +21,7 @@ export abstract class WearableObject extends UsableObject {
           this.put();
         },
         condition: () => {
-          return !this.worn && GameController.playerOwns(this.getId());
+          return !this.worn && GameController.getPlayer().owns(this.getId());
         },
       },
       {
@@ -30,7 +30,7 @@ export abstract class WearableObject extends UsableObject {
           this.pull();
         },
         condition: () => {
-          return this.worn && GameController.playerOwns(this.getId());
+          return this.worn && GameController.getPlayer().owns(this.getId());
         },
       },
     ];
@@ -57,13 +57,15 @@ export abstract class WearableObject extends UsableObject {
     const alreadyWornObject = owner.getWornObject(this.getEmplacement());
 
     if (alreadyWornObject) {
-      console.log(TextManager.getName(emplacementNames[this.getEmplacement()]))
+      console.log(TextManager.getName(emplacementNames[this.getEmplacement()]));
       GameController.inform([
         {
           text: {
             fr:
               'Something already worn at ' +
-              TextManager.getName(emplacementNames[this.getEmplacement()]).printSimple(),
+              TextManager.getName(
+                emplacementNames[this.getEmplacement()]
+              ).printSimple(),
           },
         },
       ]);

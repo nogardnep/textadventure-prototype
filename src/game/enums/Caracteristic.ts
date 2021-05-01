@@ -1,5 +1,5 @@
-import { Name } from './Name';
-import { NameWrapper } from './Text';
+import { Name } from '../models/Name';
+import { NameWrapper } from '../models/Text';
 
 export enum CaracteristicKey {
   life,
@@ -7,7 +7,10 @@ export enum CaracteristicKey {
 }
 
 export type Caracteristics = {
-  [key in keyof typeof CaracteristicKey]: number;
+  [key in keyof typeof CaracteristicKey]: {
+    current: number;
+    max: number;
+  };
 };
 
 export const caracteristicKeys: {

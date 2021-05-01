@@ -1,4 +1,13 @@
+import { EntityId, EntityType } from './../../../game/models/Entity';
+import { GameController } from './../../../game/GameController';
+import { Router } from '@angular/router';
+import { GameService } from './../../services/game.service';
+import { caracteristicNames } from '../../../game/enums/Caracteristic';
+import { TextWrapper } from './../../../game/models/Text';
+import { Spell } from 'src/game/models/entity/Spell';
+import { Scenario } from './../../../game/models/Scenario';
 import { Component, OnInit } from '@angular/core';
+import { Character } from 'src/game/models/entity/Character';
 
 @Component({
   selector: 'app-new-play',
@@ -6,10 +15,111 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./new-play.page.scss'],
 })
 export class NewPlayPage implements OnInit {
+  selectedSpells: Spell[] = [];
+  usedPoints: number = 0;
+  scenario: Scenario;
+  text: { [key: string]: TextWrapper } = {
+    validate: { fr: 'Valider', en: 'Validate' },
+    cancel: { fr: 'Annuler', en: 'Cancel' },
+    spells: { fr: 'Sorts', en: 'Spells' },
+    title: { fr: 'Nouvelle partie', en: 'New play' },
+    caracteristics: { fr: 'Caracteristics', en: 'Caracteristics' },
+  };
+  name: string;
+  caracteristicNames = caracteristicNames;
+  caracteristicModifiers: {} = {};
+  availableSpells: Spell[] = [];
+  player: Character;
 
-  constructor() { }
+  constructor(private gameService: GameService, private router: Router) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.scenario = GameController.getScenario();
+    this.player = this.scenario.getInitialPlayer();
+
+    for (let key in this.player.caracteristics) {
+      this.caracteristicModifiers[key] = 0;
+    }
+
+    this.scenario.starting.availableSpells.forEach((type: EntityType) => {
+      this.availableSpells.push(
+        new this.scenario.entityConstructors[type]() as Spell
+      );
+    });
   }
 
+  onClickValidate(): void {
+    let valid = true;
+
+    if (this.scenario.starting.askForName && !this.name) {
+      valid = false;
+      this.gameService.inform([{ text: { fr: 'please enter a name' } }]);
+    }
+
+    if (valid) {
+      this.gameService.startNewPlay(this.player);
+
+      this.selectedSpells.forEach((item: Spell) => {
+        this.player.giveSpell(item.getId());
+      });
+
+      for (let key in this.player.caracteristics) {
+        const caracteristic = this.player.caracteristics[key];
+        caracteristic.max += this.caracteristicModifiers[key];
+        caracteristic.current = caracteristic.max;
+      }
+
+      this.router.navigate(['/game']);
+    }
+  }
+
+  onClickAddPoint(key: string): void {
+    this.usedPoints++;
+    this.caracteristicModifiers[key]++;
+  }
+
+  onClickRemovePoint(key: string): void {
+    this.usedPoints--;
+    if (this.caracteristicModifiers[key] - 1 >= 0) {
+      this.caracteristicModifiers[key]--;
+    }
+  }
+
+  onClickCancel(): void {
+    this.router.navigate(['']);
+  }
+
+  onClickSpell(spell: Spell): void {
+    if (this.spellIsSelected(spell)) {
+      this.unselectSpell(spell);
+    } else {
+      if (this.selectedSpells.length < this.scenario.starting.maxSpells) {
+        this.selectSpell(spell);
+      }
+    }
+  }
+
+  spellIsSelected(spell: Spell): boolean {
+    let selected = false;
+
+    this.selectedSpells.forEach((item: Spell) => {
+      if (item.isSameAs(spell)) {
+        selected = true;
+      }
+    });
+
+    return selected;
+  }
+
+  private selectSpell(spell: Spell): void {
+    this.selectedSpells.push(spell);
+  }
+
+  private unselectSpell(spell: Spell): void {
+    this.selectedSpells.forEach((item: Spell, index: number) => {
+      if (item.isSameAs(spell)) {
+        this.selectedSpells.splice(index, 1);
+      }
+    });
+  }
 }

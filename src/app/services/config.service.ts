@@ -1,3 +1,6 @@
+import { GameService } from 'src/app/services/game.service';
+import { TextManager } from 'src/game/TextManager';
+import { languageKeys } from './../../game/enums/Language';
 import { Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { StorageService } from './storage.service';
@@ -7,6 +10,7 @@ export type ConfigData = {
   audio: {
     volume: number;
   };
+  language: string;
 };
 
 const CONFIG_STORAGE_KEY = 'config';
@@ -21,25 +25,6 @@ export class ConfigService {
 
   constructor(private storageService: StorageService) {
     this.load();
-
-    const loaded = {
-      audio: {
-        volume: 8,
-        are: 8,
-        list: ['c', 'd']
-      },
-    };
-
-    const base = {
-      audio: {
-        volume: 5,
-        list: ['a', 'b']
-      },
-    };
-
-    Utils.assignWithModel(base, loaded);
-
-    console.log(base);
   }
 
   emitData(): void {
@@ -48,9 +33,15 @@ export class ConfigService {
 
   save(): void {
     this.storageService.set(CONFIG_STORAGE_KEY, this.data);
+    this.apply()
+  }
+
+  apply(): void {
+    TextManager.setLanguage(this.data.language);
   }
 
   load(): void {
+    console.log('LOAD')
     this.storageService.get(CONFIG_STORAGE_KEY).then((result: {}) => {
       this.data = this.getDefault();
 
@@ -59,7 +50,12 @@ export class ConfigService {
       }
 
       this.emitData();
+      this.apply();
     });
+  }
+
+  getData(): ConfigData {
+    return this.data;
   }
 
   private getDefault(): ConfigData {
@@ -67,6 +63,7 @@ export class ConfigService {
       audio: {
         volume: 0.5,
       },
+      language: languageKeys.fr,
     };
   }
 }

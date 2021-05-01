@@ -1,61 +1,64 @@
-import { Utils } from 'src/game/Utils';
 import { EntityId } from 'src/game/models/Entity';
-import { Paragraph } from './models/Paragraph';
-import { Action } from './models/Action';
-import { Scenario } from './models/Scenario';
 import { TestScenario } from '../scenari/TestScenario';
-import { GameService } from './../app/services/game.service';
-import { Entity, StoredEntity, EntityType } from './models/Entity';
-import { Play } from './models/Play';
+import { Action } from './models/Action';
+import { Entity, EntityType, StoredEntity } from './models/Entity';
 import { Character } from './models/entity/Character';
+import { Paragraph } from './models/Paragraph';
+import { Play } from './models/Play';
+import { Scenario } from './models/Scenario';
+
+type Callbacks = {
+  onInform: (paragraphs: Paragraph[], actions?: Action[]) => void;
+  onLoaded: (play: Play) => void;
+  onStart: () => void;
+  onSave: (play: Play) => void;
+};
 
 export class GameController {
-  static gameService: GameService;
   static play: Play;
   static scenario: Scenario;
+  private static callbacks: Callbacks;
 
-  static init(gameService: GameService): void {
-    this.gameService = gameService;
+  static init(callbacks: Callbacks): void {
     this.scenario = new TestScenario(); // TODO: move
+    this.callbacks = callbacks;
+  }
+
+  static getScenario(): Scenario {
+    return this.scenario;
   }
 
   static inform(paragraphs: Paragraph[], actions?: Action[]) {
-    this.gameService.inform(paragraphs, actions);
+    this.callbacks.onInform(paragraphs, actions);
   }
 
-  static startNewPlay(): void {
-    this.setPlay(new Play());
+  static startNewPlay(player: Character): void {
+    this.play = new Play();
 
-    // TODO: move
-    const entities: { [key: string]: Entity } = this.scenario.init();
+    const entities: { [key: string]: Entity } = this.scenario.initPlay(player);
+
     for (let key in entities) {
-      GameController.storeEntity(entities[key]);
+      this.storeEntity(entities[key]);
     }
-
-    this.gameService.emitPlay();
     this.savePlay();
+    this.callbacks.onLoaded(this.play);
   }
 
   static savePlay(): void {
-    this.gameService.savePlay();
+    this.callbacks.onSave(this.play);
   }
 
-  static loadLastPlay(): void {
-    this.gameService.loadLastPlay().then((result: Play) => {});
+  static loadPlay(play: Play): void {
+    this.play = play;
+    this.callbacks.onLoaded(this.play);
   }
 
   static getPlay(): Play {
     return this.play;
   }
 
-  static setPlay(play: Play): void {
-    this.play = play;
-    // this.gameService.emitPlay();
-  }
-
   static setPlayer(entity: Entity): void {
     this.getPlay().playerId = entity.getId();
-    this.gameService.emitPlayer();
   }
 
   static getPlayer(): Character {
@@ -75,14 +78,8 @@ export class GameController {
   static useAction(action: Action): void {
     action.proceed();
 
-    console.log(action);
-
     this.play.time += action.duration !== undefined ? action.duration : 1;
     this.savePlay();
-  }
-
-  static playerOwns(id: EntityId): boolean {
-    return this.getEntity(id).parentId === this.getPlayer().getId();
   }
 
   static getPlayersLocation(): Entity {

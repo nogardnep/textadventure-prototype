@@ -1,9 +1,39 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>new-play</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-
+  <h1>{{text.title|text}}</h1>
+  <div>
+    <div *ngIf="scenario.starting.askForName">
+      <label>Name</label>
+      <input type="text" [(ngModel)]="name" />
+    </div>
+    <div *ngIf="!scenario.starting.askForName"><b>{{player.getName()|name}}</b></div>
+    <div>
+      <h3>{{text.spells|text}}</h3>
+      <div>{{selectedSpells.length}}/{{scenario.starting.maxSpells}}</div>
+      <ul>
+        <ng-container *ngFor="let spell of availableSpells">
+          <li>
+            <button (click)="onClickSpell(spell)">{{spell.getName()|name}}</button>
+            <span *ngIf="spellIsSelected(spell)">(selected)</span>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+    <div>
+      <h3>{{text.caracteristics|text}}</h3>
+      <div>{{usedPoints}}/{{scenario.starting.caracteristicsPoints}}</div>
+      <ul>
+        <li *ngFor="let item of this.player.caracteristics | keyvalue">
+          <span>{{caracteristicNames[item.key]|name}}:{{item.value.current}}
+            (+{{caracteristicModifiers[item.key]}})</span>
+          <button (click)="onClickRemovePoint(item.key)" *ngIf="caracteristicModifiers[item.key] > 0">-</button>
+          <button (click)="onClickAddPoint(item.key)"
+            *ngIf="usedPoints < scenario.starting.caracteristicsPoints">+</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div>
+    <button (click)="onClickValidate()">{{({ fr: 'Valider', en: 'Validate' })|text}}</button>
+    <button (click)="onClickCancel()">{{text.cancel|text}}</button>
+  </div>
 </ion-content>

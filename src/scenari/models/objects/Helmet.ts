@@ -1,6 +1,6 @@
-import { EmplacementKey, emplacementKeys } from './../../../game/models/Emplacement';
 import { WearableObject } from 'src/game/models/entity/WearableObject';
-import { Name } from '../../../game/models/Name';;
+import { emplacementKeys } from 'src/game/enums/Emplacement';
+import { Name } from '../../../game/models/Name';
 import { WithModifiers } from './../../../game/models/entity/WithModifiers';
 
 export class Helmet extends WearableObject implements WithModifiers {

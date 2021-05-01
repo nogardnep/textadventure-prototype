@@ -1,5 +1,5 @@
-import { Name } from './Name';
-import { NameWrapper } from './Text';
+import { Name } from "../models/Name";
+import { NameWrapper } from "../models/Text";
 
 export enum EmplacementKey {
   head,

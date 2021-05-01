@@ -6,6 +6,20 @@
       <input name="volume" type="range" min="0" max="1" step="0.01" [(ngModel)]="data.audio.volume"
         (ngModelChange)="onValueChange()">
     </div>
+    <div>
+      <div>
+        <select [(ngModel)]="data.language" (ngModelChange)="onValueChange()">
+          <ng-container *ngFor="let item of languageKeys | keyvalue ">
+            <option [innerHTML]="languageNames[item.key]|name" [ngValue]="item.key"></option>
+          </ng-container>
+        </select>
+        <!-- <select>
+          <ng-container *ngFor="let item of languageKeys | keyvalue ">
+            <option [innerHTML]="languageNames[item.key]|name" [selected]="item.key === data.language" ></option>
+          </ng-container>
+        </select> -->
+      </div>
+    </div>
   </div>
 
   <button (click)="onClickBack()">Back</button>

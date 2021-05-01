@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TextManager } from 'src/game/Printer';
+import { TextManager } from 'src/game/TextManager';
 import { TextWrapper } from './../../game/models/Text';
 
 @Pipe({ name: 'text' })

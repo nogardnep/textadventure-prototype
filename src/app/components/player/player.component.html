@@ -1,11 +1,11 @@
 <div *ngIf="player">
-  <div>name: {{player.getName()|name}}</div>
+  <div>name: <span [innerHTML]="player.getName()|name"></span></div>
   <div>
-    <h3>Caracteristics</h3>
+    <h3 [innerHTML]="text.caracteristics|text"></h3>
     <ul>
       <li *ngFor="let caracteristic of player.caracteristics | keyvalue">
         {{caracteristicNames[caracteristic.key]|name}}:
-        {{player.caracteristics[caracteristic.key]}}({{getModifier(caracteristic.key) < 0 ? ''
+        {{player.caracteristics[caracteristic.key].current}}({{getModifier(caracteristic.key) < 0 ? ''
           :'+'}}{{getModifier(caracteristic.key)}}) </li>
     </ul>
   </div>

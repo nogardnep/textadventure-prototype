@@ -1,3 +1,5 @@
+import { NewPlayPage } from './pages/new-play/new-play.page';
+import { GamePage } from './pages/game/game.page';
 import { ConfigPage } from './pages/config/config.page';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -39,7 +41,9 @@ import { PlayerComponent } from './components/player/player.component';
     InformComponent,
     ParagraphsComponent,
     PlayerComponent,
-    ConfigPage
+    ConfigPage,
+    GamePage,
+    NewPlayPage,
   ],
   entryComponents: [],
   imports: [

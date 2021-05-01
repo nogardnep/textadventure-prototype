@@ -1,20 +1,24 @@
-import { WithModifiers } from './WithModifiers';
-import { Effect } from './Effect';
-import { Caracteristics } from './../Caracteristic';
 import { GameController } from 'src/game/GameController';
 import { EntityId, EntityType } from 'src/game/models/Entity';
 import { UsableObject } from 'src/game/models/entity/UsableObject';
 import { WearableObject } from 'src/game/models/entity/WearableObject';
 import { Entity } from '../Entity';
-import { EmplacementKey } from './../Emplacement';
+import { Caracteristics } from '../../enums/Caracteristic';
 import { Spell } from './Spell';
+import { WithModifiers } from './WithModifiers';
 
 export abstract class Character extends Entity {
   spellsId: EntityId[] = [];
   effectsId: EntityId[] = [];
   caracteristics: Caracteristics = {
-    life: 10,
-    resistance: 10,
+    life: {
+      current: 10,
+      max: 10,
+    },
+    resistance: {
+      current: 10,
+      max: 10,
+    },
   };
 
   getCaracteristicValue(key: string): number {
@@ -148,12 +152,12 @@ export abstract class Character extends Entity {
     this.removeFrom(key, this.effectsId);
   }
 
-  giveSpell(key: EntityId): void {
-    this.addTo(key, this.spellsId);
+  giveSpell(id: EntityId): void {
+    this.addTo(id, this.spellsId);
   }
 
-  takeOffSpell(key: EntityId): void {
-    this.removeFrom(key, this.spellsId);
+  takeOffSpell(id: EntityId): void {
+    this.removeFrom(id, this.spellsId);
   }
 
   getSpellOfType(type: string): Spell {

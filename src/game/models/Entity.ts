@@ -1,3 +1,4 @@
+import { Name } from './Name';
 import { NameWrapper } from './Text';
 import { Paragraph } from './Paragraph';
 import { Action } from './Action';
@@ -7,11 +8,11 @@ import { GameController } from '../GameController';
 export type EntityId = string;
 export type EntityType = string;
 
-export interface EntityPresentation {
-  name?: string;
-  interiorDescription?: string;
-  exteriorDescription?: string;
-}
+// export interface EntityPresentation {
+//   name?: string;
+//   interiorDescription?: string;
+//   exteriorDescription?: string;
+// }
 
 export interface StoredEntity {
   id: EntityId;
@@ -23,14 +24,15 @@ export interface StoredEntity {
 }
 
 export class Entity implements StoredEntity {
+  name: string;
   id: EntityId;
   childrenId: EntityId[];
   parentId: EntityId;
   type: EntityType;
   // data: {};
-  // private presentation: EntityPresentation;
+  // presentation: EntityPresentation;
 
-  constructor(data?: EntityPresentation) {
+  constructor() {
     this.id = Math.floor(Math.random() * 1000).toString();
     this.childrenId = [];
     this.type = this.constructor.name;
@@ -44,7 +46,7 @@ export class Entity implements StoredEntity {
   }
 
   getName(): NameWrapper {
-    return null;
+    return { fr: new Name(this.name) };
     // return this.presentation.name ? this.presentation.name : '';
   }
 
@@ -67,7 +69,7 @@ export class Entity implements StoredEntity {
   }
 
   getResponseToSpell(spell: EntityId, additionnal?: {}): {} {
-    return additionnal? additionnal: {};
+    return additionnal ? additionnal : {};
   }
 
   getId(): string {
@@ -92,6 +94,23 @@ export class Entity implements StoredEntity {
 
   setParentId(id: EntityId): void {
     this.parentId = id;
+  }
+
+  isSameAs(entity: Entity): boolean {
+    return this.getId() === entity.getId();
+  }
+
+  owns(id: EntityId): boolean {
+    let entity = GameController.getEntity(id);
+    let found = false;
+
+    this.childrenId.forEach((item: EntityId) => {
+      if (id === item) {
+        found = true;
+      }
+    })
+
+    return found;
   }
 
   moveTo(newParent: Entity): void {

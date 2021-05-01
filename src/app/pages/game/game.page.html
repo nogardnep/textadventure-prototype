@@ -1,9 +1,33 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>game</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true">
+  <div>
+    <button (click)="onClickHome()">Home</button>
+    <button (click)="onClickConfig()">Config</button>
+  </div>
 
-<ion-content>
+  <div *ngIf="play">
+    <div>Time: {{play.time}}</div>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div>
+            <h2>Position</h2>
+            <app-position *ngIf="getPlayer()" [player]="getPlayer()"></app-position>
+          </div>
+        </ion-col>
+        <ion-col>
+          <h2>Selection</h2>
+          <app-selection [entityId]="selectionId"></app-selection>
+        </ion-col>
+        <ion-col>
+          <h2>Player</h2>
+          <component-player [entityId]="play.playerId"></component-player>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div>
+      <h2>Narration</h2>
+      <app-narration [narration]="play.narration"></app-narration>
+    </div>
+  </div>
 
 </ion-content>

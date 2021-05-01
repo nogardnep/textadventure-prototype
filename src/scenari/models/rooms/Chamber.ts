@@ -13,7 +13,7 @@ export class Chamber extends Room {
   }
 
   getName() {
-    return { fr: new Name('Chamber') };
+    return { en: new Name('Chamber'), fr: new Name('Chambre') };
   }
 
   getActions() {

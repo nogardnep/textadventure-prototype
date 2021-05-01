@@ -1,12 +1,14 @@
+import { ConfigService } from './config.service';
+import { GameController } from 'src/game/GameController';
+import { Play } from './../../game/models/Play';
+import { Player } from './../../scenari/models/characters/Player';
 import { Router } from '@angular/router';
 import { InformComponent } from './../components/inform/inform.component';
 import { ModalController } from '@ionic/angular';
 import { Action } from './../../game/models/Action';
 import { Paragraph } from './../../game/models/Paragraph';
 import { Character } from './../../game/models/entity/Character';
-import { Play } from '../../game/models/Play';
 import { StorageService } from './storage.service';
-import { GameController } from './../../game/GameController';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Entity, EntityId } from 'src/game/models/Entity';
@@ -18,6 +20,7 @@ const PLAY_STORAGE_KEY = 'play';
 })
 export class GameService {
   private selection: Entity;
+  private play: Play
 
   playSubject = new Subject<Play>();
   playerSubject = new Subject<Character>();
@@ -27,12 +30,29 @@ export class GameService {
     private storageService: StorageService,
     private modalController: ModalController,
     private router: Router,
+    private configService:ConfigService
   ) {
-    GameController.init(this);
+    this.configService.load();
 
-    this.loadLastPlay().then(() => {
-      // this.startNewPlay();
+    GameController.init({
+      onInform: (paragraphs: Paragraph[], actions?: Action[]) => {
+        this.inform(paragraphs, actions)
+      },
+      onLoaded: (play : Play) => {
+        this.play = play
+        this.emitPlay();
+      },
+      onSave: (play: Play) => {
+        this.savePlay(play)
+      },
+      onStart: () => {
+
+      }
     });
+
+    // this.loadLastPlay().then(() => {
+      // this.startNewPlay();
+    // });
   }
 
   async inform(paragraphs: Paragraph[], actions?: Action[]) {
@@ -47,12 +67,13 @@ export class GameService {
   }
 
   emitPlay(): void {
-    this.playSubject.next(GameController.getPlay());
+    // this.playSubject.next(GameController.getPlay());
+    this.playSubject.next(this.play);
   }
 
-  emitPlayer(): void {
-    this.playerSubject.next(GameController.getPlayer());
-  }
+  // emitPlayer(): void {
+  //   this.playerSubject.next(GameController.getPlayer());
+  // }
 
   emitSelection(): void {
     this.selectionSubject.next(this.selection);
@@ -67,18 +88,17 @@ export class GameService {
     return this.selection;
   }
 
-  savePlay(): void {
-    this.storageService.set(PLAY_STORAGE_KEY, GameController.getPlay());
+  savePlay(play: Play): void {
+    this.storageService.set(PLAY_STORAGE_KEY, play);
   }
 
-  startNewPlay(): Promise<Play> {
+  startNewPlay(player: Player): Promise<Play> {
     this.setSelection(null);
 
-    this.router.navigate(['new-play'])
-
     return new Promise((resolve, reject) => {
-    //   GameController.startNewPlay();
-    //   resolve(GameController.getPlay());
+      GameController.startNewPlay(player);
+      resolve(this.play);
+      // resolve(GameController.getPlay());
     });
   }
 
@@ -87,10 +107,12 @@ export class GameService {
       this.storageService.get(PLAY_STORAGE_KEY).then((playData: {}) => {
         if (playData) {
           const play = Object.assign(new Play(), playData);
-          GameController.setPlay(play);
+          GameController.loadPlay(play);
+          // GameController.setPlay(play);
           resolve(play);
         } else {
-          GameController.setPlay(null);
+          GameController.loadPlay(null);
+          // GameController.setPlay(null);
           console.error('no play found');
           reject();
         }

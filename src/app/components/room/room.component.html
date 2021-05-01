@@ -2,10 +2,8 @@
   <div><b>{{ entity.getName()|name }}</b></div>
   <entity-paragraphs [paragraphs]="entity.getInteriorDescription()"></entity-paragraphs>
   <div>
-    <div *ngIf="test()"></div>
     <ul>
       <ng-container *ngFor="let childId of entity.getChildrenId()">
-        !
         <li *ngIf="!isThePlayer(childId)">
           <app-entity-preview [entityId]="childId"></app-entity-preview>
         </li>

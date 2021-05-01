@@ -1,34 +1,7 @@
-<ion-content [fullscreen]="true">
+<ion-content>
   <div>
     <button (click)="onClickNew()">New</button>
     <button (click)="onClickLoad()">Load</button>
     <button (click)="onClickConfig()">Config</button>
   </div>
-
-  <div *ngIf="play">
-    <div>Time: {{play.time}}</div>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <div>
-            <h2>Position</h2>
-            <app-position *ngIf="getPlayer()" [player]="getPlayer()"></app-position>
-          </div>
-        </ion-col>
-        <ion-col>
-          <h2>Selection</h2>
-          <app-selection [entityId]="selectionId"></app-selection>
-        </ion-col>
-        <ion-col>
-          <h2>Player</h2>
-          <component-player [entityId]="play.playerId"></component-player>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    <div>
-      <h2>Narration</h2>
-      <app-narration [narration]="play.narration"></app-narration>
-    </div>
-  </div>
-
 </ion-content>

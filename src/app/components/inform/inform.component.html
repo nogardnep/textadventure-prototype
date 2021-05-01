@@ -1,7 +1,7 @@
 <div>
-  <p *ngFor="let paragraph of paragraphs">
-    {{paragraph.text|text}}
-  </p>
+  <ng-container *ngFor="let paragraph of paragraphs">
+    <p [innerHTML]="paragraph.text|text"></p>
+  </ng-container>
 </div>
 <div>
   <ng-container *ngIf="actions && actions.length > 0; then thenBlock else elseBlock"></ng-container>
@@ -9,12 +9,12 @@
     <ul>
       <ng-container *ngFor="let action of actions">
         <li *ngIf="!action.condition || action.condition()">
-          <button (click)="onClickOption(action)">{{action.text|text}}</button>
+          <button (click)="onClickOption(action)" [innerHTML]="action.text|text"></button>
         </li>
       </ng-container>
     </ul>
   </ng-template>
   <ng-template #elseBlock>
-    <button *ngIf="!(actions && actions.length > 0)" (click)="onClickOption()">{{text.close|text}}</button>
+    <button *ngIf="!(actions && actions.length > 0)" (click)="onClickOption()" [innerHTML]="text.close|text"></button>
   </ng-template>
 </div>

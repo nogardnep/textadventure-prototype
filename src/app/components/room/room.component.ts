@@ -21,11 +21,6 @@ export class RoomComponent implements OnInit {
     this.entity = GameController.getEntity(this.entityId);
   }
 
-  test(): void {
-    // console.log('!');
-    // console.log(this.entity);
-  }
-
   isThePlayer(entityId: EntityId): boolean {
     return GameController.getPlay().playerId === entityId;
   }
