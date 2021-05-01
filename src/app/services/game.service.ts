@@ -1,7 +1,7 @@
 import { ConfigService } from './config.service';
 import { GameController } from 'src/game/GameController';
 import { Play, StoredPlay } from './../../game/models/Play';
-import { Player } from './../../scenari/models/characters/Player';
+import { Jean } from '../../scenari/models/characters/Jean';
 import { Router } from '@angular/router';
 import { InformComponent } from './../components/inform/inform.component';
 import { ModalController } from '@ionic/angular';

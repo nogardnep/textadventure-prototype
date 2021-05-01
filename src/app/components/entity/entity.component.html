@@ -4,9 +4,9 @@
 
   <div>
     <ul>
-      <ng-container *ngFor="let childId of entity.getChildrenId()">
+      <ng-container *ngFor="let child of entity.getChildren()">
         <li>
-          <app-entity-preview [entityId]="childId"></app-entity-preview>
+          <app-entity-preview [entity]="child"></app-entity-preview>
         </li>
       </ng-container>
     </ul>

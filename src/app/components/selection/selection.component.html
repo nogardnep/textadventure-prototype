@@ -4,9 +4,9 @@
   <entity-paragraphs [paragraphs]="entity.getExteriorDescription()"></entity-paragraphs>
   <div>
     <ul>
-      <ng-container *ngFor="let childId of entity.getChildrenId()">
+      <ng-container *ngFor="let child of entity.getChildren()">
         <li>
-          <app-entity [entityId]="childId"></app-entity>
+          <app-entity-preview [entity]="child"></app-entity-preview>
         </li>
       </ng-container>
     </ul>

@@ -12,6 +12,10 @@ export class Chamber extends Room {
     super();
   }
 
+  init() {
+    this.giveChildOfType(entityConstructors.Tom.name, false);
+  }
+
   getName() {
     return { en: new Name('Chamber'), fr: new Name('Chambre') };
   }
@@ -33,7 +37,7 @@ export class Chamber extends Room {
             .giveSpellOfType(entityConstructors.InvocationSpell.name, true);
           GameController.getPlay()
             .getPlayer()
-            .giveEffectOfType(entityConstructors.PoisonEffect.name);
+            .giveEffectOfType(entityConstructors.PoisonEffect.name, true);
         },
         condition: () => {
           return !this.fire;

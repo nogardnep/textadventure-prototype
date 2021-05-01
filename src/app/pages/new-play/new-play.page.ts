@@ -36,6 +36,7 @@ export class NewPlayPage implements OnInit {
   ngOnInit(): void {
     GameController.startNewPlay();
 
+
     this.player = GameController.getPlay().getPlayer() as Character;
     this.scenario = GameController.getPlay().getScenario();
 
@@ -48,6 +49,8 @@ export class NewPlayPage implements OnInit {
         new this.scenario.entityConstructors[type]() as Spell
       );
     });
+
+    this.onClickValidate();
   }
 
   onClickValidate(): void {

@@ -1,4 +1,4 @@
-<ion-content>
+<ion-content *ngIf="scenario && player">
   <h1>{{text.title|text}}</h1>
   <div>
     <div *ngIf="scenario.starting.askForName">

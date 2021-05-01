@@ -7,7 +7,7 @@ import { GameService } from '../../services/game.service';
   templateUrl: './position.component.html',
   styleUrls: ['./position.component.scss'],
 })
-export class PositionComponent implements OnInit, OnChanges {
+export class PositionComponent implements OnInit {
   // @Input() playerId: EntityId;
 
   @Input() player: Entity;
@@ -15,14 +15,4 @@ export class PositionComponent implements OnInit, OnChanges {
   constructor(private gameService: GameService) {}
 
   ngOnInit() {}
-
-  ngOnChanges() {
-    // console.log(this.playerId)
-
-    // if (this.playerId) {
-    //   this.player = GameController.getEntity(this.playerId);
-    // } else {
-    //   this.player = null;
-    // }
-  }
 }

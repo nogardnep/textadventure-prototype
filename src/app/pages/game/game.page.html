@@ -44,8 +44,8 @@
     <div>
     </div>
   </div>
-  <div>
-    <p>(no play found)</p>
+  <div *ngIf="!play">
+    <p>loading...</p>
   </div>
 
 </ion-content>

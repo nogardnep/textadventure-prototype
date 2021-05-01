@@ -179,4 +179,62 @@ export class Entity implements StoredEntity {
   isOfType(type: EntityType): boolean {
     return this.type === type;
   }
+
+  giveChildOfType(type: EntityType, doNotCreateNew: boolean): Entity {
+    const entity = this.giveEntityOfTypeInList(
+      type,
+      this.childrenId,
+      doNotCreateNew
+    );
+
+    if (entity) {
+      entity.parentId = this.getId();
+    }
+
+    return entity;
+  }
+
+  getChildrenOfType(type: EntityType, list: EntityId[]): Entity[] {
+    const found: Entity[] = [];
+
+    list.forEach((id: EntityId) => {
+      const item = GameController.getPlay().getEntity(id);
+
+      if (item.inheritsFrom(type)) {
+        found.push(item);
+      }
+    });
+
+    return found;
+  }
+
+  protected giveEntityOfTypeInList(
+    type: EntityType,
+    list: EntityId[],
+    doNotCreateNew: boolean
+  ): Entity {
+    let entity = null;
+
+    if (!doNotCreateNew || this.getChildrenOfType(type, list).length === 0) {
+      entity = GameController.getPlay().addEntityOfType(type);
+      this.addToList(entity.getId(), list);
+    }
+
+    return entity;
+  }
+
+  protected addToList(key: EntityId, list: EntityId[]): void {
+    list.push(key);
+    this.save();
+  }
+
+  protected removeFromList(key: EntityId, list: EntityId[]): void {
+    list.forEach((item: EntityId, index: number) => {
+      if (item === key) {
+        list.splice(index, 1);
+      }
+    });
+
+    this.save();
+  }
 }

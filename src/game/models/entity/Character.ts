@@ -141,43 +141,57 @@ export abstract class Character extends Entity {
   }
 
   giveEffect(id: EntityId): void {
-    this.addTo(id, this.effectsId);
-  }
-
-  giveEffectOfType(type: EntityType, doNotCreateNew = false): void {
-    this.giveEntityOfType(type, this.effectsId, doNotCreateNew);
-  }
-
-  giveObjectOfType(type: EntityType, doNotCreateNew = false): void {
-    this.giveEntityOfType(type, this.childrenId, doNotCreateNew);
-  }
-
-  giveSpellOfType(type: EntityType, doNotCreateNew = false): void {
-    this.giveEntityOfType(type, this.spellsId, doNotCreateNew);
-  }
-
-  getEffectsOfType(type: EntityType): Entity[] {
-    return this.getEntitiesOfType(type, this.effectsId);
-  }
-
-  getSpellsOfType(type: EntityType): Entity[] {
-    return this.getEntitiesOfType(type, this.spellsId);
-  }
-
-  getObjectsOfType(type: EntityType): Entity[] {
-    return this.getEntitiesOfType(type, this.childrenId);
-  }
-
-  takeOffEffect(key: EntityId): void {
-    this.removeFrom(key, this.effectsId);
+    this.addToList(id, this.effectsId);
   }
 
   giveSpell(id: EntityId): void {
-    this.addTo(id, this.spellsId);
+    this.addToList(id, this.spellsId);
+  }
+
+  giveChildOfType(type: EntityType, doNotCreateNew: boolean): Entity {
+    const entity = this.giveEntityOfTypeInList(
+      type,
+      this.childrenId,
+      doNotCreateNew
+    );
+
+    if (entity) {
+      entity.setParentId(this.getId());
+    }
+
+    return entity;
+  }
+
+  giveEffectOfType(type: EntityType, doNotCreateNew: boolean): Effect {
+    return this.giveEntityOfTypeInList(
+      type,
+      this.effectsId,
+      doNotCreateNew
+    ) as Effect;
+  }
+
+  giveSpellOfType(type: EntityType, doNotCreateNew: boolean): Spell {
+    return this.giveEntityOfTypeInList(
+      type,
+      this.spellsId,
+      doNotCreateNew
+    ) as Spell;
+  }
+
+  getEffectsOfType(type: EntityType): Entity[] {
+    return this.getChildrenOfType(type, this.effectsId);
+  }
+
+  getSpellsOfType(type: EntityType): Entity[] {
+    return this.getChildrenOfType(type, this.spellsId);
+  }
+
+  takeOffEffect(key: EntityId): void {
+    this.removeFromList(key, this.effectsId);
   }
 
   takeOffSpell(id: EntityId): void {
-    this.removeFrom(id, this.spellsId);
+    this.removeFromList(id, this.spellsId);
   }
 
   getSpellOfType(type: string): Spell {
@@ -194,46 +208,11 @@ export abstract class Character extends Entity {
     return spell;
   }
 
-  private giveEntityOfType(
-    type: EntityType,
-    list: EntityId[],
-    doNotCreateNew = false
-  ): void {
-    if (!doNotCreateNew || this.getEntitiesOfType(type, list).length === 0) {
-      const newEntity = GameController.getPlay().addEntityOfType(type);
-      this.addTo(newEntity.getId(), list);
-    }
+  canSee(entit: Entity):boolean {
+    return false;
   }
 
-  // TODO: move
-  private getEntitiesOfType(type: EntityType, list: EntityId[]): Entity[] {
-    const found: Entity[] = [];
-
-    list.forEach((id: EntityId) => {
-      const item = GameController.getPlay().getEntity(id);
-
-      if (item.inheritsFrom(type)) {
-        found.push(item);
-      }
-    });
-
-    return found;
-  }
-
-  // TODO: move
-  private addTo(key: EntityId, list: EntityId[]): void {
-    list.push(key);
-    this.save();
-  }
-
-  // TODO: move
-  private removeFrom(key: EntityId, list: EntityId[]): void {
-    list.forEach((item: EntityId, index: number) => {
-      if (item === key) {
-        list.splice(index, 1);
-      }
-    });
-
-    this.save();
+  canReach(entit: Entity):boolean {
+    return false;
   }
 }

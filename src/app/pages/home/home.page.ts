@@ -11,21 +11,22 @@ export class HomePage {
   constructor(private gameService: GameService, private router: Router) {}
 
   onClickNew(): void {
-    this.gameService.inform(
-      [{ text: { fr: 'Êtes-vous sûr&nbsp;?' } }],
-      [
-        {
-          text: { fr: 'Oui' },
-          proceed: () => {
-            this.router.navigate(['/new-play']);
-          },
-        },
-        {
-          text: { fr: 'Non' },
-          proceed: () => {},
-        },
-      ]
-    );
+    this.router.navigate(['/new-play']);
+    // this.gameService.inform(
+    //   [{ text: { fr: 'Êtes-vous sûr&nbsp;?' } }],
+    //   [
+    //     {
+    //       text: { fr: 'Oui' },
+    //       proceed: () => {
+    //         this.router.navigate(['/new-play']);
+    //       },
+    //     },
+    //     {
+    //       text: { fr: 'Non' },
+    //       proceed: () => {},
+    //     },
+    //   ]
+    // );
   }
 
   onClickLoad(): void {

@@ -22,7 +22,8 @@ export class GamePage implements OnInit {
   private selectionSubscription: Subscription;
 
   constructor(private gameService: GameService, private router: Router) {
-    GameController.loadPlay();
+    // GameController.loadPlay();
+    GameController.startNewPlay()
   }
 
   ngOnInit(): void {

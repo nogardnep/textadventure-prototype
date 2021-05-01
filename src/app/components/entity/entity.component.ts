@@ -8,17 +8,12 @@ import { GameService } from './../../services/game.service';
   templateUrl: './entity.component.html',
   styleUrls: ['./entity.component.scss'],
 })
-export class EntityComponent implements OnInit, OnChanges {
-  @Input() entityId: EntityId;
-  entity: Entity;
+export class EntityComponent implements OnInit {
+  @Input() entity: Entity;
 
   constructor(private gameService: GameService) {}
 
   ngOnInit() {}
-
-  ngOnChanges() {
-    this.entity = GameController.getPlay().getEntity(this.entityId);
-  }
 
   onClickEntity(): void {
     this.gameService.setSelection(this.entity);

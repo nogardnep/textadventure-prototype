@@ -1,3 +1,4 @@
+import { Tom } from './models/characters/Tom';
 import { Play } from 'src/game/models/Play';
 import { Entity } from 'src/game/models/Entity';
 import { Box } from './models/objects/Box';
@@ -6,7 +7,7 @@ import { IllusionSpell } from './models/spells/IllustionSpell';
 import { GameController } from '../game/GameController';
 import { caracteristicKeys } from '../game/enums/Caracteristic';
 import { Scenario } from './../game/models/Scenario';
-import { Player } from './models/characters/Player';
+import { Jean } from './models/characters/Jean';
 import { PoisonEffect } from './models/effects/PoisonEffect';
 import { Boots } from './models/objects/Boots';
 import { Helmet } from './models/objects/Helmet';
@@ -18,7 +19,7 @@ import { Character } from 'src/game/models/entity/Character';
 export const entityConstructors = {
   Chamber,
   Corridor,
-  Player,
+  Jean,
   Helmet,
   Boots,
   DestructionSpell,
@@ -26,6 +27,7 @@ export const entityConstructors = {
   IllusionSpell,
   InvocationSpell,
   Box,
+  Tom,
 };
 
 export class TestScenario implements Scenario {
@@ -43,14 +45,14 @@ export class TestScenario implements Scenario {
   };
 
   getInitialPlayer(): Character {
-    const player = new entityConstructors.Player();
+    const player = new entityConstructors.Jean();
     player.name = 'Jack';
     return player;
   }
 
   init(play: Play) {
     const entities: { [key: string]: Entity } = {
-      player: new entityConstructors.Player(),
+      player: new entityConstructors.Jean(),
       chamber: new entityConstructors.Chamber(),
       hemlet: new entityConstructors.Helmet(),
       boots: new entityConstructors.Boots(),
@@ -82,6 +84,6 @@ export class TestScenario implements Scenario {
   }
 
   start(): void {
-    GameController.inform([{ text: { fr: "L'histoire comment ici" } }]);
+    // GameController.inform([{ text: { fr: "L'histoire comment ici" } }]);
   }
 }

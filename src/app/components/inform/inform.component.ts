@@ -19,7 +19,6 @@ export class InformComponent implements OnInit {
   constructor(private modalController: ModalController) {}
 
   ngOnInit() {
-    console.log(this.actions);
   }
 
   onClickOption(action?: Action): void {
