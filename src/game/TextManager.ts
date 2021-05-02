@@ -1,9 +1,8 @@
 import { TextWrapper, NameWrapper } from './models/Text';
 import { Name } from './models/Name';
-import { languageKeys } from './enums/Language';
+import { LANGUAGE_KEYS } from './enums/Language';
 
 export abstract class TextManager {
-  static languages: string[] = ['fr', 'en']; // TODO: move
   static currentLanguage: string;
 
   static setLanguage(language: string) {
@@ -14,7 +13,7 @@ export abstract class TextManager {
     let toPrint: string = wrapper[this.currentLanguage];
 
     if (toPrint === undefined) {
-      for (let key in languageKeys) {
+      for (let key in LANGUAGE_KEYS) {
         const found = wrapper[key]
 
         if (found) {
@@ -30,11 +29,11 @@ export abstract class TextManager {
     return toPrint;
   }
 
-  static getName(wrapper: NameWrapper): Name {
+  static extractName(wrapper: NameWrapper): Name {
     let name: Name = wrapper[this.currentLanguage];
 
     if (name === undefined ) {
-      for (let key in languageKeys) {
+      for (let key in LANGUAGE_KEYS) {
         const found = wrapper[key]
 
         if (found) {

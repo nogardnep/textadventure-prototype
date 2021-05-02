@@ -3,9 +3,13 @@
     <b>{{ entity.getName()|name }}</b>
     <span *ngIf="isSelected()">(selected)</span>
     <span *ngIf="isWorn()">(on {{getEmplacement()|name}})</span>
+    <span *ngIf="isOpen()">(open)</span>
+    <span *ngIf="isClosed()">(closed)</span>
+    <span *ngIf="isDead()">(dead)</span>
   </button>
   <p>{{ entity.getInteriorDescription() }}</p>
   <app-actions [entity]="entity"></app-actions>
+  <app-entity-list *ngIf="contentIsVisible()" [parent]="entity"></app-entity-list>
 </div>
 <div *ngIf="!entity">
   <p>(entity not found)</p>

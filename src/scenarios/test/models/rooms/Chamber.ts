@@ -1,8 +1,8 @@
-import { PoisonEffect } from './../effects/PoisonEffect';
-import { Name } from '../../../game/models/Name';
+import { PoisonEffect } from '../effects/PoisonEffect';
+import { Name } from '../../../../game/models/Name';
 import { entityConstructors } from '../../TestScenario';
-import { GameController } from '../../../game/GameController';
-import { Room } from '../../../game/models/entity/Room';
+import { GameController } from '../../../../game/GameController';
+import { Room } from '../../../../game/models/entities/Room';
 import { EntityId } from 'src/game/models/Entity';
 
 export class Chamber extends Room {

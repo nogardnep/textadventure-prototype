@@ -1,16 +1,18 @@
 import { TextManager } from 'src/game/TextManager';
-import { Character } from 'src/game/models/entity/Character';
+import { Character } from 'src/game/models/entities/Character';
 import { Action } from 'src/game/models/Action';
 import { GameController } from 'src/game/GameController';
 import { Entity, EntityId } from 'src/game/models/Entity';
-import { emplacementNames } from 'src/game/enums/Emplacement';
+import { EMPLACEMENT_NAMES } from 'src/game/enums/Emplacement';
+import { Thing } from './Thing';
 
-export abstract class UsableObject extends Entity {
+export abstract class UsableObject extends Thing {
   wearable = false;
   fixed = false;
   worn = false;
   openable = false;
   closed = true;
+  transparent = false;
 
   getActions(additionnal?: Action[]) {
     let actions: Action[] = [
@@ -48,7 +50,8 @@ export abstract class UsableObject extends Entity {
         condition: () => {
           return (
             !this.fixed &&
-            !this.getParent().isSameAs(GameController.getPlay().getPlayer())
+            !GameController.getPlay().getPlayer().owns(this)
+            && GameController.getPlay().getPlayer().canReach(this)
           );
         },
       },
@@ -60,7 +63,7 @@ export abstract class UsableObject extends Entity {
         condition: () => {
           return (
             !this.fixed &&
-            this.getParent().isSameAs(GameController.getPlay().getPlayer())
+            GameController.getPlay().getPlayer().owns(this)
           );
         },
         duration: 0,
@@ -132,8 +135,8 @@ export abstract class UsableObject extends Entity {
           text: {
             fr:
               'Something already worn at ' +
-              TextManager.getName(
-                emplacementNames[this.getEmplacement()]
+              TextManager.extractName(
+                EMPLACEMENT_NAMES[this.getEmplacement()]
               ).printSimple(),
           },
         },

@@ -1,6 +1,6 @@
 import { GameService } from 'src/app/services/game.service';
 import { TextManager } from 'src/game/TextManager';
-import { languageKeys } from './../../game/enums/Language';
+import { LANGUAGE_KEYS } from './../../game/enums/Language';
 import { Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { StorageService } from './storage.service';
@@ -62,7 +62,7 @@ export class ConfigService {
       audio: {
         volume: 0.5,
       },
-      language: languageKeys.fr,
+      language: LANGUAGE_KEYS.fr,
     };
   }
 }

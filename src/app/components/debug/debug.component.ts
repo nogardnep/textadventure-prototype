@@ -27,6 +27,8 @@ export class DebugComponent implements OnInit , OnDestroy {
         }
       }
     );
+
+    this.gameService.emitPlay();
   }
 
   ngOnDestroy() {

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Character } from 'src/game/models/entity/Character';
-import { Spell } from 'src/game/models/entity/Spell';
-import { caracteristicNames } from '../../../game/enums/Caracteristic';
+import { Character } from 'src/game/models/entities/Character';
+import { Spell } from 'src/game/models/entities/Spell';
+import { CARACTERISTIC_NAMES } from '../../../game/enums/Caracteristic';
 import { GameController } from './../../../game/GameController';
 import { EntityType } from './../../../game/models/Entity';
 import { Scenario } from './../../../game/models/Scenario';
@@ -26,7 +26,7 @@ export class NewPlayPage implements OnInit {
     caracteristics: { fr: 'Caracteristics', en: 'Caracteristics' },
   };
   name: string;
-  caracteristicNames = caracteristicNames;
+  caracteristicNames = CARACTERISTIC_NAMES;
   caracteristicModifiers: {} = {};
   availableSpells: Spell[] = [];
   player: Character;
@@ -34,7 +34,7 @@ export class NewPlayPage implements OnInit {
   constructor(private gameService: GameService, private router: Router) {}
 
   ngOnInit(): void {
-    GameController.startNewPlay();
+    GameController.startNewPlay(this.gameService.getCurrentScenario());
 
 
     this.player = GameController.getPlay().getPlayer() as Character;

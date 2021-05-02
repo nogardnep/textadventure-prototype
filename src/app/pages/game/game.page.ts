@@ -1,13 +1,13 @@
-import { Narration } from './../../../game/models/Narration';
-import { Router } from '@angular/router';
-
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GameService } from 'src/app/services/game.service';
-import { Entity, EntityId } from 'src/game/models/Entity';
-import { Play } from 'src/game/models/Play';
-import { Character } from 'src/game/models/entity/Character';
 import { GameController } from 'src/game/GameController';
+import { Character } from 'src/game/models/entities/Character';
+import { Entity } from 'src/game/models/Entity';
+import { Play } from 'src/game/models/Play';
+import { Narration } from './../../../game/models/Narration';
+
 
 @Component({
   selector: 'app-game',
@@ -23,7 +23,8 @@ export class GamePage implements OnInit {
 
   constructor(private gameService: GameService, private router: Router) {
     // GameController.loadPlay();
-    GameController.startNewPlay()
+    GameController.startNewPlay(this.gameService.getCurrentScenario())
+    // GameController.getPlay().getScenario().start()
   }
 
   ngOnInit(): void {

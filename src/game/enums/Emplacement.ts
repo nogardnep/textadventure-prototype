@@ -7,7 +7,7 @@ export enum EmplacementKey {
   foot,
 }
 
-export const emplacementKeys: {
+export const EMPLACEMENT_KEYS: {
   [key in keyof typeof EmplacementKey]: string;
 } = {
   head: EmplacementKey[EmplacementKey.head],
@@ -15,7 +15,7 @@ export const emplacementKeys: {
   foot: EmplacementKey[EmplacementKey.foot],
 };
 
-export const emplacementNames: {
+export const EMPLACEMENT_NAMES: {
   [key in keyof typeof EmplacementKey]: NameWrapper;
 } = {
   head: { fr: new Name('head') },

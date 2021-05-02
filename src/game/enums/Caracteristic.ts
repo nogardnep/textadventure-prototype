@@ -13,14 +13,14 @@ export type Caracteristics = {
   };
 };
 
-export const caracteristicKeys: {
+export const CARACTERISTIC_KEYS: {
   [key in keyof typeof CaracteristicKey]: string;
 } = {
   life: CaracteristicKey[CaracteristicKey.life],
   resistance: CaracteristicKey[CaracteristicKey.resistance],
 };
 
-export const caracteristicNames: {
+export const CARACTERISTIC_NAMES: {
   [key in keyof typeof CaracteristicKey]: NameWrapper;
 } = {
   life: { fr: new Name('life') },

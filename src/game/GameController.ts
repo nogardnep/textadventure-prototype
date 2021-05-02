@@ -1,6 +1,5 @@
-import { TestScenario } from '../scenari/TestScenario';
+import { Scenario, Scenarios } from 'src/game/models/Scenario';
 import { Action } from './models/Action';
-import { Entity, EntityType } from './models/Entity';
 import { Paragraph } from './models/Paragraph';
 import { Play, StoredPlay } from './models/Play';
 import { TextWrapper } from './models/Text';
@@ -13,15 +12,14 @@ type Callbacks = {
   onLoad: () => Promise<StoredPlay>;
 };
 
-const SCENARIO = TestScenario; // TODO: move
-
 export class GameController {
   private static play: Play;
-  private static storedPlay: StoredPlay;
   private static callbacks: Callbacks;
+  private static scenarios: Scenarios;
 
-  static init(callbacks: Callbacks): void {
+  static init(callbacks: Callbacks, scenarios: Scenarios): void {
     this.callbacks = callbacks;
+    this.scenarios = scenarios;
   }
 
   static inform(paragraphs: Paragraph[], actions?: Action[]) {
@@ -45,38 +43,28 @@ export class GameController {
     });
   }
 
-  static startNewPlay(): void {
-    this.storedPlay = {
-      narration: null,
-      playerId: null,
-      storedEntities: {},
-      time: null,
-    };
+  static getScenarios(): Scenarios {
+    return this.scenarios;
+  }
 
-    this.play = new Play(new SCENARIO());
+  static startNewPlay(scenario: Scenario): void {
+    this.play = new Play(scenario);
     this.play.init();
 
     this.savePlay();
     this.callbacks.onLoaded(this.play);
   }
 
-  static getStoredPlay(): StoredPlay {
-    return this.storedPlay;
-  }
-
   static savePlay(): void {
-    this.callbacks.onSave(this.storedPlay);
+    this.callbacks.onSave(this.getPlay().getStored());
   }
 
   static loadPlay(): void {
     this.callbacks
       .onLoad()
       .then((storedPlay: StoredPlay) => {
-        this.storedPlay = storedPlay;
-
-        this.play = new Play(new SCENARIO());
+        this.play = new Play(this.scenarios[storedPlay.scenarioId]);
         this.play.load(storedPlay);
-
         this.callbacks.onLoaded(this.play);
       })
       .catch((error) => {
@@ -96,9 +84,5 @@ export class GameController {
     action.proceed();
     this.play.increaseTime(action.duration !== undefined ? action.duration : 1);
     this.savePlay();
-  }
-
-  static saveEntity(entity: Entity): void {
-    this.getPlay().saveEntity(entity);
   }
 }

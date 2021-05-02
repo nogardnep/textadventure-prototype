@@ -6,15 +6,15 @@ export enum LanguageKey {
   fr,
 }
 
-export const languageKeys: {
+export const LANGUAGE_KEYS: {
   [key in keyof typeof LanguageKey]: string;
 } = {
   en: LanguageKey[LanguageKey.en],
   fr: LanguageKey[LanguageKey.fr],
 };
 
-export const languageNames: {
-  [key in keyof typeof languageKeys]: NameWrapper;
+export const LANGUAGE_NAMES: {
+  [key in keyof typeof LanguageKey]: NameWrapper;
 } = {
   fr: { fr: new Name('français') },
   en: { en: new Name('english') },

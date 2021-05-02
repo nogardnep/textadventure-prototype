@@ -1,5 +1,5 @@
 import { GameController } from '../../../game/GameController';
-import { Exit, Room } from '../../../game/models/entity/Room';
+import { Exit, Room } from '../../../game/models/entities/Room';
 import { GameService } from '../../services/game.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { EntityId, Entity } from 'src/game/models/Entity';
@@ -21,11 +21,6 @@ export class LocationComponent implements OnInit {
   ngOnChanges() {
     // this.entity = GameController.getEntity(this.entityId);
   }
-
-  isThePlayer(entity: Entity): boolean {
-    return entity.isSameAs(GameController.getPlay().getPlayer());
-  }
-
   getExits(): Exit[] {
     return (this.entity as Room).exits;
   }

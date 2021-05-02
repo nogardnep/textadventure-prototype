@@ -1,7 +1,8 @@
 import { EntityType } from 'src/game/models/Entity';
 import { Entity, EntityId } from '../Entity';
-import { GameController } from './../../GameController';
-import { Section } from './../Section';
+import { GameController } from '../../GameController';
+import { Section } from '../Section';
+import { Thing } from './Thing';
 
 export type Exit = {
   destinationId: EntityId;
@@ -9,7 +10,7 @@ export type Exit = {
   doorId?: EntityId;
 };
 
-export abstract class Room extends Entity {
+export abstract class Room extends Thing {
   exits: Exit[] = [];
 
   exit(exit: Exit): void {

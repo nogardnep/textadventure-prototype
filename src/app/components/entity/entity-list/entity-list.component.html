@@ -1,3 +1,9 @@
-<p>
-  entity-list works!
-</p>
+<div>
+  <ul>
+    <ng-container *ngFor="let child of parent.getChildren()">
+      <li *ngIf="!isThePlayer(child) && isVisible(child)">
+        <app-entity-preview [entity]="child"></app-entity-preview>
+      </li>
+    </ng-container>
+  </ul>
+</div>

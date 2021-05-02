@@ -20,7 +20,6 @@ export interface StoredEntity {
   // data: {};
   parentId: EntityId;
   childrenId: EntityId[];
-  save(): void;
 }
 
 export class Entity implements StoredEntity {
@@ -54,7 +53,7 @@ export class Entity implements StoredEntity {
   }
 
   save(): void {
-    GameController.saveEntity(this);
+    GameController.getPlay().storeEntity(this);
   }
 
   getType(): string {

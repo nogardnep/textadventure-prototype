@@ -4,9 +4,6 @@ import { Entity } from 'src/game/models/Entity';
 import { Box } from './models/objects/Box';
 import { InvocationSpell } from './models/spells/InvocationSpell';
 import { IllusionSpell } from './models/spells/IllustionSpell';
-import { GameController } from '../game/GameController';
-import { caracteristicKeys } from '../game/enums/Caracteristic';
-import { Scenario } from './../game/models/Scenario';
 import { Jean } from './models/characters/Jean';
 import { PoisonEffect } from './models/effects/PoisonEffect';
 import { Boots } from './models/objects/Boots';
@@ -14,7 +11,9 @@ import { Helmet } from './models/objects/Helmet';
 import { Chamber } from './models/rooms/Chamber';
 import { Corridor } from './models/rooms/Corridor';
 import { DestructionSpell } from './models/spells/DestructionSpell';
-import { Character } from 'src/game/models/entity/Character';
+import { Character } from 'src/game/models/entities/Character';
+import { Scenario } from 'src/game/models/Scenario';
+import { GameController } from 'src/game/GameController';
 
 export const entityConstructors = {
   Chamber,
@@ -31,6 +30,8 @@ export const entityConstructors = {
 };
 
 export class TestScenario implements Scenario {
+  id = 'test';
+
   entityConstructors = entityConstructors;
 
   starting = {
@@ -84,6 +85,15 @@ export class TestScenario implements Scenario {
   }
 
   start(): void {
-    // GameController.inform([{ text: { fr: "L'histoire comment ici" } }]);
+    // GameController.inform([
+    //   {
+    //     text: {
+    //       fr:
+    //         'Vous, ' +
+    //         GameController.getPlay().getPlayer().getName().fr +
+    //         ", commencez l'histoire comment ici",
+    //     },
+    //   },
+    // ]);
   }
 }

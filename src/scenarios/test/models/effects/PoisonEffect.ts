@@ -1,4 +1,4 @@
-import { Effect } from "src/game/models/entity/Effect";
+import { Effect } from "src/game/models/entities/Effect";
 import { Name } from "src/game/models/Name";
 
 export class PoisonEffect extends Effect {

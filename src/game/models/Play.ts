@@ -1,15 +1,16 @@
 import { GameController } from 'src/game/GameController';
 import { Entity, EntityType } from 'src/game/models/Entity';
-import { Character } from 'src/game/models/entity/Character';
+import { Character } from 'src/game/models/entities/Character';
 import { EntityId, StoredEntity } from './Entity';
 import { Narration, StoredNarration } from './Narration';
-import { Scenario } from './Scenario';
+import { Scenario, ScenarioId } from './Scenario';
 
 export interface StoredPlay {
   storedEntities: { [id: string]: StoredEntity };
   playerId: EntityId;
   narration: StoredNarration;
   time: number;
+  scenarioId: ScenarioId;
 }
 
 export class Play {
@@ -18,38 +19,51 @@ export class Play {
   private narration: Narration;
   private time: number;
   private scenario: Scenario;
+  private stored: StoredPlay;
 
   constructor(scenario: Scenario) {
+    this.stored = {
+      narration: null,
+      playerId: null,
+      storedEntities: {},
+      time: null,
+      scenarioId: null,
+    };
+
     this.entities = {};
     this.player = null;
     this.narration = new Narration();
     this.scenario = scenario;
     this.time = 0;
+
+    this.stored.scenarioId = this.scenario.id;
   }
 
   init(): void {
-    this.setTime(0);
     this.scenario.init(this);
     this.narration.save();
-    this.savePlayer();
+    this.storePlayer();
+    this.storeTime();
   }
 
   load(storedPlay: StoredPlay): void {
+    this.stored = storedPlay;
+
     for (let id in storedPlay.storedEntities) {
       let entity: Entity = null;
-      const stored = storedPlay.storedEntities[id];
+      const storedEntity = storedPlay.storedEntities[id];
 
-      const constructor = this.scenario.entityConstructors[stored.type];
+      const constructor = this.scenario.entityConstructors[storedEntity.type];
 
       if (constructor) {
         entity = new constructor();
 
         // TODO
         // Utils.assignWithModel(entity, stored);
-        Object.assign(entity, stored);
+        Object.assign(entity, storedEntity);
       } else {
         console.error(
-          stored.type + ' constructor not found (check in the list)'
+          storedEntity.type + ' constructor not found (check in the list)'
         );
       }
 
@@ -62,6 +76,10 @@ export class Play {
     if (storedPlay.narration) {
       this.narration.load(storedPlay.narration);
     }
+  }
+
+  getStored(): StoredPlay {
+    return this.stored;
   }
 
   getScenario(): Scenario {
@@ -100,21 +118,9 @@ export class Play {
     return entity;
   }
 
-  saveEntity(entity: Entity): void {
-    GameController.getStoredPlay().storedEntities[
-      entity.getId()
-    ] = entity.getStored();
-    GameController.savePlay();
-  }
-
   setPlayer(entity: Character): void {
     this.player = entity;
-    this.savePlayer();
-  }
-
-  savePlayer(): void {
-    GameController.getStoredPlay().playerId = this.player.getId();
-    GameController.savePlay();
+    this.storePlayer();
   }
 
   getPlayer(): Character {
@@ -127,12 +133,7 @@ export class Play {
 
   setTime(time: number): void {
     this.time = time;
-    this.saveTime();
-  }
-
-  saveTime(): void {
-    GameController.getStoredPlay().time = this.time;
-    GameController.savePlay();
+    this.storeTime();
   }
 
   getNarration(): Narration {
@@ -141,6 +142,30 @@ export class Play {
 
   increaseTime(duration: number): void {
     this.time += duration;
-    this.setTime(this.time + duration);
+    this.storeTime();
+  }
+
+  storeEntity(entity: Entity): void {
+    this.stored.storedEntities[entity.getId()] = entity.getStored();
+    this.save();
+  }
+
+  storeNarration(): void {
+    this.stored.narration = this.narration.getStored()
+    this.save();
+  }
+
+  storePlayer(): void {
+    this.stored.playerId = this.player.getId();
+    this.save();
+  }
+
+  storeTime(): void {
+    this.stored.time = this.time;
+    this.save();
+  }
+
+  save(): void {
+    GameController.savePlay();
   }
 }

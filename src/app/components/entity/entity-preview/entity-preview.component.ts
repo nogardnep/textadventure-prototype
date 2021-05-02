@@ -1,8 +1,9 @@
-import { UsableObject } from 'src/game/models/entity/UsableObject';
+import { Character } from 'src/game/models/entities/Character';
+import { UsableObject } from 'src/game/models/entities/UsableObject';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { Entity, EntityId } from 'src/game/models/Entity';
 import { GameController } from './../../../../game/GameController';
-import { emplacementNames } from '../../../../game/enums/Emplacement';
+import { EMPLACEMENT_NAMES } from '../../../../game/enums/Emplacement';
 import { NameWrapper } from './../../../../game/models/Text';
 import { GameService } from './../../../services/game.service';
 
@@ -38,7 +39,32 @@ export class EntityPreviewComponent implements OnInit, OnChanges {
     return (this.entity as UsableObject).worn;
   }
 
+  isOpen(): boolean {
+    return (
+      (this.entity as UsableObject).openable &&
+      !(this.entity as UsableObject).closed
+    );
+  }
+
+  isClosed(): boolean {
+    return (
+      (this.entity as UsableObject).openable &&
+      (this.entity as UsableObject).closed
+    );
+  }
+
+  isDead(): boolean {
+    return (this.entity as Character).dead;
+  }
+
+  contentIsVisible(): boolean {
+    return (
+      !(this.entity as UsableObject).closed ||
+      (this.entity as UsableObject).transparent
+    );
+  }
+
   getEmplacement(): NameWrapper {
-    return emplacementNames[(this.entity as UsableObject).getEmplacement()];
+    return EMPLACEMENT_NAMES[(this.entity as UsableObject).getEmplacement()];
   }
 }

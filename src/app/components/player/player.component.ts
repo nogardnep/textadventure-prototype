@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
-import { Character } from 'src/game/models/entity/Character';
-import { caracteristicNames } from '../../../game/enums/Caracteristic';
+import { Character } from 'src/game/models/entities/Character';
+import { CARACTERISTIC_NAMES } from '../../../game/enums/Caracteristic';
 import { Entity } from './../../../game/models/Entity';
 import { TextWrapper } from './../../../game/models/Text';
 
@@ -13,7 +13,7 @@ import { TextWrapper } from './../../../game/models/Text';
 export class PlayerComponent implements OnInit, OnChanges {
   // @Input() entityId: EntityId;
   @Input() player: Character;
-  caracteristicNames = caracteristicNames;
+  caracteristicNames = CARACTERISTIC_NAMES;
   text: { [key: string]: TextWrapper } = {
     caracteristics: {fr: 'caracteristiques', en: 'caracteristics'},
   };

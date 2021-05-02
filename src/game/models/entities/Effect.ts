@@ -1,4 +1,4 @@
-import { WithModifiers } from './WithModifiers';
+import { WithModifiers } from './constraints/WithModifiers';
 import { Entity } from '../Entity';
 
 export class Effect extends Entity implements WithModifiers {

@@ -1,4 +1,4 @@
-import { languageKeys, languageNames } from 'src/game/enums/Language';
+import { LANGUAGE_KEYS, LANGUAGE_NAMES } from 'src/game/enums/Language';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '../../services/config.service';
 import { Location } from '@angular/common';
@@ -13,8 +13,8 @@ import { TextManager } from 'src/game/TextManager';
 })
 export class ConfigPage implements OnInit, OnDestroy {
   data: ConfigData;
-  languageKeys = languageKeys;
-  languageNames = languageNames;
+  languageKeys = LANGUAGE_KEYS;
+  languageNames = LANGUAGE_NAMES;
 
   private dataSubscription: Subscription;
 

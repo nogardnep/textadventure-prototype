@@ -1,3 +1,4 @@
+import { EntityListComponent } from './components/entity/entity-list/entity-list.component';
 import { DebugComponent } from './components/debug/debug.component';
 import { PrompterComponent } from './components/prompter/prompter.component';
 import { NewPlayPage } from './pages/new-play/new-play.page';
@@ -47,7 +48,8 @@ import { PlayerComponent } from './components/player/player.component';
     GamePage,
     NewPlayPage,
     PrompterComponent,
-    DebugComponent
+    DebugComponent,
+    EntityListComponent,
   ],
   entryComponents: [],
   imports: [

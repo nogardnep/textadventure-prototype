@@ -1,15 +1,7 @@
 <div *ngIf="entity">
   <div><b>{{ entity.getName()|name }}</b></div>
   <entity-paragraphs [paragraphs]="entity.getInteriorDescription()"></entity-paragraphs>
-  <div>
-    <ul>
-      <ng-container *ngFor="let item of entity.getChildren()">
-        <li *ngIf="!isThePlayer(item)">
-          <app-entity-preview [entity]="item"></app-entity-preview>
-        </li>
-      </ng-container>
-    </ul>
-  </div>
+  <app-entity-list [parent]="entity"></app-entity-list>
 
   <app-actions [entity]="entity"></app-actions>
 

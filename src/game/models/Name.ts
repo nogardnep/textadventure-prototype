@@ -11,7 +11,10 @@ export class Name {
   private coreName: string;
   private props: NameProps;
 
-  constructor(coreName: string, props?: NameProps) {
+  constructor(
+    coreName: string,
+    props?: NameProps,
+  ) {
     this.coreName = coreName;
 
     this.props = {};

@@ -1,17 +1,19 @@
+import { Scenario } from 'src/game/models/Scenario';
 import { ConfigService } from './config.service';
 import { GameController } from 'src/game/GameController';
 import { Play, StoredPlay } from './../../game/models/Play';
-import { Jean } from '../../scenari/models/characters/Jean';
+import { Jean } from '../../scenarios/test/models/characters/Jean';
 import { Router } from '@angular/router';
 import { InformComponent } from './../components/inform/inform.component';
 import { ModalController } from '@ionic/angular';
 import { Action } from './../../game/models/Action';
 import { Paragraph } from './../../game/models/Paragraph';
-import { Character } from './../../game/models/entity/Character';
+import { Character } from '../../game/models/entities/Character';
 import { StorageService } from './storage.service';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Entity, EntityId } from 'src/game/models/Entity';
+import { SCENARIOS } from 'src/scenarios/scenarios';
 
 const PLAY_STORAGE_KEY = 'play';
 
@@ -34,29 +36,37 @@ export class GameService {
   ) {
     this.configService.load(); // TODO: move?
 
-    GameController.init({
-      onLoad: () => {
-        return this.loadLastPlay();
+    GameController.init(
+      {
+        onLoad: () => {
+          return this.loadLastPlay();
+        },
+        onInform: (paragraphs: Paragraph[], actions?: Action[]) => {
+          this.inform(paragraphs, actions);
+        },
+        onLoaded: (play: Play) => {
+          this.play = play;
+          this.emitPlay();
+          this.setSelection(null);
+        },
+        onSave: (storedPlay: StoredPlay) => {
+          this.savePlay(storedPlay);
+        },
+        onStart: () => {
+          this.setSelection(null);
+        },
       },
-      onInform: (paragraphs: Paragraph[], actions?: Action[]) => {
-        this.inform(paragraphs, actions);
-      },
-      onLoaded: (play: Play) => {
-        this.play = play;
-        this.emitPlay();
-        this.setSelection(null);
-      },
-      onSave: (storedPlay: StoredPlay) => {
-        this.savePlay(storedPlay);
-      },
-      onStart: () => {
-        this.setSelection(null);
-      },
-    });
+      SCENARIOS
+    );
 
     // this.loadLastPlay().then(() => {
     // this.startNewPlay();
     // });
+  }
+
+  // TODO: temp
+  getCurrentScenario() : Scenario{
+    return SCENARIOS['test']
   }
 
   async inform(paragraphs: Paragraph[], actions?: Action[]) {
@@ -71,17 +81,12 @@ export class GameService {
   }
 
   emitPlay(): void {
-    // this.playSubject.next(GameController.getPlay());
     this.playSubject.next(this.play);
   }
 
   getPlay(): Play {
     return this.play;
   }
-
-  // emitPlayer(): void {
-  //   this.playerSubject.next(GameController.getPlayer());
-  // }
 
   emitSelection(): void {
     this.selectionSubject.next(this.selection);
@@ -99,15 +104,6 @@ export class GameService {
   savePlay(storedPlay: StoredPlay): void {
     this.storageService.set(PLAY_STORAGE_KEY, storedPlay);
   }
-
-  // startNewPlay(player: Player): Promise<Play> {
-  // this.setSelection(null);
-
-  //   return new Promise((resolve, reject) => {
-  //     GameController.startNewPlay(player);
-  //     resolve(this.play);
-  //   });
-  // }
 
   loadLastPlay(): Promise<StoredPlay> {
     return new Promise((resolve, reject) => {

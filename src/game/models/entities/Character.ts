@@ -1,13 +1,15 @@
-import { Effect } from 'src/game/models/entity/Effect';
+import { Effect } from 'src/game/models/entities/Effect';
 import { GameController } from 'src/game/GameController';
 import { EntityId, EntityType } from 'src/game/models/Entity';
-import { UsableObject } from 'src/game/models/entity/UsableObject';
+import { UsableObject } from 'src/game/models/entities/UsableObject';
 import { Entity } from '../Entity';
 import { Caracteristics } from '../../enums/Caracteristic';
 import { Spell } from './Spell';
-import { WithModifiers } from './WithModifiers';
+import { WithModifiers } from './constraints/WithModifiers';
+import { Thing } from './Thing';
 
-export abstract class Character extends Entity {
+export abstract class Character extends Thing {
+  dead = false;
   spellsId: EntityId[] = [];
   effectsId: EntityId[] = [];
   caracteristics: Caracteristics = {
@@ -208,11 +210,79 @@ export abstract class Character extends Entity {
     return spell;
   }
 
-  canSee(entit: Entity):boolean {
-    return false;
+  canSee(entity: Entity): boolean {
+    let response = false;
+
+    if (!(entity as Thing).invisible) {
+      const parent = entity.getParent();
+
+      if (parent) {
+        if (parent.isSameAs(this.getParent())) {
+          response = true;
+        } else {
+          response = this.lookIn(parent);
+        }
+      }
+    }
+
+    return response;
   }
 
-  canReach(entit: Entity):boolean {
-    return false;
+  private lookIn(entity: Entity): boolean {
+    let response = false;
+
+    if (
+      !(entity as UsableObject).closed ||
+      (entity as UsableObject).transparent
+    ) {
+      const parent = entity.getParent();
+
+      if (parent && parent.isSameAs(this.getParent())) {
+        response = true;
+      } else {
+        response = this.lookIn(parent);
+      }
+    }
+
+    return response;
+  }
+
+  canReach(entity: Entity): boolean {
+    let response = false;
+
+    if (!(entity as Thing).invisible) {
+      const parent = entity.getParent();
+
+      if (parent) {
+        if (parent.isSameAs(this.getParent())) {
+          response = true;
+        } else {
+          response = this.searchIn(parent);
+        }
+      }
+    }
+
+    return response;
+  }
+
+  private searchIn(entity: Entity): boolean {
+    let response = false;
+
+    if (
+      !(entity as UsableObject).closed &&
+      (entity.getParent().isSameAs(this) ||
+        !(entity instanceof Character) ||
+        (entity as Character).dead)
+    ) {
+      const parent = entity.getParent();
+
+      if (parent && parent.isSameAs(this.getParent())) {
+        response = true;
+      } else {
+        response = this.lookIn(parent);
+      }
+    }
+
+    return response;
   }
 }

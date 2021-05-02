@@ -1,7 +1,7 @@
-import { Name } from '../../../game/models/Name';
+import { Name } from '../../../../game/models/Name';
 import { entityConstructors } from '../../TestScenario';
-import { GameController } from '../../../game/GameController';
-import { Room } from '../../../game/models/entity/Room';
+import { GameController } from '../../../../game/GameController';
+import { Room } from '../../../../game/models/entities/Room';
 
 export class Corridor extends Room {
   toogle = false;

@@ -1,8 +1,11 @@
 import { Play } from 'src/game/models/Play';
-import { Entity, EntityId, EntityType } from './Entity';
-import { Character } from './entity/Character';
+import { Entity, EntityType } from './Entity';
+
+export type Scenarios = { [key: string]: Scenario };
+export type ScenarioId = string;
 
 export interface Scenario {
+  id: ScenarioId;
   entityConstructors: { [key: string]: new () => Entity };
   starting: {
     maxSpells: number;
@@ -10,7 +13,6 @@ export interface Scenario {
     availableSpells: EntityType[];
     askForName: boolean;
   };
-  // getInitialPlayer(): Character;
   init(play: Play): { [key: string]: Entity };
   start(): void;
 }

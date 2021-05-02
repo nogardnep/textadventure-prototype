@@ -2,12 +2,12 @@ import { GameController } from 'src/game/GameController';
 import { TextWrapper } from 'src/game/models/Text';
 import { Paragraph } from './Paragraph';
 
-type Chapter = {
+export type Chapter = {
   title?: TextWrapper;
   sections: Section[];
 };
 
-type Section = {
+export type Section = {
   title?: TextWrapper;
   paragraphs: Paragraph[];
 };
@@ -65,7 +65,7 @@ export class Narration implements StoredNarration {
   }
 
   save(): void {
-    GameController.getStoredPlay().narration = this.getStored();
-    GameController.savePlay();
+    // TODO: move
+    GameController.getPlay().storeNarration();
   }
 }

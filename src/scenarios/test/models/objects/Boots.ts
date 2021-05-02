@@ -1,6 +1,6 @@
-import { emplacementKeys } from 'src/game/enums/Emplacement';
-import { UsableObject } from 'src/game/models/entity/UsableObject';
-import { WithModifiers } from 'src/game/models/entity/WithModifiers';
+import { EMPLACEMENT_KEYS } from 'src/game/enums/Emplacement';
+import { UsableObject } from 'src/game/models/entities/UsableObject';
+import { WithModifiers } from 'src/game/models/entities/constraints/WithModifiers';
 import { Name } from 'src/game/models/Name';
 
 export class Boots extends UsableObject implements WithModifiers {
@@ -26,6 +26,6 @@ export class Boots extends UsableObject implements WithModifiers {
   }
 
   getEmplacement() {
-    return emplacementKeys.foot;
+    return EMPLACEMENT_KEYS.foot;
   }
 }

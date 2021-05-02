@@ -7,6 +7,6 @@ export class NamePipe implements PipeTransform {
   constructor() {}
 
   transform(nameWrapper: NameWrapper): string {
-    return TextManager.getName(nameWrapper).printSimple();
+    return TextManager.extractName(nameWrapper).printSimple();
   }
 }

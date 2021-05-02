@@ -1,7 +1,7 @@
-import { emplacementKeys } from 'src/game/enums/Emplacement';
-import { UsableObject } from 'src/game/models/entity/UsableObject';
+import { EMPLACEMENT_KEYS } from 'src/game/enums/Emplacement';
+import { UsableObject } from 'src/game/models/entities/UsableObject';
 import { Name } from 'src/game/models/Name';
-import { WithModifiers } from 'src/game/models/entity/WithModifiers';
+import { WithModifiers } from 'src/game/models/entities/constraints/WithModifiers';
 
 export class Helmet extends UsableObject implements WithModifiers {
   constructor() {
@@ -26,6 +26,6 @@ export class Helmet extends UsableObject implements WithModifiers {
   }
 
   getEmplacement() {
-    return emplacementKeys.head;
+    return EMPLACEMENT_KEYS.head;
   }
 }
