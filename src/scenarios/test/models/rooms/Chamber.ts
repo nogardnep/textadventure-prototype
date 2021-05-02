@@ -1,15 +1,14 @@
-import { PoisonEffect } from '../effects/PoisonEffect';
-import { Name } from '../../../../game/models/Name';
-import { entityConstructors } from '../../TestScenario';
-import { GameController } from '../../../../game/GameController';
-import { Room } from '../../../../game/models/entities/Room';
 import { EntityId } from 'src/game/models/Entity';
+import { Play } from 'src/game/models/Play';
+import { Room } from 'src/game/models/entities/Room';
+import { Name } from 'src/game/models/Name';
+import { entityConstructors } from '../../TestScenario';
 
 export class Chamber extends Room {
   fire: boolean = false;
 
-  constructor() {
-    super();
+  constructor(play: Play) {
+    super(play);
   }
 
   init() {
@@ -32,10 +31,10 @@ export class Chamber extends Room {
         text: { fr: 'set fire' },
         proceed: () => {
           // this.fire = true;
-          GameController.getPlay()
+          this.getPlay()
             .getPlayer()
             .giveSpellOfType(entityConstructors.InvocationSpell.name, true);
-          GameController.getPlay()
+          this.getPlay()
             .getPlayer()
             .giveEffectOfType(entityConstructors.PoisonEffect.name, true);
         },
@@ -52,7 +51,7 @@ export class Chamber extends Room {
     switch (spell) {
       case entityConstructors.DestructionSpell.name: {
         response = () => {
-          GameController.inform([{ text: { en: 'destroy all' } }]);
+          this.getPlay().inform([{ text: { en: 'destroy all' } }]);
         };
         break;
       }

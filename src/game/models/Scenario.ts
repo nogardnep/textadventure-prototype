@@ -6,13 +6,13 @@ export type ScenarioId = string;
 
 export interface Scenario {
   id: ScenarioId;
-  entityConstructors: { [key: string]: new () => Entity };
+  entityConstructors: { [key: string]: new (play: Play) => Entity };
   starting: {
     maxSpells: number;
     caracteristicsPoints: number;
     availableSpells: EntityType[];
     askForName: boolean;
   };
-  init(play: Play): { [key: string]: Entity };
+  init(play: Play): void;
   start(): void;
 }

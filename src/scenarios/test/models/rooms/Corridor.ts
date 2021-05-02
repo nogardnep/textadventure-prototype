@@ -1,3 +1,4 @@
+import { Entity } from 'src/game/models/Entity';
 import { Name } from '../../../../game/models/Name';
 import { entityConstructors } from '../../TestScenario';
 import { GameController } from '../../../../game/GameController';

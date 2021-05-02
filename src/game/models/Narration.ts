@@ -1,3 +1,4 @@
+import { Play } from 'src/game/models/Play';
 import { GameController } from 'src/game/GameController';
 import { TextWrapper } from 'src/game/models/Text';
 import { Paragraph } from './Paragraph';
@@ -17,9 +18,13 @@ export interface StoredNarration {
 }
 
 export class Narration implements StoredNarration {
+  protected getPlay: () => Play;
   chapters: Chapter[] = [];
 
-  constructor() {
+  constructor(play: Play) {
+    this.getPlay = () => {
+      return play;
+    };
     this.chapters = [];
   }
 
@@ -31,7 +36,9 @@ export class Narration implements StoredNarration {
     const stored = {};
 
     Object.getOwnPropertyNames(this).forEach((item) => {
-      stored[item] = this[item];
+      if (typeof this[item] !== 'function') {
+        stored[item] = this[item];
+      }
     });
 
     return stored as StoredNarration;

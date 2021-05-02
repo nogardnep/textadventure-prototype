@@ -2,16 +2,14 @@ import { Play } from 'src/game/models/Play';
 import { UsableObject } from 'src/game/models/entities/UsableObject';
 import { Name } from '../../../../game/models/Name';
 
-export class Box extends UsableObject {
+export class Shield extends UsableObject {
   constructor(play: Play) {
     super(play);
 
-    this.openable = true;
-    this.closed = true;
-    this.transparent = true;
+    this.holdable = true;
   }
 
   getName() {
-    return { fr: new Name('Box') };
+    return { fr: new Name('shield') };
   }
 }

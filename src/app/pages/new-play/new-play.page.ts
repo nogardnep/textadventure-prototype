@@ -36,21 +36,26 @@ export class NewPlayPage implements OnInit {
   ngOnInit(): void {
     GameController.startNewPlay(this.gameService.getCurrentScenario());
 
-
     this.player = GameController.getPlay().getPlayer() as Character;
     this.scenario = GameController.getPlay().getScenario();
 
-    for (let key in this.player.caracteristics) {
-      this.caracteristicModifiers[key] = 0;
+    if (this.player) {
+      for (let key in this.player.caracteristics) {
+        this.caracteristicModifiers[key] = 0;
+      }
+
+      this.scenario.starting.availableSpells.forEach((type: EntityType) => {
+        this.availableSpells.push(
+          new this.scenario.entityConstructors[type](
+            GameController.getPlay()
+          ) as Spell
+        );
+      });
+
+      this.onClickValidate();
+    } else {
+      console.error('No player found in this scenario');
     }
-
-    this.scenario.starting.availableSpells.forEach((type: EntityType) => {
-      this.availableSpells.push(
-        new this.scenario.entityConstructors[type]() as Spell
-      );
-    });
-
-    this.onClickValidate();
   }
 
   onClickValidate(): void {
@@ -63,7 +68,7 @@ export class NewPlayPage implements OnInit {
 
     if (valid) {
       this.selectedSpells.forEach((item: Spell) => {
-        this.player.giveSpell(item.getId());
+        this.player.giveSpell(item);
       });
 
       for (let key in this.player.caracteristics) {
@@ -72,7 +77,7 @@ export class NewPlayPage implements OnInit {
         caracteristic.current = caracteristic.max;
       }
 
-      GameController.getPlay().getScenario().start()
+      GameController.getPlay().getScenario().start();
       this.router.navigate(['/game']);
     }
   }
@@ -107,7 +112,7 @@ export class NewPlayPage implements OnInit {
     let selected = false;
 
     this.selectedSpells.forEach((item: Spell) => {
-      if (item.isSameAs(spell)) {
+      if (item.equals(spell)) {
         selected = true;
       }
     });
@@ -121,7 +126,7 @@ export class NewPlayPage implements OnInit {
 
   private unselectSpell(spell: Spell): void {
     this.selectedSpells.forEach((item: Spell, index: number) => {
-      if (item.isSameAs(spell)) {
+      if (item.equals(spell)) {
         this.selectedSpells.splice(index, 1);
       }
     });

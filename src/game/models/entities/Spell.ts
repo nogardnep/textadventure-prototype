@@ -1,7 +1,4 @@
-import { Location } from '@angular/common';
-import { GameController } from 'src/game/GameController';
 import { Action } from 'src/game/models/Action';
-import { couldStartTrivia } from 'typescript';
 import { Entity } from '../Entity';
 
 export abstract class Spell extends Entity {
@@ -24,7 +21,7 @@ export abstract class Spell extends Entity {
 
   cast(): void {
     let response = null;
-    const location: Entity = GameController.getPlay().getPlayer().getParent();
+    const location: Entity = this.getPlay().getPlayer().getParent();
 
     if (location.getResponseToSpell) {
       response = location.getResponseToSpell(this.constructor.name);
@@ -33,7 +30,7 @@ export abstract class Spell extends Entity {
     if (response) {
       response();
     } else {
-      GameController.inform([{ text: { fr: 'rien ne se passe' } }]);
+      this.getPlay().inform([{ text: { fr: 'rien ne se passe' } }]);
     }
   }
 }

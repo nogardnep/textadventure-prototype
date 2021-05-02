@@ -19,6 +19,6 @@ export class EntityListComponent implements OnInit {
   }
 
   isThePlayer(entity: Entity): boolean {
-    return entity.isSameAs(GameController.getPlay().getPlayer());
+    return entity.equals(GameController.getPlay().getPlayer());
   }
 }

@@ -1,19 +1,21 @@
-import { Tom } from './models/characters/Tom';
+import { GameController } from 'src/game/GameController';
+import { Character } from 'src/game/models/entities/Character';
 import { Play } from 'src/game/models/Play';
-import { Entity } from 'src/game/models/Entity';
-import { Box } from './models/objects/Box';
-import { InvocationSpell } from './models/spells/InvocationSpell';
-import { IllusionSpell } from './models/spells/IllustionSpell';
+import { Scenario } from 'src/game/models/Scenario';
+import { TextManager } from 'src/game/TextManager';
 import { Jean } from './models/characters/Jean';
+import { Tom } from './models/characters/Tom';
 import { PoisonEffect } from './models/effects/PoisonEffect';
 import { Boots } from './models/objects/Boots';
+import { Box } from './models/objects/Box';
 import { Helmet } from './models/objects/Helmet';
+import { Shield } from './models/objects/Shield';
+import { Sword } from './models/objects/Sword';
 import { Chamber } from './models/rooms/Chamber';
 import { Corridor } from './models/rooms/Corridor';
 import { DestructionSpell } from './models/spells/DestructionSpell';
-import { Character } from 'src/game/models/entities/Character';
-import { Scenario } from 'src/game/models/Scenario';
-import { GameController } from 'src/game/GameController';
+import { IllusionSpell } from './models/spells/IllustionSpell';
+import { InvocationSpell } from './models/spells/InvocationSpell';
 
 export const entityConstructors = {
   Chamber,
@@ -27,6 +29,8 @@ export const entityConstructors = {
   InvocationSpell,
   Box,
   Tom,
+  Sword,
+  Shield,
 };
 
 export class TestScenario implements Scenario {
@@ -45,55 +49,42 @@ export class TestScenario implements Scenario {
     askForName: false,
   };
 
-  getInitialPlayer(): Character {
-    const player = new entityConstructors.Jean();
-    player.name = 'Jack';
-    return player;
-  }
-
   init(play: Play) {
-    const entities: { [key: string]: Entity } = {
-      player: new entityConstructors.Jean(),
-      chamber: new entityConstructors.Chamber(),
-      hemlet: new entityConstructors.Helmet(),
-      boots: new entityConstructors.Boots(),
-      destructionSpell: new entityConstructors.DestructionSpell(),
-      box: new entityConstructors.Box(),
-      // poisonEffect: new entityConstructors.PoisonEffect(),
-    };
+    const player = play.addEntity(
+      entityConstructors.Jean.name
+    ) as Character;
 
-    for (let item in entities) {
-      play.addEntity(entities[item]);
-    }
+    player.moveTo(play.addEntity(entityConstructors.Chamber.name));
 
-    entities.player.moveTo(entities.chamber);
-    entities.box.moveTo(entities.chamber);
-    entities.hemlet.moveTo(entities.chamber);
-    entities.boots.moveTo(entities.box);
-    (entities.player as Character).giveSpell(entities.destructionSpell.getId());
-    // entities.player.giveEffect(entities.poisonEffect.getId());
+    // entities.player.moveTo(entities.chamber);
+    // entities.box.moveTo(entities.chamber);
+    // entities.hemlet.moveTo(entities.chamber);
+    // entities.boots.moveTo(entities.box);
 
-    // GameController.setPlayer(entities.player);
+    // (entities.player as Character).giveSpellOfType(
+    //   entityConstructors.DestructionSpell.name,
+    //   true
+    // );
+    // (entities.player as Character).giveEffectOfType(
+    //   entityConstructors.PoisonEffect.name,
+    //   true
+    // );
 
-    play.setPlayer(entities.player as Character);
-
-    for (let item in entities) {
-      entities[item].save();
-    }
-
-    return entities;
+    play.setPlayer(player);
   }
 
   start(): void {
-    // GameController.inform([
-    //   {
-    //     text: {
-    //       fr:
-    //         'Vous, ' +
-    //         GameController.getPlay().getPlayer().getName().fr +
-    //         ", commencez l'histoire comment ici",
-    //     },
-    //   },
-    // ]);
+    GameController.inform([
+      {
+        text: {
+          fr:
+            "L'histoire de " +
+            TextManager.extractName(
+              GameController.getPlay().getPlayer().getName()
+            ).printSimple() +
+            ' commence ici',
+        },
+      },
+    ]);
   }
 }

@@ -1,43 +1,36 @@
-import { Name } from './Name';
-import { NameWrapper } from './Text';
-import { Paragraph } from './Paragraph';
-import { Action } from './Action';
-import { Play } from './../models/Play';
 import { GameController } from '../GameController';
+import { Play } from './../models/Play';
+import { Action } from './Action';
+import { Name } from './Name';
+import { Paragraph } from './Paragraph';
+import { NameWrapper } from './Text';
 
 export type EntityId = string;
 export type EntityType = string;
 
-// export interface EntityPresentation {
-//   name?: string;
-//   interiorDescription?: string;
-//   exteriorDescription?: string;
-// }
-
 export interface StoredEntity {
   id: EntityId;
   type: EntityType;
-  // data: {};
   parentId: EntityId;
   childrenId: EntityId[];
 }
 
 export class Entity implements StoredEntity {
+  protected getPlay: () => Play;
   name: string;
   id: EntityId;
   childrenId: EntityId[];
   parentId: EntityId;
   type: EntityType;
-  // data: {};
-  // presentation: EntityPresentation;
 
-  constructor() {
+  constructor(play: Play) {
+    this.getPlay = () => {
+      return play;
+    };
     this.id = Math.floor(Math.random() * 1000).toString();
     this.childrenId = [];
     this.type = this.constructor.name;
     this.parentId = null;
-    // this.data = {};
-    // this.presentation = data ? data : {};
   }
 
   init(): void {}
@@ -46,14 +39,16 @@ export class Entity implements StoredEntity {
     const stored = {};
 
     Object.getOwnPropertyNames(this).forEach((item) => {
-      stored[item] = this[item];
+      if (typeof this[item] !== 'function') {
+        stored[item] = this[item];
+      }
     });
 
     return stored as StoredEntity;
   }
 
   save(): void {
-    GameController.getPlay().storeEntity(this);
+    this.getPlay().storeEntity(this)
   }
 
   getType(): string {
@@ -62,21 +57,14 @@ export class Entity implements StoredEntity {
 
   getName(): NameWrapper {
     return { fr: new Name(this.name) };
-    // return this.presentation.name ? this.presentation.name : '';
   }
 
   getExteriorDescription(): Paragraph[] {
     return [];
-    // return this.presentation.exteriorDescription
-    //   ? this.presentation.exteriorDescription
-    //   : '';
   }
 
   getInteriorDescription(): Paragraph[] {
     return [];
-    // return this.presentation.interiorDescription
-    //   ? this.presentation.interiorDescription
-    //   : '';
   }
 
   getActions(additionnal?: Action[]): Action[] {
@@ -113,36 +101,29 @@ export class Entity implements StoredEntity {
     return this.parentId;
   }
 
-  // setData(key: string, value: any) {
-  //   this.data[key] = value;
-  // }
-
-  // getData(key: string): number | string | boolean | {} | [] {
-  //   return this.data[key];
-  // }
-
   setParentId(id: EntityId): void {
     this.parentId = id;
   }
 
-  isSameAs(entity: Entity): boolean {
+  equals(entity: Entity): boolean {
     return this.getId() === entity.getId();
   }
 
-  owns(entity: Entity): boolean {
-    // TODO: deep search
+  owns(entity: Entity, deepSearch: boolean): boolean {
     let found = false;
 
     this.getChildren().forEach((item: Entity) => {
-      if (item.isSameAs(entity)) {
+      if (item.equals(entity)) {
         found = true;
+      } else if (deepSearch) {
+        found = item.owns(entity, deepSearch);
       }
     });
 
     return found;
   }
 
-  moveTo(newParent: Entity): void {
+  moveTo(entity: Entity): void {
     const previousParentId = this.parentId;
 
     if (previousParentId) {
@@ -159,13 +140,19 @@ export class Entity implements StoredEntity {
       previousParent.save();
     }
 
-    if (newParent) {
-      newParent.childrenId.push(this.id);
-      newParent.save();
+    if (entity) {
+      entity.childrenId.push(this.id);
+      entity.save();
     }
 
-    this.parentId = newParent.id;
+    this.parentId = entity.id;
     this.save();
+
+    entity.onVisitedBy(this);
+  }
+
+  onVisitedBy(entity: Entity): void {
+    // To be override in other classes
   }
 
   inheritsFrom(type: EntityType): boolean {
@@ -215,21 +202,21 @@ export class Entity implements StoredEntity {
     let entity = null;
 
     if (!doNotCreateNew || this.getChildrenOfType(type, list).length === 0) {
-      entity = GameController.getPlay().addEntityOfType(type);
-      this.addToList(entity.getId(), list);
+      entity = GameController.getPlay().addEntity(type);
+      this.addToList(entity, list);
     }
 
     return entity;
   }
 
-  protected addToList(key: EntityId, list: EntityId[]): void {
-    list.push(key);
+  protected addToList(entity: Entity, list: EntityId[]): void {
+    list.push(entity.getId());
     this.save();
   }
 
-  protected removeFromList(key: EntityId, list: EntityId[]): void {
-    list.forEach((item: EntityId, index: number) => {
-      if (item === key) {
+  protected removeFromList(entity: Entity, list: EntityId[]): void {
+    list.forEach((id: EntityId, index: number) => {
+      if (id === entity.getId()) {
         list.splice(index, 1);
       }
     });

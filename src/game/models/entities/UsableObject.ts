@@ -1,7 +1,6 @@
 import { TextManager } from 'src/game/TextManager';
 import { Character } from 'src/game/models/entities/Character';
 import { Action } from 'src/game/models/Action';
-import { GameController } from 'src/game/GameController';
 import { Entity, EntityId } from 'src/game/models/Entity';
 import { EMPLACEMENT_NAMES } from 'src/game/enums/Emplacement';
 import { Thing } from './Thing';
@@ -13,6 +12,8 @@ export abstract class UsableObject extends Thing {
   openable = false;
   closed = true;
   transparent = false;
+  holdable = false;
+  hold = false;
 
   getActions(additionnal?: Action[]) {
     let actions: Action[] = [
@@ -25,7 +26,7 @@ export abstract class UsableObject extends Thing {
           return (
             this.wearable &&
             !this.worn &&
-            GameController.getPlay().getPlayer().owns(this)
+            this.getPlay().getPlayer().owns(this, false)
           );
         },
       },
@@ -38,20 +39,20 @@ export abstract class UsableObject extends Thing {
           return (
             this.wearable &&
             this.worn &&
-            GameController.getPlay().getPlayer().owns(this)
+            this.getPlay().getPlayer().owns(this, false)
           );
         },
       },
       {
         text: { fr: 'take' },
         proceed: () => {
-          this.giveTo(GameController.getPlay().getPlayer());
+          this.giveTo(this.getPlay().getPlayer());
         },
         condition: () => {
           return (
             !this.fixed &&
-            !GameController.getPlay().getPlayer().owns(this)
-            && GameController.getPlay().getPlayer().canReach(this)
+            !this.getPlay().getPlayer().owns(this, false) &&
+            this.getPlay().getPlayer().canReach(this)
           );
         },
       },
@@ -61,10 +62,7 @@ export abstract class UsableObject extends Thing {
           this.drop();
         },
         condition: () => {
-          return (
-            !this.fixed &&
-            GameController.getPlay().getPlayer().owns(this)
-          );
+          return !this.fixed && this.getPlay().getPlayer().owns(this, false);
         },
         duration: 0,
       },
@@ -112,9 +110,7 @@ export abstract class UsableObject extends Thing {
 
     if (canProceed) {
       this.moveTo(
-        GameController.getPlay().getEntity(
-          GameController.getPlay().getPlayer().getParentId()
-        )
+        this.getPlay().getEntity(this.getPlay().getPlayer().getParentId())
       );
     }
 
@@ -123,14 +119,12 @@ export abstract class UsableObject extends Thing {
 
   put(): boolean {
     let canProceed = false;
-    let owner: Character = GameController.getPlay().getEntity(
-      this.parentId
-    ) as Character;
+    let owner: Character = this.getPlay().getEntity(this.parentId) as Character;
 
     const alreadyWornObject = owner.getWornObject(this.getEmplacement());
 
     if (alreadyWornObject) {
-      GameController.inform([
+      this.getPlay().inform([
         {
           text: {
             fr:

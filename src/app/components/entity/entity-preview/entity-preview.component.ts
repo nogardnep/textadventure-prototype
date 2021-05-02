@@ -31,7 +31,7 @@ export class EntityPreviewComponent implements OnInit, OnChanges {
   isSelected(): boolean {
     return (
       this.gameService.getSelection() &&
-      this.gameService.getSelection().isSameAs(this.entity)
+      this.gameService.getSelection().equals(this.entity)
     );
   }
 

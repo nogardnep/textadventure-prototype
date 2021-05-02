@@ -1,5 +1,4 @@
 import { Effect } from 'src/game/models/entities/Effect';
-import { GameController } from 'src/game/GameController';
 import { EntityId, EntityType } from 'src/game/models/Entity';
 import { UsableObject } from 'src/game/models/entities/UsableObject';
 import { Entity } from '../Entity';
@@ -10,6 +9,7 @@ import { Thing } from './Thing';
 
 export abstract class Character extends Thing {
   dead = false;
+  hands = 2;
   spellsId: EntityId[] = [];
   effectsId: EntityId[] = [];
   caracteristics: Caracteristics = {
@@ -27,40 +27,55 @@ export abstract class Character extends Thing {
     return this.caracteristics[key];
   }
 
+  getHeldObjects():  UsableObject[] {
+    let found: UsableObject[] = [];
+
+    this.getChildren().forEach((item: Entity) => {
+      if (this.isHolding(item)) {
+        found.push(item as UsableObject);
+      }
+    });
+
+    return found;
+  }
+
   getWornObjects(): UsableObject[] {
     let found: UsableObject[] = [];
 
     this.getChildren().forEach((item: Entity) => {
-      if (item instanceof UsableObject && this.isWorn(item.getId())) {
-        found.push(item);
+      if (this.isWearing(item)) {
+        found.push(item as UsableObject);
       }
     });
 
     return found;
   }
 
-  getNotWornObjects(): UsableObject[] {
+  getInventoryObjects(): UsableObject[] {
     let found: UsableObject[] = [];
 
     this.getChildren().forEach((item: Entity) => {
-      if (item instanceof UsableObject && !this.isWorn(item.getId())) {
-        found.push(item);
+      if (!this.isWearing(item) && !this.isHolding(item)) {
+        found.push(item as UsableObject);
       }
     });
 
     return found;
   }
 
-  isWorn(id: EntityId): boolean {
-    const object = GameController.getPlay().getEntity(id);
-    return object instanceof UsableObject && object.worn;
+  isHolding(entity: Entity): boolean {
+    return (entity as UsableObject).hold;
+  }
+
+  isWearing(entity: Entity): boolean {
+    return (entity as UsableObject).worn;
   }
 
   getWornObject(emplacementKey: string): UsableObject {
     let found: UsableObject = null;
 
     this.childrenId.forEach((id: EntityId) => {
-      const entity = GameController.getPlay().getEntity(id);
+      const entity = this.getPlay().getEntity(id);
 
       if (
         entity instanceof UsableObject &&
@@ -78,7 +93,7 @@ export abstract class Character extends Thing {
     const entities: Spell[] = [];
 
     this.spellsId.forEach((id: EntityId) => {
-      const entity = GameController.getPlay().getEntity(id);
+      const entity = this.getPlay().getEntity(id);
       entities.push(entity as Spell);
     });
 
@@ -89,7 +104,7 @@ export abstract class Character extends Thing {
     const entities: Effect[] = [];
 
     this.effectsId.forEach((id: EntityId) => {
-      const entity = GameController.getPlay().getEntity(id);
+      const entity = this.getPlay().getEntity(id);
       entities.push(entity as Effect);
     });
 
@@ -125,7 +140,7 @@ export abstract class Character extends Thing {
     let value = 0;
 
     from.forEach((item: EntityId) => {
-      const entity = (GameController.getPlay().getEntity(
+      const entity = (this.getPlay().getEntity(
         item
       ) as unknown) as WithModifiers;
 
@@ -142,12 +157,12 @@ export abstract class Character extends Thing {
     return value;
   }
 
-  giveEffect(id: EntityId): void {
-    this.addToList(id, this.effectsId);
+  giveEffect(entity: Entity): void {
+    this.addToList(entity, this.effectsId);
   }
 
-  giveSpell(id: EntityId): void {
-    this.addToList(id, this.spellsId);
+  giveSpell(entity: Entity): void {
+    this.addToList(entity, this.spellsId);
   }
 
   giveChildOfType(type: EntityType, doNotCreateNew: boolean): Entity {
@@ -188,19 +203,19 @@ export abstract class Character extends Thing {
     return this.getChildrenOfType(type, this.spellsId);
   }
 
-  takeOffEffect(key: EntityId): void {
-    this.removeFromList(key, this.effectsId);
+  takeOffEffect(entity: Entity): void {
+    this.removeFromList(entity, this.effectsId);
   }
 
-  takeOffSpell(id: EntityId): void {
-    this.removeFromList(id, this.spellsId);
+  takeOffSpell(entity: Entity): void {
+    this.removeFromList(entity, this.spellsId);
   }
 
   getSpellOfType(type: string): Spell {
     let spell: Spell = null;
 
     this.spellsId.forEach((id: EntityId) => {
-      const item = GameController.getPlay().getEntity(id);
+      const item = this.getPlay().getEntity(id);
 
       if (item.inheritsFrom(type)) {
         spell = item as Spell;
@@ -217,10 +232,10 @@ export abstract class Character extends Thing {
       const parent = entity.getParent();
 
       if (parent) {
-        if (parent.isSameAs(this.getParent())) {
+        if (parent.equals(this.getParent())) {
           response = true;
         } else {
-          response = this.lookIn(parent);
+          response = this.checkVisible(parent);
         }
       }
     }
@@ -228,7 +243,7 @@ export abstract class Character extends Thing {
     return response;
   }
 
-  private lookIn(entity: Entity): boolean {
+  private checkVisible(entity: Entity): boolean {
     let response = false;
 
     if (
@@ -237,10 +252,10 @@ export abstract class Character extends Thing {
     ) {
       const parent = entity.getParent();
 
-      if (parent && parent.isSameAs(this.getParent())) {
+      if (parent && parent.equals(this.getParent())) {
         response = true;
       } else {
-        response = this.lookIn(parent);
+        response = this.checkVisible(parent);
       }
     }
 
@@ -254,10 +269,10 @@ export abstract class Character extends Thing {
       const parent = entity.getParent();
 
       if (parent) {
-        if (parent.isSameAs(this.getParent())) {
+        if (parent.equals(this.getParent())) {
           response = true;
         } else {
-          response = this.searchIn(parent);
+          response = this.checkReachable(parent);
         }
       }
     }
@@ -265,21 +280,21 @@ export abstract class Character extends Thing {
     return response;
   }
 
-  private searchIn(entity: Entity): boolean {
+  private checkReachable(entity: Entity): boolean {
     let response = false;
 
     if (
       !(entity as UsableObject).closed &&
-      (entity.getParent().isSameAs(this) ||
+      (entity.getParent().equals(this) ||
         !(entity instanceof Character) ||
         (entity as Character).dead)
     ) {
       const parent = entity.getParent();
 
-      if (parent && parent.isSameAs(this.getParent())) {
+      if (parent && parent.equals(this.getParent())) {
         response = true;
       } else {
-        response = this.lookIn(parent);
+        response = this.checkVisible(parent);
       }
     }
 

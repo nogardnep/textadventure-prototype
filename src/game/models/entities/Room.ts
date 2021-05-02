@@ -1,6 +1,5 @@
 import { EntityType } from 'src/game/models/Entity';
-import { Entity, EntityId } from '../Entity';
-import { GameController } from '../../GameController';
+import { EntityId } from '../Entity';
 import { Section } from '../Section';
 import { Thing } from './Thing';
 
@@ -14,9 +13,9 @@ export abstract class Room extends Thing {
   exits: Exit[] = [];
 
   exit(exit: Exit): void {
-    GameController.getPlay()
+    this.getPlay()
       .getPlayer()
-      .moveTo(GameController.getPlay().getEntity(exit.destinationId));
+      .moveTo(this.getPlay().getEntity(exit.destinationId));
   }
 
   getSection(): Section {
@@ -24,7 +23,7 @@ export abstract class Room extends Thing {
   }
 
   exitTo(type: EntityType): void {
-    const entity = GameController.getPlay().getFirstEntityOfType(type);
-    GameController.getPlay().getPlayer().moveTo(entity);
+    const entity = this.getPlay().getFirstEntityOfType(type);
+    this.getPlay().getPlayer().moveTo(entity);
   }
 }

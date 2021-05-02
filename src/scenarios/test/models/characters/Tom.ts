@@ -1,9 +1,10 @@
+import { Play } from 'src/game/models/Play';
 import { entityConstructors } from '../../TestScenario';
 import { Character } from 'src/game/models/entities/Character';
 
 export class Tom extends Character {
-  constructor() {
-    super();
+  constructor(play: Play) {
+    super(play);
 
     this.name = 'Tom';
     this.dead = true;

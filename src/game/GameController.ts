@@ -50,7 +50,6 @@ export class GameController {
   static startNewPlay(scenario: Scenario): void {
     this.play = new Play(scenario);
     this.play.init();
-
     this.savePlay();
     this.callbacks.onLoaded(this.play);
   }

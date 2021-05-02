@@ -10,17 +10,12 @@ import { TextWrapper } from './../../../game/models/Text';
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
 })
-export class PlayerComponent implements OnInit, OnChanges {
-  // @Input() entityId: EntityId;
+export class PlayerComponent implements OnInit {
   @Input() player: Character;
   caracteristicNames = CARACTERISTIC_NAMES;
   text: { [key: string]: TextWrapper } = {
     caracteristics: {fr: 'caracteristiques', en: 'caracteristics'},
   };
-
-  ngOnChanges() {
-    // this.player = GameController.getPlay().getEntity(this.entityId) as Character;
-  }
 
   constructor(private gameService: GameService) {}
 
@@ -33,7 +28,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   }
 
   getInventoryObjects(): Entity[] {
-    return this.player.getNotWornObjects();
+    return this.player.getInventoryObjects();
   }
 
   getWornObjects(): Entity[] {

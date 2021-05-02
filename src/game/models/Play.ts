@@ -1,3 +1,5 @@
+import { Action } from './Action';
+import { Paragraph } from './Paragraph';
 import { GameController } from 'src/game/GameController';
 import { Entity, EntityType } from 'src/game/models/Entity';
 import { Character } from 'src/game/models/entities/Character';
@@ -32,7 +34,7 @@ export class Play {
 
     this.entities = {};
     this.player = null;
-    this.narration = new Narration();
+    this.narration = new Narration(this);
     this.scenario = scenario;
     this.time = 0;
 
@@ -52,11 +54,10 @@ export class Play {
     for (let id in storedPlay.storedEntities) {
       let entity: Entity = null;
       const storedEntity = storedPlay.storedEntities[id];
-
       const constructor = this.scenario.entityConstructors[storedEntity.type];
 
       if (constructor) {
-        entity = new constructor();
+        entity = new constructor(this);
 
         // TODO
         // Utils.assignWithModel(entity, stored);
@@ -86,16 +87,14 @@ export class Play {
     return this.scenario;
   }
 
-  addEntity(entity: Entity): Entity {
+  addEntity(type: EntityType): Entity {
+    const constructor = this.getScenario().entityConstructors[type];
+    const entity = new constructor(this);
     this.entities[entity.getId()] = entity;
     entity.init();
     entity.save();
-    return entity;
-  }
 
-  addEntityOfType(type: EntityType): Entity {
-    const constructor = this.getScenario().entityConstructors[type];
-    return this.addEntity(new constructor());
+    return entity;
   }
 
   getEntity(id: EntityId) {
@@ -112,7 +111,7 @@ export class Play {
     }
 
     if (!entity && createIfNotExists) {
-      entity = this.addEntityOfType(type);
+      entity = this.addEntity(type);
     }
 
     return entity;
@@ -151,13 +150,15 @@ export class Play {
   }
 
   storeNarration(): void {
-    this.stored.narration = this.narration.getStored()
+    this.stored.narration = this.narration.getStored();
     this.save();
   }
 
   storePlayer(): void {
-    this.stored.playerId = this.player.getId();
-    this.save();
+    if (this.player) {
+      this.stored.playerId = this.player.getId();
+      this.save();
+    }
   }
 
   storeTime(): void {
@@ -167,5 +168,9 @@ export class Play {
 
   save(): void {
     GameController.savePlay();
+  }
+
+  inform(paragraphs: Paragraph[], actions?: Action[]) :void  {
+    GameController.inform(paragraphs, actions);
   }
 }
