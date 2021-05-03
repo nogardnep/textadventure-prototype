@@ -1,8 +1,8 @@
 import { TextWrapper } from './Text';
 
-export interface Action {
+export type Choice = {
   text: TextWrapper;
   proceed: () => void;
-  condition?: () => boolean;
-  duration?: number
-}
+  check?: () => boolean;
+  duration?: number;
+};

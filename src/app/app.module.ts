@@ -26,6 +26,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ParagraphsComponent } from './components/entity/paragraphs/paragraphs.component';
 import { PlayerComponent } from './components/player/player.component';
+import { ChoicesComponent } from './components/entity/choices/choices.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { PlayerComponent } from './components/player/player.component';
     PrompterComponent,
     DebugComponent,
     EntityListComponent,
+    ChoicesComponent,
   ],
   entryComponents: [],
   imports: [

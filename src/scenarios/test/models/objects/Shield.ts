@@ -1,8 +1,8 @@
 import { Play } from 'src/game/models/Play';
-import { UsableObject } from 'src/game/models/entities/UsableObject';
+import { Thing } from 'src/game/models/entities/Thing';
 import { Name } from '../../../../game/models/Name';
 
-export class Shield extends UsableObject {
+export class Shield extends Thing {
   constructor(play: Play) {
     super(play);
 

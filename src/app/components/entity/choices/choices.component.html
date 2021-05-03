@@ -1,0 +1,9 @@
+<div>
+  <ul>
+    <ng-container *ngFor="let choice of entity.getChoices()">
+      <li *ngIf="isVisible(choice)">
+        <button (click)="onClickChoice(choice)">{{choice.text|text}}</button>
+      </li>
+    </ng-container>
+  </ul>
+</div>

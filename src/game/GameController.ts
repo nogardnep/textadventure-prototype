@@ -1,11 +1,11 @@
 import { Scenario, Scenarios } from 'src/game/models/Scenario';
-import { Action } from './models/Action';
+import { Choice } from './models/Choice';
 import { Paragraph } from './models/Paragraph';
 import { Play, StoredPlay } from './models/Play';
 import { TextWrapper } from './models/Text';
 
 type Callbacks = {
-  onInform: (paragraphs: Paragraph[], actions?: Action[]) => void;
+  onInform: (paragraphs: Paragraph[], actions?: Choice[]) => void;
   onLoaded: (play: Play) => void;
   onStart: () => void;
   onSave: (storedPlay: StoredPlay) => void;
@@ -22,7 +22,7 @@ export class GameController {
     this.scenarios = scenarios;
   }
 
-  static inform(paragraphs: Paragraph[], actions?: Action[]) {
+  static inform(paragraphs: Paragraph[], actions?: Choice[]) {
     this.callbacks.onInform(paragraphs, actions);
   }
 
@@ -48,7 +48,7 @@ export class GameController {
   }
 
   static startNewPlay(scenario: Scenario): void {
-    this.play = new Play(scenario);
+    this.play = this.createPlay(scenario);
     this.play.init();
     this.savePlay();
     this.callbacks.onLoaded(this.play);
@@ -62,7 +62,7 @@ export class GameController {
     this.callbacks
       .onLoad()
       .then((storedPlay: StoredPlay) => {
-        this.play = new Play(this.scenarios[storedPlay.scenarioId]);
+        this.play = this.createPlay(this.scenarios[storedPlay.scenarioId]);
         this.play.load(storedPlay);
         this.callbacks.onLoaded(this.play);
       })
@@ -71,17 +71,22 @@ export class GameController {
       });
   }
 
+  private static createPlay(scenario: Scenario): Play {
+    return new Play(scenario, {
+      onSave: () => {
+        this.savePlay();
+      },
+      onInform: (paragraphs: Paragraph[], actions?: Choice[]) => {
+        this.inform(paragraphs, actions);
+      },
+    });
+  }
+
   static getPlay(): Play {
     return this.play;
   }
 
   static narrate(paragraphs: Paragraph[]): void {
     this.play.getNarration().addSection({ paragraphs });
-  }
-
-  static useAction(action: Action): void {
-    action.proceed();
-    this.play.increaseTime(action.duration !== undefined ? action.duration : 1);
-    this.savePlay();
   }
 }

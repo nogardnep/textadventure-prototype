@@ -6,7 +6,7 @@ import { Jean } from '../../scenarios/test/models/characters/Jean';
 import { Router } from '@angular/router';
 import { InformComponent } from './../components/inform/inform.component';
 import { ModalController } from '@ionic/angular';
-import { Action } from './../../game/models/Action';
+import { Choice } from '../../game/models/Choice';
 import { Paragraph } from './../../game/models/Paragraph';
 import { Character } from '../../game/models/entities/Character';
 import { StorageService } from './storage.service';
@@ -41,7 +41,7 @@ export class GameService {
         onLoad: () => {
           return this.loadLastPlay();
         },
-        onInform: (paragraphs: Paragraph[], actions?: Action[]) => {
+        onInform: (paragraphs: Paragraph[], actions?: Choice[]) => {
           this.inform(paragraphs, actions);
         },
         onLoaded: (play: Play) => {
@@ -69,7 +69,7 @@ export class GameService {
     return SCENARIOS['test']
   }
 
-  async inform(paragraphs: Paragraph[], actions?: Action[]) {
+  async inform(paragraphs: Paragraph[], actions?: Choice[]) {
     const modal = await this.modalController.create({
       component: InformComponent,
       componentProps: {

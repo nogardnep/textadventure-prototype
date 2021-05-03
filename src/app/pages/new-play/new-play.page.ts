@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Character } from 'src/game/models/entities/Character';
 import { Spell } from 'src/game/models/entities/Spell';
-import { CARACTERISTIC_NAMES } from '../../../game/enums/Caracteristic';
+import { CARACTERISTIC_NAMES } from '../../../game/dictionnaries/Caracteristic';
 import { GameController } from './../../../game/GameController';
 import { EntityType } from './../../../game/models/Entity';
 import { Scenario } from './../../../game/models/Scenario';

@@ -1,10 +1,10 @@
-import { Action } from './Action';
-import { Paragraph } from './Paragraph';
-import { GameController } from 'src/game/GameController';
-import { Entity, EntityType } from 'src/game/models/Entity';
 import { Character } from 'src/game/models/entities/Character';
+import { Entity, EntityType } from 'src/game/models/Entity';
+import { Action, ActionKeys, BASE_ACTIONS } from '../dictionnaries/Actions';
+import { Choice } from './Choice';
 import { EntityId, StoredEntity } from './Entity';
 import { Narration, StoredNarration } from './Narration';
+import { Paragraph } from './Paragraph';
 import { Scenario, ScenarioId } from './Scenario';
 
 export interface StoredPlay {
@@ -15,6 +15,11 @@ export interface StoredPlay {
   scenarioId: ScenarioId;
 }
 
+type PlayCallBacks = {
+  onSave: () => void;
+  onInform: (paragraphs: Paragraph[], actions?: Choice[]) => void;
+};
+
 export class Play {
   private entities: { [id: string]: Entity };
   private player: Character;
@@ -22,8 +27,10 @@ export class Play {
   private time: number;
   private scenario: Scenario;
   private stored: StoredPlay;
+  private callbacks: PlayCallBacks;
+  private actions: { [key: string]: Action };
 
-  constructor(scenario: Scenario) {
+  constructor(scenario: Scenario, callbacks: PlayCallBacks) {
     this.stored = {
       narration: null,
       playerId: null,
@@ -32,13 +39,14 @@ export class Play {
       scenarioId: null,
     };
 
+    this.callbacks = callbacks;
     this.entities = {};
     this.player = null;
     this.narration = new Narration(this);
     this.scenario = scenario;
     this.time = 0;
-
     this.stored.scenarioId = this.scenario.id;
+    this.actions = Object.assign({}, BASE_ACTIONS, scenario.actions);
   }
 
   init(): void {
@@ -167,10 +175,53 @@ export class Play {
   }
 
   save(): void {
-    GameController.savePlay();
+    this.callbacks.onSave();
   }
 
-  inform(paragraphs: Paragraph[], actions?: Action[]) :void  {
-    GameController.inform(paragraphs, actions);
+  inform(paragraphs: Paragraph[], actions?: Choice[]): void {
+    this.callbacks.onInform(paragraphs, actions);
+  }
+
+  getAction(key: ActionKeys): Action {
+    const action = this.actions[key];
+
+    if (!action) {
+      console.error('Action "' + key + '" not found');
+    }
+
+    return action;
+  }
+
+  tryAction(key: ActionKeys, ...args: any[]): boolean {
+    let success = false;
+
+    if (this.checkAction(key, false, args)) {
+      this.executeAction(key, args);
+      success = true;
+    }
+
+    return success;
+  }
+
+  executeAction(key: ActionKeys, args: any[]) {
+    if (this.getAction(key)) {
+      this.actions[key].proceed(this.player, args);
+    }
+  }
+
+  checkAction(key: ActionKeys, silently: boolean, args: any[]): boolean {
+    let success = false;
+
+    if (this.getAction(key)) {
+      let response = this.actions[key].check(this.player, args);
+
+      if (!silently && response.failureMessage) {
+        this.inform([{ text: response.failureMessage }]);
+      }
+
+      success = response.success;
+    }
+
+    return success;
   }
 }

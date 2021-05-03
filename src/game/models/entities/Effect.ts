@@ -1,7 +1,7 @@
 import { WithModifiers } from './constraints/WithModifiers';
-import { Entity } from '../Entity';
+import { Entity as Immaterial } from '../Entity';
 
-export class Effect extends Entity implements WithModifiers {
+export class Effect extends Immaterial implements WithModifiers {
   getModifiers(): { [key: string]: { value: number; condition?: () => boolean; }; } {
     return {};
   }

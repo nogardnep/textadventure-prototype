@@ -1,13 +1,13 @@
 import { Effect } from 'src/game/models/entities/Effect';
 import { EntityId, EntityType } from 'src/game/models/Entity';
-import { UsableObject } from 'src/game/models/entities/UsableObject';
+import { Thing } from 'src/game/models/entities/Thing';
 import { Entity } from '../Entity';
-import { Caracteristics } from '../../enums/Caracteristic';
+import { Caracteristics } from '../../dictionnaries/Caracteristic';
 import { Spell } from './Spell';
 import { WithModifiers } from './constraints/WithModifiers';
-import { Thing } from './Thing';
+import { Material } from './Material';
 
-export abstract class Character extends Thing {
+export abstract class Character extends Material {
   dead = false;
   hands = 2;
   spellsId: EntityId[] = [];
@@ -27,36 +27,36 @@ export abstract class Character extends Thing {
     return this.caracteristics[key];
   }
 
-  getHeldObjects():  UsableObject[] {
-    let found: UsableObject[] = [];
+  getHeldObjects(): Thing[] {
+    let found: Thing[] = [];
 
     this.getChildren().forEach((item: Entity) => {
       if (this.isHolding(item)) {
-        found.push(item as UsableObject);
+        found.push(item as Thing);
       }
     });
 
     return found;
   }
 
-  getWornObjects(): UsableObject[] {
-    let found: UsableObject[] = [];
+  getWornObjects(): Thing[] {
+    let found: Thing[] = [];
 
     this.getChildren().forEach((item: Entity) => {
       if (this.isWearing(item)) {
-        found.push(item as UsableObject);
+        found.push(item as Thing);
       }
     });
 
     return found;
   }
 
-  getInventoryObjects(): UsableObject[] {
-    let found: UsableObject[] = [];
+  getInventoryObjects(): Thing[] {
+    let found: Thing[] = [];
 
     this.getChildren().forEach((item: Entity) => {
       if (!this.isWearing(item) && !this.isHolding(item)) {
-        found.push(item as UsableObject);
+        found.push(item as Thing);
       }
     });
 
@@ -64,21 +64,21 @@ export abstract class Character extends Thing {
   }
 
   isHolding(entity: Entity): boolean {
-    return (entity as UsableObject).hold;
+    return (entity as Thing).hold;
   }
 
   isWearing(entity: Entity): boolean {
-    return (entity as UsableObject).worn;
+    return (entity as Thing).worn;
   }
 
-  getWornObject(emplacementKey: string): UsableObject {
-    let found: UsableObject = null;
+  getWornObject(emplacementKey: string): Thing {
+    let found: Thing = null;
 
     this.childrenId.forEach((id: EntityId) => {
       const entity = this.getPlay().getEntity(id);
 
       if (
-        entity instanceof UsableObject &&
+        entity instanceof Thing &&
         entity.worn &&
         entity.getEmplacement() === emplacementKey
       ) {
@@ -228,7 +228,7 @@ export abstract class Character extends Thing {
   canSee(entity: Entity): boolean {
     let response = false;
 
-    if (!(entity as Thing).invisible) {
+    if (!(entity as Material).invisible) {
       const parent = entity.getParent();
 
       if (parent) {
@@ -246,10 +246,7 @@ export abstract class Character extends Thing {
   private checkVisible(entity: Entity): boolean {
     let response = false;
 
-    if (
-      !(entity as UsableObject).closed ||
-      (entity as UsableObject).transparent
-    ) {
+    if (!(entity as Thing).closed || (entity as Thing).transparent) {
       const parent = entity.getParent();
 
       if (parent && parent.equals(this.getParent())) {
@@ -265,16 +262,16 @@ export abstract class Character extends Thing {
   canReach(entity: Entity): boolean {
     let response = false;
 
-    if (!(entity as Thing).invisible) {
-      const parent = entity.getParent();
+    if (!(entity as Material).invisible) {
+        const parent = entity.getParent();
 
-      if (parent) {
-        if (parent.equals(this.getParent())) {
-          response = true;
-        } else {
-          response = this.checkReachable(parent);
+        if (parent) {
+          if (parent.equals(this.getParent())) {
+            response = true;
+          } else {
+            response = this.checkReachable(parent);
+          }
         }
-      }
     }
 
     return response;
@@ -284,7 +281,7 @@ export abstract class Character extends Thing {
     let response = false;
 
     if (
-      !(entity as UsableObject).closed &&
+      !(entity as Thing).closed &&
       (entity.getParent().equals(this) ||
         !(entity instanceof Character) ||
         (entity as Character).dead)
@@ -294,7 +291,7 @@ export abstract class Character extends Thing {
       if (parent && parent.equals(this.getParent())) {
         response = true;
       } else {
-        response = this.checkVisible(parent);
+        response = this.checkReachable(parent);
       }
     }
 

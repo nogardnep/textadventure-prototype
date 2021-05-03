@@ -1,7 +1,7 @@
-import { GameController } from './../../../../game/GameController';
-import { Action } from './../../../../game/models/Action';
 import { Component, Input, OnInit } from '@angular/core';
+import { ActionKeys } from 'src/game/dictionnaries/Actions';
 import { Entity } from 'src/game/models/Entity';
+import { TextWrapper } from 'src/game/models/Text';
 
 @Component({
   selector: 'app-actions',
@@ -15,15 +15,15 @@ export class ActionsComponent implements OnInit {
 
   ngOnInit() {}
 
-  onClickAction(action: Action): void {
-    GameController.useAction(action);
+  onClickAction(key: ActionKeys): void {
+    this.entity.getPlay().executeAction(key, [this.entity]);
   }
 
-  isVisible(action: Action): boolean {
-    return !action.condition || action.condition();
+  isVisible(key: ActionKeys): boolean {
+    return this.entity.getPlay().checkAction(key, true, [this.entity]);
   }
 
-  getActions(): Action[] {
-    return this.entity.getActions();
+  getText(key: ActionKeys): TextWrapper {
+    return this.entity.getPlay().getAction(key).text;
   }
 }

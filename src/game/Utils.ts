@@ -1,4 +1,3 @@
-
 export abstract class Utils {
   static assignWithModel(target: {}, source: {}): void {
     for (let key in target) {

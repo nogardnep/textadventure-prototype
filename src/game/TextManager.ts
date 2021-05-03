@@ -1,6 +1,6 @@
 import { TextWrapper, NameWrapper } from './models/Text';
 import { Name } from './models/Name';
-import { LANGUAGE_KEYS } from './enums/Language';
+import { LANGUAGE_KEYS } from './dictionnaries/Language';
 
 export abstract class TextManager {
   static currentLanguage: string;

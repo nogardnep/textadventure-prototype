@@ -1,3 +1,4 @@
+import { look } from './actions/look';
 import { GameController } from 'src/game/GameController';
 import { Character } from 'src/game/models/entities/Character';
 import { Play } from 'src/game/models/Play';
@@ -38,6 +39,10 @@ export class TestScenario implements Scenario {
 
   entityConstructors = entityConstructors;
 
+  actions = {
+    look,
+  };
+
   starting = {
     maxSpells: 2,
     caracteristicsPoints: 5,
@@ -50,9 +55,7 @@ export class TestScenario implements Scenario {
   };
 
   init(play: Play) {
-    const player = play.addEntity(
-      entityConstructors.Jean.name
-    ) as Character;
+    const player = play.addEntity(entityConstructors.Jean.name) as Character;
 
     player.moveTo(play.addEntity(entityConstructors.Chamber.name));
 

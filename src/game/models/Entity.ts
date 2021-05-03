@@ -1,6 +1,8 @@
-import { GameController } from '../GameController';
+import { ActionKeys, ActionKey } from '../dictionnaries/Actions';
+import { Utils } from '../Utils';
 import { Play } from './../models/Play';
-import { Action } from './Action';
+import { Choice } from './Choice';
+import { Spell } from './entities/Spell';
 import { Name } from './Name';
 import { Paragraph } from './Paragraph';
 import { NameWrapper } from './Text';
@@ -16,7 +18,7 @@ export interface StoredEntity {
 }
 
 export class Entity implements StoredEntity {
-  protected getPlay: () => Play;
+  protected onGetPlay: () => Play;
   name: string;
   id: EntityId;
   childrenId: EntityId[];
@@ -24,7 +26,7 @@ export class Entity implements StoredEntity {
   type: EntityType;
 
   constructor(play: Play) {
-    this.getPlay = () => {
+    this.onGetPlay = () => {
       return play;
     };
     this.id = Math.floor(Math.random() * 1000).toString();
@@ -48,7 +50,11 @@ export class Entity implements StoredEntity {
   }
 
   save(): void {
-    this.getPlay().storeEntity(this)
+    this.getPlay().storeEntity(this);
+  }
+
+  getPlay(): Play {
+    return this.onGetPlay();
   }
 
   getType(): string {
@@ -67,23 +73,35 @@ export class Entity implements StoredEntity {
     return [];
   }
 
-  getActions(additionnal?: Action[]): Action[] {
+  getDisplayedActions(a?: ActionKey[], b?: ActionKey[]): ActionKey[] {
+    let array: any[] = (a ? a : []).concat(b ? b : []);
+
+    array = Array.from(new Set(array));
+
+    return array;
+
+    return array;
+  }
+
+  getChoices(additionnal?: Choice[]): Choice[] {
     return additionnal ? additionnal : [];
   }
 
-  getResponseToSpell(spell: EntityId, additionnal?: {}): {} {
+  getResponseToAction(key: ActionKeys): void {}
+
+  getResponseToSpell(spell: Spell, additionnal?: {}): {} {
     return additionnal ? additionnal : {};
   }
 
   getParent(): Entity {
-    return GameController.getPlay().getEntity(this.parentId);
+    return this.getPlay().getEntity(this.parentId);
   }
 
   getChildren(): Entity[] {
     const children: Entity[] = [];
 
     this.childrenId.forEach((id: EntityId) => {
-      children.push(GameController.getPlay().getEntity(id));
+      children.push(this.getPlay().getEntity(id));
     });
 
     return children;
@@ -109,14 +127,14 @@ export class Entity implements StoredEntity {
     return this.getId() === entity.getId();
   }
 
-  owns(entity: Entity, deepSearch: boolean): boolean {
+  isOwning(entity: Entity, deepSearch: boolean): boolean {
     let found = false;
 
     this.getChildren().forEach((item: Entity) => {
       if (item.equals(entity)) {
         found = true;
       } else if (deepSearch) {
-        found = item.owns(entity, deepSearch);
+        found = item.isOwning(entity, deepSearch);
       }
     });
 
@@ -127,9 +145,7 @@ export class Entity implements StoredEntity {
     const previousParentId = this.parentId;
 
     if (previousParentId) {
-      const previousParent = GameController.getPlay().getEntity(
-        previousParentId
-      );
+      const previousParent = this.getPlay().getEntity(previousParentId);
 
       previousParent.childrenId.forEach((item, index) => {
         if (item === this.id) {
@@ -157,8 +173,7 @@ export class Entity implements StoredEntity {
 
   inheritsFrom(type: EntityType): boolean {
     return (
-      this instanceof
-      GameController.getPlay().getScenario().entityConstructors[type]
+      this instanceof this.getPlay().getScenario().entityConstructors[type]
     );
   }
 
@@ -184,7 +199,7 @@ export class Entity implements StoredEntity {
     const found: Entity[] = [];
 
     list.forEach((id: EntityId) => {
-      const item = GameController.getPlay().getEntity(id);
+      const item = this.getPlay().getEntity(id);
 
       if (item.inheritsFrom(type)) {
         found.push(item);
@@ -202,7 +217,7 @@ export class Entity implements StoredEntity {
     let entity = null;
 
     if (!doNotCreateNew || this.getChildrenOfType(type, list).length === 0) {
-      entity = GameController.getPlay().addEntity(type);
+      entity = this.getPlay().addEntity(type);
       this.addToList(entity, list);
     }
 

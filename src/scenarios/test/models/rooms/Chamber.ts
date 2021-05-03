@@ -1,10 +1,11 @@
 import { EntityId } from 'src/game/models/Entity';
 import { Play } from 'src/game/models/Play';
-import { Room } from 'src/game/models/entities/Room';
+import { Place } from 'src/game/models/entities/Place';
 import { Name } from 'src/game/models/Name';
 import { entityConstructors } from '../../TestScenario';
+import { Spell } from 'src/game/models/entities/Spell';
 
-export class Chamber extends Room {
+export class Chamber extends Place {
   fire: boolean = false;
 
   constructor(play: Play) {
@@ -19,7 +20,7 @@ export class Chamber extends Room {
     return { en: new Name('Chamber'), fr: new Name('Chambre') };
   }
 
-  getActions() {
+  getChoices() {
     return [
       {
         text: { fr: 'go to corridor' },
@@ -45,10 +46,10 @@ export class Chamber extends Room {
     ];
   }
 
-  getResponseToSpell(spell: EntityId) {
+  getResponseToSpell(spell: Spell) {
     let response = null;
 
-    switch (spell) {
+    switch (spell.getType()) {
       case entityConstructors.DestructionSpell.name: {
         response = () => {
           this.getPlay().inform([{ text: { en: 'destroy all' } }]);

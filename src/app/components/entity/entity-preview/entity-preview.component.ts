@@ -1,9 +1,9 @@
 import { Character } from 'src/game/models/entities/Character';
-import { UsableObject } from 'src/game/models/entities/UsableObject';
+import { Thing } from 'src/game/models/entities/Thing';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { Entity, EntityId } from 'src/game/models/Entity';
 import { GameController } from './../../../../game/GameController';
-import { EMPLACEMENT_NAMES } from '../../../../game/enums/Emplacement';
+import { EMPLACEMENT_NAMES } from '../../../../game/dictionnaries/Emplacement';
 import { NameWrapper } from './../../../../game/models/Text';
 import { GameService } from './../../../services/game.service';
 
@@ -12,17 +12,12 @@ import { GameService } from './../../../services/game.service';
   templateUrl: './entity-preview.component.html',
   styleUrls: ['./entity-preview.component.scss'],
 })
-export class EntityPreviewComponent implements OnInit, OnChanges {
-  // @Input() entityId: EntityId;
+export class EntityPreviewComponent implements OnInit {
   @Input() entity: Entity;
 
   constructor(private gameService: GameService) {}
 
   ngOnInit() {}
-
-  ngOnChanges() {
-    // this.entity = GameController.getPlay().getEntity(this.entityId);
-  }
 
   onClickEntity(): void {
     this.gameService.setSelection(this.entity);
@@ -36,20 +31,20 @@ export class EntityPreviewComponent implements OnInit, OnChanges {
   }
 
   isWorn(): boolean {
-    return (this.entity as UsableObject).worn;
+    return (this.entity as Thing).worn;
   }
 
   isOpen(): boolean {
     return (
-      (this.entity as UsableObject).openable &&
-      !(this.entity as UsableObject).closed
+      (this.entity as Thing).openable &&
+      !(this.entity as Thing).closed
     );
   }
 
   isClosed(): boolean {
     return (
-      (this.entity as UsableObject).openable &&
-      (this.entity as UsableObject).closed
+      (this.entity as Thing).openable &&
+      (this.entity as Thing).closed
     );
   }
 
@@ -59,12 +54,12 @@ export class EntityPreviewComponent implements OnInit, OnChanges {
 
   contentIsVisible(): boolean {
     return (
-      !(this.entity as UsableObject).closed ||
-      (this.entity as UsableObject).transparent
+      !(this.entity as Thing).closed ||
+      (this.entity as Thing).transparent
     );
   }
 
   getEmplacement(): NameWrapper {
-    return EMPLACEMENT_NAMES[(this.entity as UsableObject).getEmplacement()];
+    return EMPLACEMENT_NAMES[(this.entity as Thing).getEmplacement()];
   }
 }

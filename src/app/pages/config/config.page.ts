@@ -1,4 +1,4 @@
-import { LANGUAGE_KEYS, LANGUAGE_NAMES } from 'src/game/enums/Language';
+import { LANGUAGE_KEYS, LANGUAGE_NAMES } from 'src/game/dictionnaries/Language';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '../../services/config.service';
 import { Location } from '@angular/common';
