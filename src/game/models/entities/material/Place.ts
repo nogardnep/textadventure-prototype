@@ -1,22 +1,23 @@
-import { Name } from 'src/game/models/Name';
-import { NameWrapper } from './../Text';
-import { TextWrapper } from 'src/game/models/Text';
+import { DirectionKey } from 'src/game/dictionnaries/Direction';
 import { EntityType } from 'src/game/models/Entity';
-import { EntityId } from '../Entity';
-import { Section } from '../Section';
-import { Material } from './Material';
-import { DiractionKey } from 'src/game/dictionnaries/Direction';
+import { TextWrapper } from 'src/game/models/Text';
+import { EntityId } from '../../Entity';
+import { Section } from '../../Section';
+import { MaterialEntity } from '../MaterialEntity';
 
 export type Connection = {
   destinationId: EntityId;
   text: TextWrapper;
-  directionKey: DiractionKey;
-  doorId?: EntityId;
+  passageId?: EntityId;
+  directionKey?: DirectionKey;
   check?: () => boolean;
   distance?: number;
 };
 
-export abstract class Place extends Material {
+export const DEFAULT_DISTANCE = 1;
+export const DEFAULT_SPEED = 1; // TODO: move
+
+export  class Place extends MaterialEntity {
   connections: Connection[] = [];
 
   exit(exit: Connection): void {
@@ -26,6 +27,10 @@ export abstract class Place extends Material {
   }
 
   addConnection(connection: Connection): void {}
+
+  getConnections(): Connection[] {
+    return [];
+  }
 
   getSection(): Section {
     return null;

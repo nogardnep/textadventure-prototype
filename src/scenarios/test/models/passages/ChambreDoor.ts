@@ -1,17 +1,16 @@
-import { UsuableObject } from 'src/game/models/entities/material/thing/UsuableObject';
+import { Passage } from 'src/game/models/entities/material/thing/Passage';
 import { Name } from 'src/game/models/Name';
 import { Play } from 'src/game/models/Play';
 
-export class Box extends UsuableObject {
+export class Door extends Passage {
   constructor(play: Play) {
     super(play);
 
     this.openable = true;
     this.closed = true;
-    this.transparent = true;
   }
 
   getName() {
-    return { fr: new Name('Box') };
+    return { fr: new Name('porte') };
   }
 }

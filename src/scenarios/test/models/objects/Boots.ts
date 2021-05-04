@@ -1,14 +1,13 @@
-import { Play } from 'src/game/models/Play';
 import { EMPLACEMENT_KEYS } from 'src/game/dictionnaries/Emplacement';
-import { Thing } from 'src/game/models/entities/Thing';
 import { WithModifiers } from 'src/game/models/entities/constraints/WithModifiers';
+import { WearableObject } from 'src/game/models/entities/material/thing/object/WearableObject';
+import { UsuableObject } from 'src/game/models/entities/material/thing/UsuableObject';
 import { Name } from 'src/game/models/Name';
+import { Play } from 'src/game/models/Play';
 
-export class Boots extends Thing implements WithModifiers {
+export class Boots extends WearableObject implements WithModifiers {
   constructor(play: Play) {
     super(play);
-
-    this.wearable = true;
   }
 
   getName() {

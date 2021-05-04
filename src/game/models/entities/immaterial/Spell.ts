@@ -1,7 +1,7 @@
 import { ActionKey, ActionKeys } from 'src/game/dictionnaries/Actions';
-import { Immaterial } from './Immaterial';
+import { ImmaterialEntity } from '../ImmaterialEntity';
 
-export abstract class Spell extends Immaterial {
+export  class Spell extends ImmaterialEntity {
   getDisplayedActions(a?: ActionKey[], b?: ActionKey[]) {
     return super.getDisplayedActions([ActionKeys.Cast], a);
   }

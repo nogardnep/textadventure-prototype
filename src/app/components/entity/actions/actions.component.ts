@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActionKeys } from 'src/game/dictionnaries/Actions';
+import { ActionKeys, ActionKey } from 'src/game/dictionnaries/Actions';
 import { Entity } from 'src/game/models/Entity';
 import { TextWrapper } from 'src/game/models/Text';
 
@@ -15,15 +15,15 @@ export class ActionsComponent implements OnInit {
 
   ngOnInit() {}
 
-  onClickAction(key: ActionKeys): void {
+  onClickAction(key: ActionKey): void {
     this.entity.getPlay().executeAction(key, [this.entity]);
   }
 
-  isVisible(key: ActionKeys): boolean {
+  isVisible(key: ActionKey): boolean {
     return this.entity.getPlay().checkAction(key, true, [this.entity]);
   }
 
-  getText(key: ActionKeys): TextWrapper {
+  getText(key: ActionKey): TextWrapper {
     return this.entity.getPlay().getAction(key).text;
   }
 }

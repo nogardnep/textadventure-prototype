@@ -1,11 +1,26 @@
-import { Character } from 'src/game/models/entities/Character';
+import { TextWrapper } from './Text';
+import { Passage } from 'src/game/models/entities/material/thing/Passage';
+import { DEFAULT_ACTION_DURATION } from './../dictionnaries/Actions';
+import { Character } from 'src/game/models/entities/material/Character';
 import { Entity, EntityType } from 'src/game/models/Entity';
-import { Action, ActionKeys, BASE_ACTIONS } from '../dictionnaries/Actions';
+import { Action, ActionKey, BASE_ACTIONS } from '../dictionnaries/Actions';
 import { Choice } from './Choice';
 import { EntityId, StoredEntity } from './Entity';
 import { Narration, StoredNarration } from './Narration';
 import { Paragraph } from './Paragraph';
 import { Scenario, ScenarioId } from './Scenario';
+import {
+  Direction,
+  DirectionKey,
+  BASE_DIRECTIONS,
+  getOppositeDirection,
+} from '../dictionnaries/Direction';
+import {
+  Connection,
+  DEFAULT_SPEED,
+  DEFAULT_DISTANCE,
+  Place,
+} from './entities/material/Place';
 
 export interface StoredPlay {
   storedEntities: { [id: string]: StoredEntity };
@@ -29,6 +44,8 @@ export class Play {
   private stored: StoredPlay;
   private callbacks: PlayCallBacks;
   private actions: { [key: string]: Action };
+  private directions: { [key: string]: Direction };
+  private entityConstructors: { [key: string]: new (play: Play) => Entity };
 
   constructor(scenario: Scenario, callbacks: PlayCallBacks) {
     this.stored = {
@@ -47,6 +64,8 @@ export class Play {
     this.time = 0;
     this.stored.scenarioId = this.scenario.id;
     this.actions = Object.assign({}, BASE_ACTIONS, scenario.actions);
+    this.directions = Object.assign({}, BASE_DIRECTIONS, scenario.directions);
+    this.entityConstructors = Object.assign({}, scenario.entityConstructors);
   }
 
   init(): void {
@@ -56,13 +75,25 @@ export class Play {
     this.storeTime();
   }
 
+  start(): void {
+    this.scenario.update(this);
+  }
+
+  update(): void {
+    for (let key in this.entities) {
+      this.entities[key].update();
+    }
+
+    this.scenario.update(this);
+  }
+
   load(storedPlay: StoredPlay): void {
     this.stored = storedPlay;
 
     for (let id in storedPlay.storedEntities) {
       let entity: Entity = null;
       const storedEntity = storedPlay.storedEntities[id];
-      const constructor = this.scenario.entityConstructors[storedEntity.type];
+      const constructor = this.entityConstructors[storedEntity.type];
 
       if (constructor) {
         entity = new constructor(this);
@@ -96,13 +127,59 @@ export class Play {
   }
 
   addEntity(type: EntityType): Entity {
-    const constructor = this.getScenario().entityConstructors[type];
+    const constructor = this.entityConstructors[type];
     const entity = new constructor(this);
     this.entities[entity.getId()] = entity;
     entity.init();
     entity.save();
 
     return entity;
+  }
+
+
+  // TODO: unusable?
+  createConnection(param: {
+    first: {
+      placeType: EntityType;
+      text: TextWrapper;
+    };
+    second: {
+      placeType: EntityType;
+      text: TextWrapper;
+    };
+    passageType?: EntityType;
+    directionKeyForFirst?: DirectionKey;
+    distance?: number;
+  }): void {
+    const firstPlace = this.getFirstEntityOfType(
+      param.first.placeType
+    ) as Place;
+
+    const secondPlace = this.getFirstEntityOfType(
+      param.second.placeType
+    ) as Place;
+
+    let passage: Entity;
+
+    if (param.passageType) {
+      passage = this.addEntity(param.passageType);
+    }
+
+    firstPlace.addConnection({
+      destinationId: secondPlace.getId(),
+      text: param.first.text,
+      directionKey: param.directionKeyForFirst,
+      distance: param.distance,
+      passageId: passage.getId(),
+    });
+
+    secondPlace.addConnection({
+      destinationId: firstPlace.getId(),
+      text: param.second.text,
+      directionKey: getOppositeDirection(param.directionKeyForFirst),
+      distance: param.distance,
+      passageId: passage.getId(),
+    });
   }
 
   getEntity(id: EntityId) {
@@ -150,6 +227,7 @@ export class Play {
   increaseTime(duration: number): void {
     this.time += duration;
     this.storeTime();
+    this.update();
   }
 
   storeEntity(entity: Entity): void {
@@ -182,7 +260,11 @@ export class Play {
     this.callbacks.onInform(paragraphs, actions);
   }
 
-  getAction(key: ActionKeys): Action {
+  getDirection(key: DirectionKey): Direction {
+    return this.directions[key];
+  }
+
+  getAction(key: ActionKey): Action {
     const action = this.actions[key];
 
     if (!action) {
@@ -192,24 +274,53 @@ export class Play {
     return action;
   }
 
-  tryAction(key: ActionKeys, ...args: any[]): boolean {
+  tryAction(key: ActionKey, ...args: any[]): boolean {
     let success = false;
 
     if (this.checkAction(key, false, args)) {
-      this.executeAction(key, args);
-      success = true;
+      success = this.executeAction(key, args);
     }
 
     return success;
   }
 
-  executeAction(key: ActionKeys, args: any[]) {
-    if (this.getAction(key)) {
-      this.actions[key].proceed(this.player, args);
+  useConnection(connection: Connection): void {
+    this.player.moveTo(this.getEntity(connection.destinationId));
+    this.increaseTime(
+      (connection.distance ? connection.distance : DEFAULT_DISTANCE) *
+        DEFAULT_SPEED
+    );
+  }
+
+  private onActionEnded(key: ActionKey, withSuccess: boolean): void {
+    const action = this.getAction(key);
+
+    if (action && withSuccess) {
+      this.increaseTime(
+        action.duration !== undefined
+          ? action.duration
+          : DEFAULT_ACTION_DURATION
+      );
     }
   }
 
-  checkAction(key: ActionKeys, silently: boolean, args: any[]): boolean {
+  executeAction(key: ActionKey, args: any[]): boolean {
+    let success = false;
+
+    if (this.getAction(key)) {
+      let response = this.actions[key].proceed(this.player, args);
+
+      if (response === undefined || response === true) {
+        success = true;
+      }
+
+      this.onActionEnded(key, success);
+    }
+
+    return success;
+  }
+
+  checkAction(key: ActionKey, silently: boolean, args: any[]): boolean {
     let success = false;
 
     if (this.getAction(key)) {

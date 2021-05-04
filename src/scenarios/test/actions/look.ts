@@ -1,5 +1,5 @@
 import { Action } from 'src/game/dictionnaries/Actions';
-import { Character } from 'src/game/models/entities/Character';
+import { Character } from 'src/game/models/entities/material/Character';
 
 export const look: Action = {
   text: { fr: 'regarder' },

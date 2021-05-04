@@ -1,6 +1,6 @@
 import { Play } from 'src/game/models/Play';
 import { entityConstructors } from '../../TestScenario';
-import { Character } from 'src/game/models/entities/Character';
+import { Character } from 'src/game/models/entities/material/Character';
 
 export class Tom extends Character {
   constructor(play: Play) {

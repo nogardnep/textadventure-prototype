@@ -1,9 +1,9 @@
-import { EntityId } from 'src/game/models/Entity';
-import { Play } from 'src/game/models/Play';
-import { Place } from 'src/game/models/entities/Place';
+import { Connection, Place } from 'src/game/models/entities/material/Place';
+import { Spell } from 'src/game/models/entities/immaterial/Spell';
 import { Name } from 'src/game/models/Name';
+import { Play } from 'src/game/models/Play';
 import { entityConstructors } from '../../TestScenario';
-import { Spell } from 'src/game/models/entities/Spell';
+import { DirectionKeys } from 'src/game/dictionnaries/Direction';
 
 export class Chamber extends Place {
   fire: boolean = false;
@@ -18,6 +18,26 @@ export class Chamber extends Place {
 
   getName() {
     return { en: new Name('Chamber'), fr: new Name('Chambre') };
+  }
+
+  getConnections(): Connection[] {
+    const passage = this.getPlay()
+      .addEntity(entityConstructors.Door.name)
+      .getId();
+
+    return [
+      {
+        destinationId: this.getPlay()
+          .getFirstEntityOfType(entityConstructors.Corridor.name, true)
+          .getId(),
+        directionKey: DirectionKeys.North,
+        text: { fr: 'a door' },
+        distance: 10,
+        passageId: this.getPlay()
+          .getFirstEntityOfType(entityConstructors.Door.name)
+          .getId(),
+      },
+    ];
   }
 
   getChoices() {

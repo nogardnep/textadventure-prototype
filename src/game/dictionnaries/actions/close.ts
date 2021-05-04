@@ -1,5 +1,5 @@
-import { Thing } from 'src/game/models/entities/Thing';
-import { Character } from 'src/game/models/entities/Character';
+import { Thing } from 'src/game/models/entities/material/Thing';
+import { Character } from 'src/game/models/entities/material/Character';
 import { Action } from '../Actions';
 
 export const close: Action = {
@@ -8,7 +8,7 @@ export const close: Action = {
     let success = false;
     const target = args[0];
 
-    if (target.openable && !target.closed) {
+    if (target instanceof Thing && target.openable && !target.closed) {
       success = true;
     }
 

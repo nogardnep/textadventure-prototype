@@ -1,5 +1,5 @@
 import { GameController } from '../../../game/GameController';
-import { Connection, Place } from '../../../game/models/entities/Place';
+import { Connection, Place } from '../../../game/models/entities/material/Place';
 import { GameService } from '../../services/game.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { EntityId, Entity } from 'src/game/models/Entity';

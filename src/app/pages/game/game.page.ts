@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GameService } from 'src/app/services/game.service';
 import { GameController } from 'src/game/GameController';
-import { Character } from 'src/game/models/entities/Character';
+import { Character } from 'src/game/models/entities/material/Character';
 import { Entity } from 'src/game/models/Entity';
 import { Play } from 'src/game/models/Play';
 import { Narration } from './../../../game/models/Narration';

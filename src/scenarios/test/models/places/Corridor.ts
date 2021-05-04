@@ -2,7 +2,7 @@ import { Entity } from 'src/game/models/Entity';
 import { Name } from '../../../../game/models/Name';
 import { entityConstructors } from '../../TestScenario';
 import { GameController } from '../../../../game/GameController';
-import { Place } from '../../../../game/models/entities/Place';
+import { Place } from '../../../../game/models/entities/material/Place';
 
 export class Corridor extends Place {
   toogle = false;

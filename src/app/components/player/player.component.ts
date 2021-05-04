@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
-import { Character } from 'src/game/models/entities/Character';
+import { Character } from 'src/game/models/entities/material/Character';
 import { CARACTERISTIC_NAMES } from '../../../game/dictionnaries/Caracteristic';
 import { Entity } from './../../../game/models/Entity';
 import { TextWrapper } from './../../../game/models/Text';

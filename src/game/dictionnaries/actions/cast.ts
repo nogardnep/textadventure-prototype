@@ -1,5 +1,5 @@
-import { Character } from 'src/game/models/entities/Character';
-import { Spell } from 'src/game/models/entities/Spell';
+import { Character } from 'src/game/models/entities/material/Character';
+import { Spell } from 'src/game/models/entities/immaterial/Spell';
 import { Action } from '../Actions';
 
 export const cast: Action = {

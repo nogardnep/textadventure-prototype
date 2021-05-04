@@ -1,5 +1,5 @@
 import { Entity } from '../Entity';
 
-export abstract class Material extends Entity {
+export  class ImmaterialEntity extends Entity {
   invisible = false;
 }

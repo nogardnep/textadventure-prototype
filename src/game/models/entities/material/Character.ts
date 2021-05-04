@@ -1,13 +1,16 @@
-import { Effect } from 'src/game/models/entities/Effect';
+import { Thing } from 'src/game/models/entities/material/Thing';
 import { EntityId, EntityType } from 'src/game/models/Entity';
-import { Thing } from 'src/game/models/entities/Thing';
-import { Entity } from '../Entity';
-import { Caracteristics } from '../../dictionnaries/Caracteristic';
-import { Spell } from './Spell';
-import { WithModifiers } from './constraints/WithModifiers';
-import { Material } from './Material';
+import { Entity } from '../../Entity';
+import { Caracteristics } from '../../../dictionnaries/Caracteristic';
+import { Spell } from '../immaterial/Spell';
+import { WithModifiers } from '../constraints/WithModifiers';
+import { MaterialEntity } from '../MaterialEntity';
+import { UsuableObject } from './thing/UsuableObject';
+import { Effect } from '../immaterial/Effect';
+import { HoldableObject } from './thing/object/HoldableObject';
+import { WearableObject } from './thing/object/WearableObject';
 
-export abstract class Character extends Material {
+export  class Character extends MaterialEntity {
   dead = false;
   hands = 2;
   spellsId: EntityId[] = [];
@@ -27,36 +30,36 @@ export abstract class Character extends Material {
     return this.caracteristics[key];
   }
 
-  getHeldObjects(): Thing[] {
-    let found: Thing[] = [];
+  getHeldObjects(): UsuableObject[] {
+    let found: UsuableObject[] = [];
 
     this.getChildren().forEach((item: Entity) => {
       if (this.isHolding(item)) {
-        found.push(item as Thing);
+        found.push(item as UsuableObject);
       }
     });
 
     return found;
   }
 
-  getWornObjects(): Thing[] {
-    let found: Thing[] = [];
+  getWornObjects(): UsuableObject[] {
+    let found: UsuableObject[] = [];
 
     this.getChildren().forEach((item: Entity) => {
       if (this.isWearing(item)) {
-        found.push(item as Thing);
+        found.push(item as UsuableObject);
       }
     });
 
     return found;
   }
 
-  getInventoryObjects(): Thing[] {
-    let found: Thing[] = [];
+  getInventoryObjects(): UsuableObject[] {
+    let found: UsuableObject[] = [];
 
     this.getChildren().forEach((item: Entity) => {
       if (!this.isWearing(item) && !this.isHolding(item)) {
-        found.push(item as Thing);
+        found.push(item as UsuableObject);
       }
     });
 
@@ -64,21 +67,21 @@ export abstract class Character extends Material {
   }
 
   isHolding(entity: Entity): boolean {
-    return (entity as Thing).hold;
+    return (entity as HoldableObject).hold;
   }
 
   isWearing(entity: Entity): boolean {
-    return (entity as Thing).worn;
+    return (entity as WearableObject).worn;
   }
 
-  getWornObject(emplacementKey: string): Thing {
-    let found: Thing = null;
+  getWornObject(emplacementKey: string): UsuableObject {
+    let found: UsuableObject = null;
 
     this.childrenId.forEach((id: EntityId) => {
       const entity = this.getPlay().getEntity(id);
 
       if (
-        entity instanceof Thing &&
+        entity instanceof WearableObject &&
         entity.worn &&
         entity.getEmplacement() === emplacementKey
       ) {
@@ -228,7 +231,7 @@ export abstract class Character extends Material {
   canSee(entity: Entity): boolean {
     let response = false;
 
-    if (!(entity as Material).invisible) {
+    if (!(entity as MaterialEntity).invisible) {
       const parent = entity.getParent();
 
       if (parent) {
@@ -262,7 +265,7 @@ export abstract class Character extends Material {
   canReach(entity: Entity): boolean {
     let response = false;
 
-    if (!(entity as Material).invisible) {
+    if (!(entity as MaterialEntity).invisible) {
         const parent = entity.getParent();
 
         if (parent) {

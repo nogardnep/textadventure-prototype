@@ -1,3 +1,5 @@
+import { ConnectionsComponent } from './components/entity/connections/connections.component';
+import { Connection } from '../game/models/entities/material/Place';
 import { EntityListComponent } from './components/entity/entity-list/entity-list.component';
 import { DebugComponent } from './components/debug/debug.component';
 import { PrompterComponent } from './components/prompter/prompter.component';
@@ -52,6 +54,7 @@ import { ChoicesComponent } from './components/entity/choices/choices.component'
     DebugComponent,
     EntityListComponent,
     ChoicesComponent,
+    ConnectionsComponent,
   ],
   entryComponents: [],
   imports: [

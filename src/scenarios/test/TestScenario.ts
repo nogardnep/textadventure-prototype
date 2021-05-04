@@ -1,9 +1,10 @@
-import { look } from './actions/look';
 import { GameController } from 'src/game/GameController';
-import { Character } from 'src/game/models/entities/Character';
+import { Character } from 'src/game/models/entities/material/Character';
 import { Play } from 'src/game/models/Play';
 import { Scenario } from 'src/game/models/Scenario';
 import { TextManager } from 'src/game/TextManager';
+import { DirectionKeys } from 'src/game/dictionnaries/Direction';
+import { look } from './actions/look';
 import { Jean } from './models/characters/Jean';
 import { Tom } from './models/characters/Tom';
 import { PoisonEffect } from './models/effects/PoisonEffect';
@@ -12,8 +13,9 @@ import { Box } from './models/objects/Box';
 import { Helmet } from './models/objects/Helmet';
 import { Shield } from './models/objects/Shield';
 import { Sword } from './models/objects/Sword';
-import { Chamber } from './models/rooms/Chamber';
-import { Corridor } from './models/rooms/Corridor';
+import { Door } from './models/passages/ChambreDoor';
+import { Chamber } from './models/places/Chamber';
+import { Corridor } from './models/places/Corridor';
 import { DestructionSpell } from './models/spells/DestructionSpell';
 import { IllusionSpell } from './models/spells/IllustionSpell';
 import { InvocationSpell } from './models/spells/InvocationSpell';
@@ -32,10 +34,13 @@ export const entityConstructors = {
   Tom,
   Sword,
   Shield,
+  Door,
 };
 
 export class TestScenario implements Scenario {
   id = 'test';
+
+  title = { fr: 'Test' };
 
   entityConstructors = entityConstructors;
 
@@ -57,7 +62,21 @@ export class TestScenario implements Scenario {
   init(play: Play) {
     const player = play.addEntity(entityConstructors.Jean.name) as Character;
 
-    player.moveTo(play.addEntity(entityConstructors.Chamber.name));
+    player.moveTo(play.getFirstEntityOfType(entityConstructors.Chamber.name));
+
+    // play.createConnection({
+    //   first: {
+    //     placeType: entityConstructors.Chamber.name,
+    //     text: { fr: 'a scale leads to a door' },
+    //   },
+    //   second: {
+    //     placeType: entityConstructors.Corridor.name,
+    //     text: { fr: 'a door at the end of the corridor' },
+    //   },
+    //   passageType: entityConstructors.Door.name,
+    //   directionKeyForFirst: DirectionKeys.North,
+    //   distance: 10,
+    // });
 
     // entities.player.moveTo(entities.chamber);
     // entities.box.moveTo(entities.chamber);
@@ -76,8 +95,8 @@ export class TestScenario implements Scenario {
     play.setPlayer(player);
   }
 
-  start(): void {
-    GameController.inform([
+  start(play: Play): void {
+    play.inform([
       {
         text: {
           fr:
@@ -89,5 +108,8 @@ export class TestScenario implements Scenario {
         },
       },
     ]);
+  }
+
+  update(play: Play): void {
   }
 }

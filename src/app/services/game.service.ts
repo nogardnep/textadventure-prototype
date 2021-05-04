@@ -8,7 +8,7 @@ import { InformComponent } from './../components/inform/inform.component';
 import { ModalController } from '@ionic/angular';
 import { Choice } from '../../game/models/Choice';
 import { Paragraph } from './../../game/models/Paragraph';
-import { Character } from '../../game/models/entities/Character';
+import { Character } from '../../game/models/entities/material/Character';
 import { StorageService } from './storage.service';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';

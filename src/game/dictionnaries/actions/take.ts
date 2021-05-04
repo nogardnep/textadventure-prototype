@@ -1,6 +1,7 @@
-import { Thing } from 'src/game/models/entities/Thing';
-import { Character } from 'src/game/models/entities/Character';
+import { Thing } from 'src/game/models/entities/material/Thing';
+import { Character } from 'src/game/models/entities/material/Character';
 import { Action } from '../Actions';
+import { UsuableObject } from 'src/game/models/entities/material/thing/UsuableObject';
 
 export const take: Action = {
   text: { fr: 'prendre' },
@@ -21,7 +22,10 @@ export const take: Action = {
     };
   },
   proceed: (author: Character, args: any[]) => {
-    const target = args[0] as Thing;
-    target.giveTo(author);
+    const target = args[0];
+
+    if (target instanceof UsuableObject) {
+      target.giveTo(author);
+    }
   },
 };

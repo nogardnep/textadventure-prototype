@@ -1,11 +1,12 @@
-import { Character } from 'src/game/models/entities/Character';
-import { Thing } from 'src/game/models/entities/Thing';
+import { Character } from 'src/game/models/entities/material/Character';
+import { Thing } from 'src/game/models/entities/material/Thing';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { Entity, EntityId } from 'src/game/models/Entity';
 import { GameController } from './../../../../game/GameController';
 import { EMPLACEMENT_NAMES } from '../../../../game/dictionnaries/Emplacement';
 import { NameWrapper } from './../../../../game/models/Text';
 import { GameService } from './../../../services/game.service';
+import { WearableObject } from 'src/game/models/entities/material/thing/object/WearableObject';
 
 @Component({
   selector: 'app-entity-preview',
@@ -31,21 +32,15 @@ export class EntityPreviewComponent implements OnInit {
   }
 
   isWorn(): boolean {
-    return (this.entity as Thing).worn;
+    return (this.entity as WearableObject).worn;
   }
 
   isOpen(): boolean {
-    return (
-      (this.entity as Thing).openable &&
-      !(this.entity as Thing).closed
-    );
+    return (this.entity as Thing).openable && !(this.entity as Thing).closed;
   }
 
   isClosed(): boolean {
-    return (
-      (this.entity as Thing).openable &&
-      (this.entity as Thing).closed
-    );
+    return (this.entity as Thing).openable && (this.entity as Thing).closed;
   }
 
   isDead(): boolean {
@@ -53,13 +48,10 @@ export class EntityPreviewComponent implements OnInit {
   }
 
   contentIsVisible(): boolean {
-    return (
-      !(this.entity as Thing).closed ||
-      (this.entity as Thing).transparent
-    );
+    return !(this.entity as Thing).closed || (this.entity as Thing).transparent;
   }
 
   getEmplacement(): NameWrapper {
-    return EMPLACEMENT_NAMES[(this.entity as Thing).getEmplacement()];
+    return EMPLACEMENT_NAMES[(this.entity as WearableObject).getEmplacement()];
   }
 }

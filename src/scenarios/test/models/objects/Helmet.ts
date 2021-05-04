@@ -1,16 +1,13 @@
-import { Play } from 'src/game/models/Play';
-import { EMPLACEMENT_KEYS } from 'src/game/dictionnaries/Emplacement';
-import { Thing } from 'src/game/models/entities/Thing';
-import { Name } from 'src/game/models/Name';
-import { WithModifiers } from 'src/game/models/entities/constraints/WithModifiers';
 import { ActionKey } from 'src/game/dictionnaries/Actions';
-import { Utils } from 'src/game/Utils';
+import { EMPLACEMENT_KEYS } from 'src/game/dictionnaries/Emplacement';
+import { WithModifiers } from 'src/game/models/entities/constraints/WithModifiers';
+import { WearableObject } from 'src/game/models/entities/material/thing/object/WearableObject';
+import { Name } from 'src/game/models/Name';
+import { Play } from 'src/game/models/Play';
 
-export class Helmet extends Thing implements WithModifiers {
+export class Helmet extends WearableObject implements WithModifiers {
   constructor(play: Play) {
     super(play);
-
-    this.wearable = true;
   }
 
   getDisplayedActions(additionnal1?: ActionKey[], additionnal2?: ActionKey[]) {

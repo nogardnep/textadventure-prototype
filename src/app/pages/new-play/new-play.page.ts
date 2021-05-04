@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Character } from 'src/game/models/entities/Character';
-import { Spell } from 'src/game/models/entities/Spell';
+import { Character } from 'src/game/models/entities/material/Character';
+import { Spell } from 'src/game/models/entities/immaterial/Spell';
 import { CARACTERISTIC_NAMES } from '../../../game/dictionnaries/Caracteristic';
 import { GameController } from './../../../game/GameController';
 import { EntityType } from './../../../game/models/Entity';
@@ -77,7 +77,7 @@ export class NewPlayPage implements OnInit {
         caracteristic.current = caracteristic.max;
       }
 
-      GameController.getPlay().getScenario().start();
+      GameController.getPlay().start();
       this.router.navigate(['/game']);
     }
   }

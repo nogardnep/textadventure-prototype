@@ -1,5 +1,5 @@
 <ng-container *ngFor="let paragraph of paragraphs">
-  <p *ngIf="!paragraph.condition || paragraph.condition()">
+  <p *ngIf="!paragraph.check || paragraph.check()">
     {{paragraph.text|text}}
   </p>
 </ng-container>

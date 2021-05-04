@@ -1,8 +1,7 @@
-import { ActionKeys, ActionKey } from '../dictionnaries/Actions';
-import { Utils } from '../Utils';
+import { ActionKey } from '../dictionnaries/Actions';
 import { Play } from './../models/Play';
 import { Choice } from './Choice';
-import { Spell } from './entities/Spell';
+import { Spell } from './entities/immaterial/Spell';
 import { Name } from './Name';
 import { Paragraph } from './Paragraph';
 import { NameWrapper } from './Text';
@@ -36,6 +35,8 @@ export class Entity implements StoredEntity {
   }
 
   init(): void {}
+
+  update(): void {}
 
   getStored(): StoredEntity {
     const stored = {};
@@ -73,12 +74,12 @@ export class Entity implements StoredEntity {
     return [];
   }
 
-  getDisplayedActions(a?: ActionKey[], b?: ActionKey[]): ActionKey[] {
-    let array: any[] = (a ? a : []).concat(b ? b : []);
+  getDisplayedActions(previous?: ActionKey[], next?: ActionKey[]): ActionKey[] {
+    let array: ActionKey[] = (previous ? previous : []).concat(
+      next ? next : []
+    );
 
     array = Array.from(new Set(array));
-
-    return array;
 
     return array;
   }
@@ -87,7 +88,7 @@ export class Entity implements StoredEntity {
     return additionnal ? additionnal : [];
   }
 
-  getResponseToAction(key: ActionKeys): void {}
+  getResponseToAction(key: ActionKey): void {}
 
   getResponseToSpell(spell: Spell, additionnal?: {}): {} {
     return additionnal ? additionnal : {};
