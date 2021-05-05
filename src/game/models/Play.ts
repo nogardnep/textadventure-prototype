@@ -21,6 +21,7 @@ import {
   DEFAULT_DISTANCE,
   Place,
 } from './entities/material/Place';
+import { MaterialEntity } from './entities/MaterialEntity';
 
 export interface StoredPlay {
   storedEntities: { [id: string]: StoredEntity };
@@ -284,8 +285,9 @@ export class Play {
     return success;
   }
 
+  // TODO: move
   useConnection(connection: Connection): void {
-    this.player.moveTo(this.getEntity(connection.destinationId));
+    this.player.moveTo(this.getEntity(connection.destinationId) as MaterialEntity);
     this.increaseTime(
       (connection.distance ? connection.distance : DEFAULT_DISTANCE) *
         DEFAULT_SPEED

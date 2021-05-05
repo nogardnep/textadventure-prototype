@@ -10,4 +10,12 @@ export abstract class Utils {
       }
     }
   }
+
+  static mergeWithoutDuplications(first: any[], second: any[]): any[] {
+    return this.removeDuplications(first.concat(second));
+  }
+
+  static removeDuplications(array: any[]): any[] {
+    return Array.from(new Set(array));
+  }
 }

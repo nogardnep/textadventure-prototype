@@ -10,6 +10,7 @@ export const take: Action = {
     const target = args[0];
 
     if (
+      target instanceof UsuableObject &&
       !target.fixed &&
       !author.isOwning(target, false) &&
       author.canReach(target)

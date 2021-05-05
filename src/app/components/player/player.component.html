@@ -38,6 +38,20 @@
     </ng-template>
   </div>
   <div>
+    <h3>Held objects</h3>
+    <div *ngIf="getHeldObjects(); then heldThenBlock else heldElseBlock"></div>
+    <ng-template #heldThenBlock>
+      <ul>
+        <li *ngFor="let entity of getHeldObjects()">
+          <app-entity-preview [entity]="entity"></app-entity-preview>
+        </li>
+      </ul>
+    </ng-template>
+    <ng-template #heldElseBlock>
+      <span>(nothing)</span>
+    </ng-template>
+  </div>
+  <div>
     <h3>Spells</h3>
     <ul *ngIf="player.spellsId.length > 0">
       <li *ngFor="let entity of player.getSpells()">

@@ -1,17 +1,17 @@
 import { Character } from 'src/game/models/entities/material/Character';
-import { WearableObject } from 'src/game/models/entities/material/thing/object/WearableObject';
+import { HoldableObject } from 'src/game/models/entities/material/thing/object/HoldableObject';
 import { Action } from '../Actions';
 
-export const pull: Action = {
-  text: { fr: 'retirer' },
+export const release: Action = {
+  text: { fr: 'lâcher' },
   check: (author: Character, args: any[]) => {
     let success = false;
     const target = args[0];
 
     if (
-      target instanceof WearableObject &&
+      target instanceof HoldableObject &&
       author.isOwning(target, false) &&
-      target.worn
+      target.held
     ) {
       success = true;
     }
@@ -23,8 +23,8 @@ export const pull: Action = {
   proceed: (author: Character, args: any[]) => {
     const target = args[0];
 
-    if (target instanceof WearableObject) {
-      target.pull();
+    if (target instanceof HoldableObject) {
+      target.release();
     }
   },
 };

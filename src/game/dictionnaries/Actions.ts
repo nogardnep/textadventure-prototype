@@ -1,3 +1,5 @@
+import { release } from './actions/release';
+import { hold } from './actions/hold';
 import { close } from './actions/close';
 import { put } from './actions/put';
 import { pull } from './actions/pull';
@@ -34,6 +36,8 @@ export enum ActionKeys {
   Open = 'open',
   Pull = 'pull',
   Put = 'put',
+  Hold = 'hold',
+  Release = 'release',
 }
 
 export const BASE_ACTIONS: {
@@ -46,4 +50,6 @@ export const BASE_ACTIONS: {
   open,
   pull,
   put,
+  hold,
+  release,
 };

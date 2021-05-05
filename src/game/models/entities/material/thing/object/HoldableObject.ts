@@ -1,43 +1,38 @@
+import { Utils } from 'src/game/Utils';
 import { ActionKey, ActionKeys } from 'src/game/dictionnaries/Actions';
-import { EMPLACEMENT_NAMES } from 'src/game/dictionnaries/Emplacement';
-import { Character } from 'src/game/models/entities/material/Character';
-import { Entity } from 'src/game/models/Entity';
 import { TextManager } from 'src/game/TextManager';
+import { MaterialEntity } from '../../../MaterialEntity';
+import { Character } from '../../Character';
 import { UsuableObject } from '../UsuableObject';
 
 export class HoldableObject extends UsuableObject {
-  hold = false;
+  held = false;
 
   getDisplayedActions(next?: ActionKey[], previous?: ActionKey[]) {
-    return super.getDisplayedActions(
-      [
-        // TODO
-      ],
-      next
+    return Utils.removeDuplications(
+      super.getDisplayedActions().concat([ActionKeys.Hold, ActionKeys.Release])
     );
   }
 
   drop(): boolean {
     let canProceed = true;
 
-    if (this.hold) {
-      canProceed = this.pull();
+    if (this.held) {
+      canProceed = this.release();
     }
 
     if (canProceed) {
-      this.moveTo(
-        this.getPlay().getEntity(this.getPlay().getPlayer().getParentId())
-      );
+      super.drop();
     }
 
     return canProceed;
   }
 
-  moveTo(newParent: Entity) {
-    if (this.hold) {
-      const pulled = this.pull();
+  moveTo(newParent: MaterialEntity) {
+    if (this.held) {
+      const canProceed = this.release();
 
-      if (pulled) {
+      if (canProceed) {
         super.moveTo(newParent);
       }
     } else {
@@ -45,44 +40,40 @@ export class HoldableObject extends UsuableObject {
     }
   }
 
-  put(): boolean {
+  hold(): boolean {
     let canProceed = false;
-    // let owner: Character = this.getPlay().getEntity(this.parentId) as Character;
+    let owner = this.getPlay().getEntity(this.parentId) as Character;
 
-    // const alreadyWornObject = owner.getWornObject(this.getEmplacement());
+    const allHandsUsed = owner.getHeldObjects().length >= owner.hands;
 
-    // if (alreadyWornObject) {
-    //   this.getPlay().inform([
-    //     {
-    //       text: {
-    //         fr:
-    //           'Something already worn at ' +
-    //           TextManager.extractName(
-    //             EMPLACEMENT_NAMES[this.getEmplacement()]
-    //           ).printSimple(),
-    //       },
-    //     },
-    //   ]);
-    //   canProceed = false;
-    // } else {
-    //   canProceed = true;
-    // }
+    if (allHandsUsed) {
+      this.getPlay().inform([
+        {
+          text: {
+            fr: 'Toutes vos mains sont prises',
+          },
+        },
+      ]);
+      canProceed = false;
+    } else {
+      canProceed = true;
+    }
 
-    // if (canProceed) {
-    //   this.worn = true;
-    //   this.save();
-    // }
+    if (canProceed) {
+      this.held = true;
+      this.save();
+    }
 
     return canProceed;
   }
 
-  pull(): boolean {
+  release(): boolean {
     let canProceed = true;
 
-    // if (canProceed) {
-    //   this.worn = false;
-    //   this.save();
-    // }
+    if (canProceed) {
+      this.held = false;
+      this.save();
+    }
 
     return canProceed;
   }

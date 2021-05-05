@@ -16,7 +16,7 @@ export class Corridor extends Place {
       {
         text: { fr: 'go to chamber' },
         proceed: () => {
-          this.exitTo(entityConstructors.Chamber.name);
+          this.exitToPlace(entityConstructors.Chamber.name);
         },
       },
     ]);

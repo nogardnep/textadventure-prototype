@@ -1,6 +1,7 @@
 import { GameController } from 'src/game/GameController';
 import { Entity } from 'src/game/models/Entity';
 import { Component, Input, OnInit } from '@angular/core';
+import { MaterialEntity } from 'src/game/models/entities/MaterialEntity';
 
 @Component({
   selector: 'app-entity-list',
@@ -8,17 +9,17 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./entity-list.component.scss'],
 })
 export class EntityListComponent implements OnInit {
-  @Input() parent: Entity;
+  @Input() parent: MaterialEntity;
 
   constructor() {}
 
   ngOnInit() {}
 
-  isVisible(entity: Entity): boolean {
+  isVisible(entity: MaterialEntity): boolean {
     return GameController.getPlay().getPlayer().canSee(entity);
   }
 
-  isThePlayer(entity: Entity): boolean {
+  isThePlayer(entity: MaterialEntity): boolean {
     return entity.equals(GameController.getPlay().getPlayer());
   }
 }

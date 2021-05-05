@@ -19,6 +19,7 @@ import { Corridor } from './models/places/Corridor';
 import { DestructionSpell } from './models/spells/DestructionSpell';
 import { IllusionSpell } from './models/spells/IllustionSpell';
 import { InvocationSpell } from './models/spells/InvocationSpell';
+import { Place } from 'src/game/models/entities/material/Place';
 
 export const entityConstructors = {
   Chamber,
@@ -61,22 +62,29 @@ export class TestScenario implements Scenario {
 
   init(play: Play) {
     const player = play.addEntity(entityConstructors.Jean.name) as Character;
+    const chamber = play.getFirstEntityOfType(
+      entityConstructors.Chamber.name
+    ) as Place;
 
-    player.moveTo(play.getFirstEntityOfType(entityConstructors.Chamber.name));
+    player.moveTo(chamber);
 
-    // play.createConnection({
-    //   first: {
-    //     placeType: entityConstructors.Chamber.name,
-    //     text: { fr: 'a scale leads to a door' },
-    //   },
-    //   second: {
-    //     placeType: entityConstructors.Corridor.name,
-    //     text: { fr: 'a door at the end of the corridor' },
-    //   },
-    //   passageType: entityConstructors.Door.name,
-    //   directionKeyForFirst: DirectionKeys.North,
-    //   distance: 10,
-    // });
+    for (let i = 0; i < 4; i++) {
+      (play.addEntity(entityConstructors.Sword.name) as Sword).moveTo(player);
+    }
+
+    play.createConnection({
+      first: {
+        placeType: entityConstructors.Chamber.name,
+        text: { fr: 'a scale leads to a door' },
+      },
+      second: {
+        placeType: entityConstructors.Corridor.name,
+        text: { fr: 'a door at the end of the corridor' },
+      },
+      passageType: entityConstructors.Door.name,
+      directionKeyForFirst: DirectionKeys.North,
+      distance: 10,
+    });
 
     // entities.player.moveTo(entities.chamber);
     // entities.box.moveTo(entities.chamber);
@@ -110,6 +118,5 @@ export class TestScenario implements Scenario {
     ]);
   }
 
-  update(play: Play): void {
-  }
+  update(play: Play): void {}
 }

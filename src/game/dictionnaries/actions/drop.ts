@@ -3,12 +3,16 @@ import { UsuableObject } from 'src/game/models/entities/material/thing/UsuableOb
 import { Action } from '../Actions';
 
 export const drop: Action = {
-  text: { fr: 'lâcher' },
+  text: { fr: 'poser' },
   check: (author: Character, args: any[]) => {
     let success = false;
     const target = args[0];
 
-    if (!target.fixed && author.isOwning(target, false)) {
+    if (
+      target instanceof UsuableObject &&
+      !target.fixed &&
+      author.isOwning(target, false)
+    ) {
       success = true;
     }
 

@@ -20,32 +20,28 @@ export class Chamber extends Place {
     return { en: new Name('Chamber'), fr: new Name('Chambre') };
   }
 
-  getConnections(): Connection[] {
-    const passage = this.getPlay()
-      .addEntity(entityConstructors.Door.name)
-      .getId();
-
-    return [
-      {
-        destinationId: this.getPlay()
-          .getFirstEntityOfType(entityConstructors.Corridor.name, true)
-          .getId(),
-        directionKey: DirectionKeys.North,
-        text: { fr: 'a door' },
-        distance: 10,
-        passageId: this.getPlay()
-          .getFirstEntityOfType(entityConstructors.Door.name)
-          .getId(),
-      },
-    ];
-  }
+  // getConnections(): Connection[] {
+  //   return [
+  //     {
+  //       destinationId: this.getPlay()
+  //         .getFirstEntityOfType(entityConstructors.Corridor.name, true)
+  //         .getId(),
+  //       directionKey: DirectionKeys.North,
+  //       text: { fr: 'a door' },
+  //       distance: 10,
+  //       passageId: this.getPlay()
+  //         .addEntity(entityConstructors.Door.name)
+  //         .getId(),
+  //     },
+  //   ];
+  // }
 
   getChoices() {
     return [
       {
         text: { fr: 'go to corridor' },
         proceed: () => {
-          this.exitTo(entityConstructors.Corridor.name);
+          this.exitToPlace(entityConstructors.Corridor.name);
         },
       },
       {

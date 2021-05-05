@@ -1,15 +1,18 @@
 import { ActionKey, ActionKeys } from 'src/game/dictionnaries/Actions';
 import { EMPLACEMENT_NAMES } from 'src/game/dictionnaries/Emplacement';
 import { Character } from 'src/game/models/entities/material/Character';
-import { Entity } from 'src/game/models/Entity';
 import { TextManager } from 'src/game/TextManager';
+import { Utils } from 'src/game/Utils';
+import { MaterialEntity } from '../../../MaterialEntity';
 import { UsuableObject } from '../UsuableObject';
 
 export class WearableObject extends UsuableObject {
   worn = false;
 
-  getDisplayedActions(next?: ActionKey[], previous?: ActionKey[]) {
-    return super.getDisplayedActions([ActionKeys.Put, ActionKeys.Pull], next);
+  getDisplayedActions() {
+    return Utils.removeDuplications(
+      super.getDisplayedActions().concat([ActionKeys.Put, ActionKeys.Pull])
+    );
   }
 
   drop(): boolean {
@@ -20,13 +23,13 @@ export class WearableObject extends UsuableObject {
     }
 
     if (canProceed) {
-      super.drop()
+      super.drop();
     }
 
     return canProceed;
   }
 
-  moveTo(newParent: Entity) {
+  moveTo(newParent: MaterialEntity) {
     if (this.worn) {
       const pulled = this.pull();
 

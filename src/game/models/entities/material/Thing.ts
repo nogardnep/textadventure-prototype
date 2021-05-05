@@ -7,8 +7,8 @@ export  class Thing extends MaterialEntity {
   openable = false;
   closed = false;
 
-  getDisplayedActions(next?: ActionKey[], previous?: ActionKey[]) {
-    return super.getDisplayedActions([ActionKeys.Open, ActionKeys.Close], next);
+  getDisplayedActions() {
+    return super.getDisplayedActions().concat([ActionKeys.Open, ActionKeys.Close]);
   }
 
   close(): void {

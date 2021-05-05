@@ -10,13 +10,8 @@ export class Helmet extends WearableObject implements WithModifiers {
     super(play);
   }
 
-  getDisplayedActions(additionnal1?: ActionKey[], additionnal2?: ActionKey[]) {
-    // return super.getDisplayedActions(Utils.mergeArrays(
-    //   ["look"],
-    //   additionnal,
-    //   true
-    // ));
-    return super.getDisplayedActions(['look'], additionnal1);
+  getDisplayedActions() {
+    return super.getDisplayedActions().concat(['look']);
   }
 
   getName() {

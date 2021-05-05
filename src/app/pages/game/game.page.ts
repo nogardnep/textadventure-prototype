@@ -22,8 +22,8 @@ export class GamePage implements OnInit {
   private selectionSubscription: Subscription;
 
   constructor(private gameService: GameService, private router: Router) {
-    // GameController.loadPlay();
-    GameController.startNewPlay(this.gameService.getCurrentScenario())
+    GameController.loadPlay();
+    // GameController.startNewPlay(this.gameService.getCurrentScenario())
     // GameController.getPlay().getScenario().start()
   }
 

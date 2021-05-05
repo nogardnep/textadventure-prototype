@@ -4,5 +4,4 @@ export type Choice = {
   text: TextWrapper;
   proceed: () => void;
   check?: () => boolean;
-  duration?: number;
 };

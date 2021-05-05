@@ -14,7 +14,7 @@ export class PlayerComponent implements OnInit {
   @Input() player: Character;
   caracteristicNames = CARACTERISTIC_NAMES;
   text: { [key: string]: TextWrapper } = {
-    caracteristics: {fr: 'caracteristiques', en: 'caracteristics'},
+    caracteristics: { fr: 'caracteristiques', en: 'caracteristics' },
   };
 
   constructor(private gameService: GameService) {}
@@ -33,6 +33,10 @@ export class PlayerComponent implements OnInit {
 
   getWornObjects(): Entity[] {
     return this.player.getWornObjects();
+  }
+
+  getHeldObjects(): Entity[] {
+    return this.player.getHeldObjects();
   }
 
   ngOnInit() {}

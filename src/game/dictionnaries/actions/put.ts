@@ -1,7 +1,6 @@
-import { Thing } from 'src/game/models/entities/material/Thing';
 import { Character } from 'src/game/models/entities/material/Character';
-import { Action } from '../Actions';
 import { WearableObject } from 'src/game/models/entities/material/thing/object/WearableObject';
+import { Action } from '../Actions';
 
 export const put: Action = {
   text: { fr: 'mettre' },
@@ -9,7 +8,11 @@ export const put: Action = {
     let success = false;
     const target = args[0];
 
-    if (author.isOwning(target, false) && target.wearable && !target.worn) {
+    if (
+      target instanceof WearableObject &&
+      author.isOwning(target, false) &&
+      !target.worn
+    ) {
       success = true;
     }
 

@@ -1,53 +1,53 @@
 import { Thing } from 'src/game/models/entities/material/Thing';
 import { EntityId, EntityType } from 'src/game/models/Entity';
 import { Entity } from '../../Entity';
-import { Caracteristics } from '../../../dictionnaries/Caracteristic';
+import { Play } from '../../Play';
 import { Spell } from '../immaterial/Spell';
-import { WithModifiers } from '../constraints/WithModifiers';
 import { MaterialEntity } from '../MaterialEntity';
-import { UsuableObject } from './thing/UsuableObject';
-import { Effect } from '../immaterial/Effect';
 import { HoldableObject } from './thing/object/HoldableObject';
 import { WearableObject } from './thing/object/WearableObject';
+import { UsuableObject } from './thing/UsuableObject';
 
-export  class Character extends MaterialEntity {
+export class Character extends MaterialEntity {
   dead = false;
   hands = 2;
   spellsId: EntityId[] = [];
-  effectsId: EntityId[] = [];
-  caracteristics: Caracteristics = {
-    life: {
-      current: 10,
-      max: 10,
-    },
-    resistance: {
-      current: 10,
-      max: 10,
-    },
-  };
 
-  getCaracteristicValue(key: string): number {
-    return this.caracteristics[key];
+  constructor(play: Play) {
+    super(play);
+
+    this.caracteristics = {
+      life: {
+        current: 10,
+        max: 10,
+        min: 0,
+      },
+      resistance: {
+        current: 10,
+        max: 10,
+        min: 0,
+      },
+    };
   }
 
-  getHeldObjects(): UsuableObject[] {
-    let found: UsuableObject[] = [];
+  getHeldObjects(): HoldableObject[] {
+    let found: HoldableObject[] = [];
 
     this.getChildren().forEach((item: Entity) => {
       if (this.isHolding(item)) {
-        found.push(item as UsuableObject);
+        found.push(item as HoldableObject);
       }
     });
 
     return found;
   }
 
-  getWornObjects(): UsuableObject[] {
-    let found: UsuableObject[] = [];
+  getWornObjects(): WearableObject[] {
+    let found: WearableObject[] = [];
 
     this.getChildren().forEach((item: Entity) => {
       if (this.isWearing(item)) {
-        found.push(item as UsuableObject);
+        found.push(item as WearableObject);
       }
     });
 
@@ -67,7 +67,7 @@ export  class Character extends MaterialEntity {
   }
 
   isHolding(entity: Entity): boolean {
-    return (entity as HoldableObject).hold;
+    return (entity as HoldableObject).held;
   }
 
   isWearing(entity: Entity): boolean {
@@ -103,63 +103,6 @@ export  class Character extends MaterialEntity {
     return entities;
   }
 
-  getEffects(): Effect[] {
-    const entities: Effect[] = [];
-
-    this.effectsId.forEach((id: EntityId) => {
-      const entity = this.getPlay().getEntity(id);
-      entities.push(entity as Effect);
-    });
-
-    return entities;
-  }
-
-  getEffectiveCaracteristics(): { [key: string]: number } {
-    const effectiveCaracteristics = {};
-
-    for (let key in this.caracteristics) {
-      effectiveCaracteristics[key] = this.getEffectiveCaracteristicValue(key);
-    }
-
-    return effectiveCaracteristics;
-  }
-
-  getEffectiveCaracteristicValue(key: string): number {
-    let value = this.caracteristics[key];
-
-    value += this.getCaracteristicModifiers(key);
-
-    return value;
-  }
-
-  getCaracteristicModifiers(key: string) {
-    return (
-      this.getModifier(key, this.childrenId) +
-      this.getModifier(key, this.effectsId)
-    );
-  }
-
-  private getModifier(id: EntityId, from: EntityId[]): number {
-    let value = 0;
-
-    from.forEach((item: EntityId) => {
-      const entity = (this.getPlay().getEntity(
-        item
-      ) as unknown) as WithModifiers;
-
-      if (entity.getModifiers) {
-        const modifier = entity.getModifiers()[id];
-        if (modifier) {
-          if (!modifier.condition || modifier.condition()) {
-            value += modifier.value;
-          }
-        }
-      }
-    });
-
-    return value;
-  }
-
   giveEffect(entity: Entity): void {
     this.addToList(entity, this.effectsId);
   }
@@ -168,26 +111,18 @@ export  class Character extends MaterialEntity {
     this.addToList(entity, this.spellsId);
   }
 
-  giveChildOfType(type: EntityType, doNotCreateNew: boolean): Entity {
+  giveChildOfType(type: EntityType, doNotCreateNew: boolean): MaterialEntity {
     const entity = this.giveEntityOfTypeInList(
       type,
       this.childrenId,
       doNotCreateNew
-    );
+    ) as MaterialEntity;
 
     if (entity) {
-      entity.setParentId(this.getId());
+      entity.setParent(this);
     }
 
     return entity;
-  }
-
-  giveEffectOfType(type: EntityType, doNotCreateNew: boolean): Effect {
-    return this.giveEntityOfTypeInList(
-      type,
-      this.effectsId,
-      doNotCreateNew
-    ) as Effect;
   }
 
   giveSpellOfType(type: EntityType, doNotCreateNew: boolean): Spell {
@@ -206,11 +141,11 @@ export  class Character extends MaterialEntity {
     return this.getChildrenOfType(type, this.spellsId);
   }
 
-  takeOffEffect(entity: Entity): void {
+  takeOffEffect(entity: Spell): void {
     this.removeFromList(entity, this.effectsId);
   }
 
-  takeOffSpell(entity: Entity): void {
+  takeOffSpell(entity: Spell): void {
     this.removeFromList(entity, this.spellsId);
   }
 
@@ -228,10 +163,10 @@ export  class Character extends MaterialEntity {
     return spell;
   }
 
-  canSee(entity: Entity): boolean {
+  canSee(entity: MaterialEntity): boolean {
     let response = false;
 
-    if (!(entity as MaterialEntity).invisible) {
+    if (!entity.invisible) {
       const parent = entity.getParent();
 
       if (parent) {
@@ -246,7 +181,7 @@ export  class Character extends MaterialEntity {
     return response;
   }
 
-  private checkVisible(entity: Entity): boolean {
+  private checkVisible(entity: MaterialEntity): boolean {
     let response = false;
 
     if (!(entity as Thing).closed || (entity as Thing).transparent) {
@@ -262,25 +197,25 @@ export  class Character extends MaterialEntity {
     return response;
   }
 
-  canReach(entity: Entity): boolean {
+  canReach(entity: MaterialEntity): boolean {
     let response = false;
 
     if (!(entity as MaterialEntity).invisible) {
-        const parent = entity.getParent();
+      const parent = entity.getParent();
 
-        if (parent) {
-          if (parent.equals(this.getParent())) {
-            response = true;
-          } else {
-            response = this.checkReachable(parent);
-          }
+      if (parent) {
+        if (parent.equals(this.getParent())) {
+          response = true;
+        } else {
+          response = this.checkReachable(parent);
         }
+      }
     }
 
     return response;
   }
 
-  private checkReachable(entity: Entity): boolean {
+  private checkReachable(entity: MaterialEntity): boolean {
     let response = false;
 
     if (

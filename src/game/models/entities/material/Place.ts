@@ -17,27 +17,33 @@ export type Connection = {
 export const DEFAULT_DISTANCE = 1;
 export const DEFAULT_SPEED = 1; // TODO: move
 
-export  class Place extends MaterialEntity {
+export class Place extends MaterialEntity {
   connections: Connection[] = [];
 
-  exit(exit: Connection): void {
+  exitToConnection(connection: Connection): void {
     this.getPlay()
       .getPlayer()
-      .moveTo(this.getPlay().getEntity(exit.destinationId));
+      .moveTo(
+        this.getPlay().getEntity(connection.destinationId) as MaterialEntity
+      );
   }
 
-  addConnection(connection: Connection): void {}
+  exitToPlace(type: EntityType): void {
+    const entity = this.getPlay().getFirstEntityOfType(type);
+    this.getPlay()
+      .getPlayer()
+      .moveTo(entity as MaterialEntity);
+  }
+
+  addConnection(connection: Connection): void {
+    this.connections.push(connection);
+  }
 
   getConnections(): Connection[] {
-    return [];
+    return this.connections;
   }
 
   getSection(): Section {
     return null;
-  }
-
-  exitTo(type: EntityType): void {
-    const entity = this.getPlay().getFirstEntityOfType(type);
-    this.getPlay().getPlayer().moveTo(entity);
   }
 }

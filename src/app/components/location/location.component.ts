@@ -1,8 +1,11 @@
-import { GameController } from '../../../game/GameController';
-import { Connection, Place } from '../../../game/models/entities/material/Place';
+import { Component, Input, OnInit } from '@angular/core';
+import { MaterialEntity } from 'src/game/models/entities/MaterialEntity';
+import { Entity } from 'src/game/models/Entity';
+import {
+  Connection,
+  Place,
+} from '../../../game/models/entities/material/Place';
 import { GameService } from '../../services/game.service';
-import { Component, OnInit, Input } from '@angular/core';
-import { EntityId, Entity } from 'src/game/models/Entity';
 
 @Component({
   selector: 'app-location',
@@ -12,7 +15,7 @@ import { EntityId, Entity } from 'src/game/models/Entity';
 export class LocationComponent implements OnInit {
   // @Input() entityId: EntityId;
   // entity: Entity;
-  @Input() entity: Entity;
+  @Input() entity: MaterialEntity;
 
   constructor(private gameService: GameService) {}
 
@@ -26,7 +29,7 @@ export class LocationComponent implements OnInit {
   }
 
   onClickExit(exit: Connection): void {
-    (this.entity as Place).exit(exit);
+    (this.entity as Place).exitToConnection(exit);
     this.gameService.emitPlay();
   }
 }
