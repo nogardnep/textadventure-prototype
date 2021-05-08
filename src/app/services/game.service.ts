@@ -12,7 +12,7 @@ import { Character } from 'src/game/modules/base/models/entities/material/Charac
 import { Paragraph } from 'src/game/core/models/Paragraph';
 import { Choice } from 'src/game/core/models/Choice';
 import { Scenario } from 'src/game/core/models/Scenario';
-import { InformComponent } from 'src/app/components/inform/inform.component';
+import { InformComponent } from '../modules/shared/components/inform/inform.component';
 
 const PLAY_STORAGE_KEY = 'play';
 

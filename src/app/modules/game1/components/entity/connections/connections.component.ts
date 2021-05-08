@@ -1,6 +1,6 @@
-import { BaseActionKeys } from './../../../../game/modules/base/dictionnaries/actions';
 import { Component, Input, OnInit } from '@angular/core';
 import { Entity } from 'src/game/core/models/Entity';
+import { BaseActionKeys } from 'src/game/modules/base/dictionnaries/actions';
 import {
   Direction,
   DirectionKey,

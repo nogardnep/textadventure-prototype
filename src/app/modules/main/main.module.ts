@@ -1,31 +1,31 @@
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { NewPlayPage } from './pages/new-play/new-play.page';
+import { HomePage } from './../game1/pages/home/home.page';
+import { ConfigPage } from './pages/config/config.page';
+import { SharedModule } from './../shared/shared.module';
+import { MainRoutingModule } from './main-routing.module';
 import { IonicStorageModule } from '@ionic/storage-angular';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { MainModule } from './modules/main/main.module';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [NewPlayPage, ConfigPage, HomePage],
   entryComponents: [],
   imports: [
-    BrowserModule,
+    SharedModule,
+    // // AppModule,
     CommonModule,
-    MainModule,
     IonicModule.forRoot(),
-    FormsModule,
-    AppRoutingModule,
     IonicStorageModule.forRoot(),
     FormsModule,
+    MainRoutingModule,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Storage,
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [],
 })
-export class AppModule {}
+export class MainModule {}

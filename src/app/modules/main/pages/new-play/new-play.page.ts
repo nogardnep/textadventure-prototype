@@ -78,7 +78,7 @@ export class NewPlayPage implements OnInit {
       }
 
       GameController.getPlay().start();
-      this.router.navigate(['/game']);
+      this.router.navigate(['/game2']);
     }
   }
 

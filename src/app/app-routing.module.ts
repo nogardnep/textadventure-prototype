@@ -1,31 +1,21 @@
-import { ConfigPage } from './pages/config/config.page';
-import { HomePage } from './pages/home/home.page';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { NewPlayPage } from './pages/new-play/new-play.page';
-import { GamePage } from './pages/game/game.page';
 
 const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full',
+    path: 'main',
+    loadChildren: () =>
+      import('./modules/main/main.module').then((m) => m.MainModule),
   },
   {
-    path: 'home',
-    component: HomePage,
+    path: 'game1',
+    loadChildren: () =>
+      import('./modules/game1/game1.module').then((m) => m.Game1Module),
   },
   {
-    path: 'config',
-    component: ConfigPage,
-  },
-  {
-    path: 'new-play',
-    component: NewPlayPage,
-  },
-  {
-    path: 'game',
-    component: GamePage,
+    path: 'game2',
+    loadChildren: () =>
+      import('./modules/game2/game2.module').then((m) => m.Game2Module),
   },
 ];
 
