@@ -1,27 +1,30 @@
-import { TextWrapper } from './Text';
-import { Passage } from 'src/game/models/entities/material/thing/Passage';
-import { DEFAULT_ACTION_DURATION } from './../dictionnaries/Actions';
 import { Character } from 'src/game/models/entities/material/Character';
 import { Entity, EntityType } from 'src/game/models/Entity';
-import { Action, ActionKey, BASE_ACTIONS } from '../dictionnaries/Actions';
-import { Choice } from './Choice';
-import { EntityId, StoredEntity } from './Entity';
-import { Narration, StoredNarration } from './Narration';
-import { Paragraph } from './Paragraph';
-import { Scenario, ScenarioId } from './Scenario';
+import { TextManager } from 'src/game/TextManager';
+import { BASE_ACTIONS } from '../dictionnaries/Actions';
 import {
+  BASE_DIRECTIONS,
   Direction,
   DirectionKey,
-  BASE_DIRECTIONS,
   getOppositeDirection,
 } from '../dictionnaries/Direction';
+import { Action } from './Action';
+import { BaseGlossary } from './BaseGlossary';
+import { Choice } from './Choice';
 import {
   Connection,
-  DEFAULT_SPEED,
   DEFAULT_DISTANCE,
+  DEFAULT_SPEED,
   Place,
 } from './entities/material/Place';
 import { MaterialEntity } from './entities/MaterialEntity';
+import { EntityId, StoredEntity } from './Entity';
+import { FrenchBaseGlossary } from './FrenchBaseGlossary';
+import { Glossary, Person, Time } from './Glossary';
+import { Narration, StoredNarration } from './Narration';
+import { Paragraph } from './Paragraph';
+import { Scenario, ScenarioId } from './Scenario';
+import { TextWrapper } from './Text';
 
 export interface StoredPlay {
   storedEntities: { [id: string]: StoredEntity };
@@ -36,6 +39,10 @@ type PlayCallBacks = {
   onInform: (paragraphs: Paragraph[], actions?: Choice[]) => void;
 };
 
+const BASE_GLOSSARIES = {
+  fr: new FrenchBaseGlossary(),
+};
+
 export class Play {
   private entities: { [id: string]: Entity };
   private player: Character;
@@ -44,9 +51,11 @@ export class Play {
   private scenario: Scenario;
   private stored: StoredPlay;
   private callbacks: PlayCallBacks;
-  private actions: { [key: string]: Action };
   private directions: { [key: string]: Direction };
   private entityConstructors: { [key: string]: new (play: Play) => Entity };
+  private glossaries: { [languageKey: string]: BaseGlossary };
+  private actions: { [actionKey: string]: Action };
+  // private actions: { [key: string]: ActionOld };
 
   constructor(scenario: Scenario, callbacks: PlayCallBacks) {
     this.stored = {
@@ -64,9 +73,15 @@ export class Play {
     this.scenario = scenario;
     this.time = 0;
     this.stored.scenarioId = this.scenario.id;
+    // this.actions = Object.assign({}, BASE_ACTIONS, scenario.actions);
     this.actions = Object.assign({}, BASE_ACTIONS, scenario.actions);
     this.directions = Object.assign({}, BASE_DIRECTIONS, scenario.directions);
     this.entityConstructors = Object.assign({}, scenario.entityConstructors);
+
+    this.glossaries = Object.assign({}, BASE_GLOSSARIES, scenario.glossaries);
+
+    Glossary.setPerson(Person.SecondPersonPlural);
+    Glossary.setTime(Time.Present);
   }
 
   init(): void {
@@ -127,6 +142,10 @@ export class Play {
     return this.scenario;
   }
 
+  getGlossary(): BaseGlossary {
+    return TextManager.extract(this.glossaries);
+  }
+
   addEntity(type: EntityType): Entity {
     const constructor = this.entityConstructors[type];
     const entity = new constructor(this);
@@ -137,8 +156,6 @@ export class Play {
     return entity;
   }
 
-
-  // TODO: unusable?
   createConnection(param: {
     first: {
       placeType: EntityType;
@@ -148,7 +165,7 @@ export class Play {
       placeType: EntityType;
       text: TextWrapper;
     };
-    passageType?: EntityType;
+    connectionType?: EntityType;
     directionKeyForFirst?: DirectionKey;
     distance?: number;
   }): void {
@@ -160,10 +177,10 @@ export class Play {
       param.second.placeType
     ) as Place;
 
-    let passage: Entity;
+    let connection: Entity;
 
-    if (param.passageType) {
-      passage = this.addEntity(param.passageType);
+    if (param.connectionType) {
+      connection = this.addEntity(param.connectionType);
     }
 
     firstPlace.addConnection({
@@ -171,7 +188,7 @@ export class Play {
       text: param.first.text,
       directionKey: param.directionKeyForFirst,
       distance: param.distance,
-      passageId: passage.getId(),
+      passageId: connection.getId(),
     });
 
     secondPlace.addConnection({
@@ -179,7 +196,7 @@ export class Play {
       text: param.second.text,
       directionKey: getOppositeDirection(param.directionKeyForFirst),
       distance: param.distance,
-      passageId: passage.getId(),
+      passageId: connection.getId(),
     });
   }
 
@@ -206,6 +223,7 @@ export class Play {
   setPlayer(entity: Character): void {
     this.player = entity;
     this.storePlayer();
+    Glossary.setGender(entity.getGender());
   }
 
   getPlayer(): Character {
@@ -265,7 +283,18 @@ export class Play {
     return this.directions[key];
   }
 
-  getAction(key: ActionKey): Action {
+  // TODO: move
+  useConnection(connection: Connection): void {
+    this.player.moveTo(
+      this.getEntity(connection.destinationId) as MaterialEntity
+    );
+    this.increaseTime(
+      (connection.distance ? connection.distance : DEFAULT_DISTANCE) *
+        DEFAULT_SPEED
+    );
+  }
+
+  getAction(key: string): Action {
     const action = this.actions[key];
 
     if (!action) {
@@ -273,68 +302,5 @@ export class Play {
     }
 
     return action;
-  }
-
-  tryAction(key: ActionKey, ...args: any[]): boolean {
-    let success = false;
-
-    if (this.checkAction(key, false, args)) {
-      success = this.executeAction(key, args);
-    }
-
-    return success;
-  }
-
-  // TODO: move
-  useConnection(connection: Connection): void {
-    this.player.moveTo(this.getEntity(connection.destinationId) as MaterialEntity);
-    this.increaseTime(
-      (connection.distance ? connection.distance : DEFAULT_DISTANCE) *
-        DEFAULT_SPEED
-    );
-  }
-
-  private onActionEnded(key: ActionKey, withSuccess: boolean): void {
-    const action = this.getAction(key);
-
-    if (action && withSuccess) {
-      this.increaseTime(
-        action.duration !== undefined
-          ? action.duration
-          : DEFAULT_ACTION_DURATION
-      );
-    }
-  }
-
-  executeAction(key: ActionKey, args: any[]): boolean {
-    let success = false;
-
-    if (this.getAction(key)) {
-      let response = this.actions[key].proceed(this.player, args);
-
-      if (response === undefined || response === true) {
-        success = true;
-      }
-
-      this.onActionEnded(key, success);
-    }
-
-    return success;
-  }
-
-  checkAction(key: ActionKey, silently: boolean, args: any[]): boolean {
-    let success = false;
-
-    if (this.getAction(key)) {
-      let response = this.actions[key].check(this.player, args);
-
-      if (!silently && response.failureMessage) {
-        this.inform([{ text: response.failureMessage }]);
-      }
-
-      success = response.success;
-    }
-
-    return success;
   }
 }

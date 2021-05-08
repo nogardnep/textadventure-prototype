@@ -1,8 +1,6 @@
-import { ActionKey } from '../dictionnaries/Actions';
-import { Caracteristic } from '../dictionnaries/Caracteristic';
 import { Play } from './../models/Play';
 import { Choice } from './Choice';
-import { Spell } from './entities/immaterial/Spell';
+import { Image } from './Image';
 import { Name } from './Name';
 import { Paragraph } from './Paragraph';
 import { NameWrapper } from './Text';
@@ -16,10 +14,10 @@ export interface StoredEntity {
 }
 
 export class Entity implements StoredEntity {
-  protected onGetPlay: () => Play;
   name: string;
   id: EntityId;
   type: EntityType;
+  protected onGetPlay: () => Play;
 
   constructor(play: Play) {
     this.onGetPlay = () => {
@@ -69,15 +67,27 @@ export class Entity implements StoredEntity {
     return [];
   }
 
-  getDisplayedActions(): ActionKey[] {
+  getPreviewDescription(): Paragraph[] {
     return [];
+  }
+
+  getDisplayedActionKeys(): string[] {
+    return [];
+  }
+
+  getPreviewImage(): Image {
+    return null;
+  }
+
+  getFullImage(): Image {
+    return null;
   }
 
   getChoices(additionnal?: Choice[]): Choice[] {
     return additionnal ? additionnal : [];
   }
 
-  getResponseToAction(key: ActionKey): void {}
+  getResponseToAction(key: string): void {}
 
   getId(): string {
     return this.id;

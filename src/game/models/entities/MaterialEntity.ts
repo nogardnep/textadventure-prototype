@@ -10,6 +10,7 @@ export class MaterialEntity extends Entity {
   parentId: EntityId = null;
   caracteristics: { [key: string]: Caracteristic } = {};
   effectsId: EntityId[] = [];
+  factionId: EntityId = null;
 
   isOwning(entity: Entity, deepSearch: boolean): boolean {
     let found = false;

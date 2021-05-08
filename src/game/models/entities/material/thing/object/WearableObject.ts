@@ -1,4 +1,4 @@
-import { ActionKey, ActionKeys } from 'src/game/dictionnaries/Actions';
+import { BaseActionKeys } from 'src/game/dictionnaries/Actions';
 import { EMPLACEMENT_NAMES } from 'src/game/dictionnaries/Emplacement';
 import { Character } from 'src/game/models/entities/material/Character';
 import { TextManager } from 'src/game/TextManager';
@@ -9,9 +9,9 @@ import { UsuableObject } from '../UsuableObject';
 export class WearableObject extends UsuableObject {
   worn = false;
 
-  getDisplayedActions() {
+  getDisplayedActionKeys() {
     return Utils.removeDuplications(
-      super.getDisplayedActions().concat([ActionKeys.Put, ActionKeys.Pull])
+      super.getDisplayedActionKeys().concat([BaseActionKeys.Putting, BaseActionKeys.Pulling])
     );
   }
 

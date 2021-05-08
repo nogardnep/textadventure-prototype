@@ -1,55 +1,33 @@
-import { release } from './actions/release';
-import { hold } from './actions/hold';
-import { close } from './actions/close';
-import { put } from './actions/put';
-import { pull } from './actions/pull';
-import { drop } from './actions/drop';
-import { Character } from 'src/game/models/entities/material/Character';
-import { TextWrapper } from '../models/Text';
-import { cast } from './actions/cast';
-import { take } from './actions/take';
-import { open } from './actions/open';
+import { Casting } from '../models/actions/Casting';
+import { Closing } from '../models/actions/Closing';
+import { Dropping } from '../models/actions/Dropping';
+import { Holding } from '../models/actions/Holding';
+import { Opening } from '../models/actions/Opening';
+import { Pulling } from '../models/actions/Pulling';
+import { Putting } from '../models/actions/Putting';
+import { Releasing } from '../models/actions/Releasing';
+import { Taking } from './../models/actions/Taking';
 
-export type Action = {
-  text: TextWrapper;
-  patterns?: [];
-  check: (
-    author: Character,
-    ...args: any[]
-  ) => {
-    success: boolean;
-    failureMessage?: TextWrapper;
-  };
-  proceed: (author: Character, ...args: any[]) => boolean | void;
-  duration?: number;
-};
-
-export const DEFAULT_ACTION_DURATION = 1;
-
-export type ActionKey = string;
-
-export enum ActionKeys {
-  Take = 'take',
-  Drop = 'drop',
-  Cast = 'cast',
-  Close = 'close',
-  Open = 'open',
-  Pull = 'pull',
-  Put = 'put',
-  Hold = 'hold',
-  Release = 'release',
+export enum BaseActionKeys {
+  Taking = 'taking',
+  Dropping = 'dropping',
+  Opening = 'opening',
+  Closing = 'closing',
+  Putting = 'putting',
+  Pulling = 'pulling',
+  Casting = 'casting',
+  Holding = 'holding',
+  Releasing = 'releasing',
 }
 
-export const BASE_ACTIONS: {
-  [key in ActionKeys]: Action;
-} = {
-  take,
-  drop,
-  cast,
-  close,
-  open,
-  pull,
-  put,
-  hold,
-  release,
+export const BASE_ACTIONS: { [key in BaseActionKeys] } = {
+  taking: new Taking(),
+  dropping: new Dropping(),
+  opening: new Opening(),
+  closing: new Closing(),
+  putting: new Putting(),
+  pulling: new Pulling(),
+  casting: new Casting(),
+  holding: new Holding(),
+  releasing: new Releasing(),
 };

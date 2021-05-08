@@ -1,4 +1,3 @@
-import { ActionKey } from 'src/game/dictionnaries/Actions';
 import { EMPLACEMENT_KEYS } from 'src/game/dictionnaries/Emplacement';
 import { WithModifiers } from 'src/game/models/entities/constraints/WithModifiers';
 import { WearableObject } from 'src/game/models/entities/material/thing/object/WearableObject';
@@ -10,9 +9,9 @@ export class Helmet extends WearableObject implements WithModifiers {
     super(play);
   }
 
-  getDisplayedActions() {
-    return super.getDisplayedActions().concat(['look']);
-  }
+  // getDisplayedActions() {
+  //   return super.getDisplayedActions().concat(['look']);
+  // }
 
   getName() {
     return { fr: new Name('Helmet') };

@@ -1,10 +1,10 @@
+import { DirectionKeys } from 'src/game/dictionnaries/Direction';
 import { GameController } from 'src/game/GameController';
 import { Character } from 'src/game/models/entities/material/Character';
+import { Place } from 'src/game/models/entities/material/Place';
 import { Play } from 'src/game/models/Play';
 import { Scenario } from 'src/game/models/Scenario';
 import { TextManager } from 'src/game/TextManager';
-import { DirectionKeys } from 'src/game/dictionnaries/Direction';
-import { look } from './actions/look';
 import { Jean } from './models/characters/Jean';
 import { Tom } from './models/characters/Tom';
 import { PoisonEffect } from './models/effects/PoisonEffect';
@@ -19,7 +19,7 @@ import { Corridor } from './models/places/Corridor';
 import { DestructionSpell } from './models/spells/DestructionSpell';
 import { IllusionSpell } from './models/spells/IllustionSpell';
 import { InvocationSpell } from './models/spells/InvocationSpell';
-import { Place } from 'src/game/models/entities/material/Place';
+import { ModifiedFrenchBaseGlossary } from './ModifiedFrenchBaseGlossary';
 
 export const entityConstructors = {
   Chamber,
@@ -43,10 +43,12 @@ export class TestScenario implements Scenario {
 
   title = { fr: 'Test' };
 
+  glossaries = { fr: new ModifiedFrenchBaseGlossary() };
+
   entityConstructors = entityConstructors;
 
   actions = {
-    look,
+    //   look,
   };
 
   starting = {
@@ -81,7 +83,7 @@ export class TestScenario implements Scenario {
         placeType: entityConstructors.Corridor.name,
         text: { fr: 'a door at the end of the corridor' },
       },
-      passageType: entityConstructors.Door.name,
+      connectionType: entityConstructors.Door.name,
       directionKeyForFirst: DirectionKeys.North,
       distance: 10,
     });

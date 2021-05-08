@@ -1,8 +1,8 @@
 <div>
   <ul>
-    <ng-container *ngFor="let key of entity.getDisplayedActions()">
-      <li *ngIf="isVisible(key)">
-        <button (click)="onClickAction(key)">{{getText(key)|text}}</button>
+    <ng-container *ngFor="let item of visibleActions | keyvalue">
+      <li>
+        <button (click)="onClickAction(item.value)">{{item.value.getText()|text}}</button>
       </li>
     </ng-container>
   </ul>

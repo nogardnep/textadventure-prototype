@@ -1,10 +1,8 @@
-import { LANGUAGE_KEYS, LANGUAGE_NAMES } from 'src/game/dictionnaries/Language';
-import { Subscription } from 'rxjs';
-import { ConfigService } from '../../services/config.service';
 import { Location } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ConfigData } from '../../services/config.service';
-import { TextManager } from 'src/game/TextManager';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { LanguageKey, LANGUAGE_NAMES } from 'src/game/dictionnaries/Language';
+import { ConfigData, ConfigService } from '../../services/config.service';
 
 @Component({
   selector: 'app-config',
@@ -13,7 +11,7 @@ import { TextManager } from 'src/game/TextManager';
 })
 export class ConfigPage implements OnInit, OnDestroy {
   data: ConfigData;
-  languageKeys = LANGUAGE_KEYS;
+  languageKeys = LanguageKey;
   languageNames = LANGUAGE_NAMES;
 
   private dataSubscription: Subscription;

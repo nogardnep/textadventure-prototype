@@ -1,47 +1,45 @@
-import { TextWrapper, NameWrapper } from './models/Text';
+import { LanguageKey } from './dictionnaries/Language';
 import { Name } from './models/Name';
-import { LANGUAGE_KEYS } from './dictionnaries/Language';
+import { NameWrapper, TextWrapper } from './models/Text';
 
 export abstract class TextManager {
-  static currentLanguage: string;
+  static currentLanguageKey: string;
 
   static setLanguage(language: string) {
-    this.currentLanguage = language;
+    this.currentLanguageKey = language;
+  }
+
+  static getLanguageKey(): string {
+    return this.currentLanguageKey;
   }
 
   static printText(wrapper: TextWrapper): string {
-    let toPrint: string = wrapper[this.currentLanguage];
+    let toPrint = this.extract(wrapper);
 
     if (toPrint === undefined) {
-      for (let key in LANGUAGE_KEYS) {
-        const found = wrapper[key]
-
-        if (found) {
-          toPrint = found;
-        }
-      }
-
-      if (toPrint === undefined) {
-        toPrint = '(missing text)';
-      }
+      toPrint = '(missing text)';
     }
 
     return toPrint;
   }
 
   static extractName(wrapper: NameWrapper): Name {
-    let name: Name = wrapper[this.currentLanguage];
+    return this.extract(wrapper);
+  }
 
-    if (name === undefined ) {
-      for (let key in LANGUAGE_KEYS) {
-        const found = wrapper[key]
+  static extract(wrapper: { [languageKey: string]: any }): any {
+    let toExtract: any = wrapper[this.currentLanguageKey];
+
+    if (toExtract === undefined) {
+      for (let key in LanguageKey) {
+        const found = wrapper[LanguageKey[key]];
 
         if (found) {
-          name = found;
+          toExtract = found;
         }
       }
     }
 
-    return name;
+    return toExtract;
   }
 }

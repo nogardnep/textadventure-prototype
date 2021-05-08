@@ -1,6 +1,7 @@
 import { Thing } from 'src/game/models/entities/material/Thing';
 import { EntityId, EntityType } from 'src/game/models/Entity';
 import { Entity } from '../../Entity';
+import { Gender } from '../../Glossary';
 import { Play } from '../../Play';
 import { Spell } from '../immaterial/Spell';
 import { MaterialEntity } from '../MaterialEntity';
@@ -28,6 +29,10 @@ export class Character extends MaterialEntity {
         min: 0,
       },
     };
+  }
+
+  getGender(): Gender {
+    return Gender.Male;
   }
 
   getHeldObjects(): HoldableObject[] {

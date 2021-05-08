@@ -43,6 +43,10 @@ export class GameController {
     });
   }
 
+static getPlay(): Play {
+  return this.play
+}
+
   static getScenarios(): Scenarios {
     return this.scenarios;
   }
@@ -80,10 +84,6 @@ export class GameController {
         this.inform(paragraphs, actions);
       },
     });
-  }
-
-  static getPlay(): Play {
-    return this.play;
   }
 
   static narrate(paragraphs: Paragraph[]): void {

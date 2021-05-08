@@ -1,29 +1,38 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActionKeys, ActionKey } from 'src/game/dictionnaries/Actions';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Action } from 'src/game/models/Action';
 import { Entity } from 'src/game/models/Entity';
-import { TextWrapper } from 'src/game/models/Text';
 
 @Component({
   selector: 'app-actions',
   templateUrl: './actions.component.html',
   styleUrls: ['./actions.component.scss'],
 })
-export class ActionsComponent implements OnInit {
+export class ActionsComponent implements OnInit, OnChanges {
   @Input() entity: Entity;
+  visibleActions: { [key: string]: Action } = {};
 
   constructor() {}
 
   ngOnInit() {}
 
-  onClickAction(key: ActionKey): void {
-    this.entity.getPlay().executeAction(key, [this.entity]);
+  ngOnChanges() {
+    this.visibleActions = {};
+
+    this.entity.getDisplayedActionKeys().forEach((key: string) => {
+      const action = this.entity.getPlay().getAction(key);
+
+      if (this.isVisible(action)) {
+        this.visibleActions[key] = action;
+      }
+    });
   }
 
-  isVisible(key: ActionKey): boolean {
-    return this.entity.getPlay().checkAction(key, true, [this.entity]);
+  onClickAction(action: Action): void {
+    action.execute(this.entity.getPlay().getPlayer(), [this.entity]);
   }
 
-  getText(key: ActionKey): TextWrapper {
-    return this.entity.getPlay().getAction(key).text;
+  isVisible(action: Action): boolean {
+    return action.check(this.entity.getPlay().getPlayer(), [this.entity], true)
+      .usable;
   }
 }

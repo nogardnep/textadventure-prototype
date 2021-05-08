@@ -1,10 +1,9 @@
-import { GameService } from 'src/app/services/game.service';
-import { TextManager } from 'src/game/TextManager';
-import { LANGUAGE_KEYS } from '../../game/dictionnaries/Language';
-import { Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { StorageService } from './storage.service';
+import { Subject } from 'rxjs';
+import { TextManager } from 'src/game/TextManager';
 import { Utils } from 'src/game/Utils';
+import { LanguageKey } from '../../game/dictionnaries/Language';
+import { StorageService } from './storage.service';
 
 export type ConfigData = {
   audio: {
@@ -62,7 +61,7 @@ export class ConfigService {
       audio: {
         volume: 0.5,
       },
-      language: LANGUAGE_KEYS.fr,
+      language: LanguageKey.French,
     };
   }
 }

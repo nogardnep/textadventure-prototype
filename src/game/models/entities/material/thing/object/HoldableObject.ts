@@ -1,6 +1,5 @@
+import { BaseActionKeys } from 'src/game/dictionnaries/Actions';
 import { Utils } from 'src/game/Utils';
-import { ActionKey, ActionKeys } from 'src/game/dictionnaries/Actions';
-import { TextManager } from 'src/game/TextManager';
 import { MaterialEntity } from '../../../MaterialEntity';
 import { Character } from '../../Character';
 import { UsuableObject } from '../UsuableObject';
@@ -8,9 +7,11 @@ import { UsuableObject } from '../UsuableObject';
 export class HoldableObject extends UsuableObject {
   held = false;
 
-  getDisplayedActions(next?: ActionKey[], previous?: ActionKey[]) {
+  getDisplayedActionKeys() {
     return Utils.removeDuplications(
-      super.getDisplayedActions().concat([ActionKeys.Hold, ActionKeys.Release])
+      super
+        .getDisplayedActionKeys()
+        .concat([BaseActionKeys.Holding, BaseActionKeys.Releasing])
     );
   }
 

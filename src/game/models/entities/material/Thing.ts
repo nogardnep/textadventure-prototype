@@ -1,4 +1,4 @@
-import { ActionKey, ActionKeys } from '../../../dictionnaries/Actions';
+import { BaseActionKeys } from '../../../dictionnaries/Actions';
 import { MaterialEntity } from '../MaterialEntity';
 
 export  class Thing extends MaterialEntity {
@@ -7,8 +7,8 @@ export  class Thing extends MaterialEntity {
   openable = false;
   closed = false;
 
-  getDisplayedActions() {
-    return super.getDisplayedActions().concat([ActionKeys.Open, ActionKeys.Close]);
+  getDisplayedActionKeys() {
+    return super.getDisplayedActionKeys().concat([BaseActionKeys.Opening, BaseActionKeys.Closing]);
   }
 
   close(): void {

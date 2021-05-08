@@ -1,6 +1,7 @@
 import { Play } from 'src/game/models/Play';
-import { Action } from '../dictionnaries/Actions';
 import { Direction } from '../dictionnaries/Direction';
+import { Action } from './Action';
+import { BaseGlossary } from './BaseGlossary';
 import { Entity, EntityType } from './Entity';
 import { TextWrapper } from './Text';
 
@@ -20,6 +21,7 @@ export interface Scenario {
     availableSpells: EntityType[];
     askForName: boolean;
   };
+  glossaries: { [languageKey: string]: BaseGlossary };
   init(play: Play): void;
   start(play: Play): void;
   update(play: Play): void;

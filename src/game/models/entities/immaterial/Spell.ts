@@ -1,8 +1,8 @@
-import { ActionKey, ActionKeys } from 'src/game/dictionnaries/Actions';
+import { BaseActionKeys } from 'src/game/dictionnaries/Actions';
 import { ImmaterialEntity } from '../ImmaterialEntity';
 
 export  class Spell extends ImmaterialEntity {
-  getDisplayedActions() {
-    return super.getDisplayedActions().concat([ActionKeys.Cast]);
+  getDisplayedActionKeys() {
+    return super.getDisplayedActionKeys().concat([BaseActionKeys.Casting]);
   }
 }

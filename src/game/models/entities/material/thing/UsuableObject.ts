@@ -1,12 +1,12 @@
-import { ActionKeys } from 'src/game/dictionnaries/Actions';
+import { BaseActionKeys } from 'src/game/dictionnaries/Actions';
 import { Utils } from 'src/game/Utils';
 import { MaterialEntity } from '../../MaterialEntity';
 import { Thing } from '../Thing';
 
 export class UsuableObject extends Thing {
-  getDisplayedActions() {
+  getDisplayedActionKeys() {
     return Utils.removeDuplications(
-      super.getDisplayedActions().concat([ActionKeys.Take, ActionKeys.Drop])
+      super.getDisplayedActionKeys().concat([BaseActionKeys.Taking, BaseActionKeys.Dropping])
     );
   }
 

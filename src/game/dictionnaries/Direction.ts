@@ -11,7 +11,16 @@ export type Direction = {
 export enum DirectionKeys {
   North = 'north',
   South = 'south',
-  // TODO
+  East = 'east',
+  West = 'west',
+  NorthEast = 'northEast',
+  NorthWest = 'northWest',
+  SouthEast = 'southEast',
+  SouthWest = 'southWest',
+  Up = 'up',
+  Down = 'down',
+  Inside = 'inside',
+  Outside = 'outside',
 }
 
 export const BASE_DIRECTIONS: {
@@ -23,7 +32,47 @@ export const BASE_DIRECTIONS: {
   },
   south: {
     key: 'south',
-    name: { fr: new Name('nord') },
+    name: { fr: new Name('sud') },
+  },
+  east: {
+    key: 'east',
+    name: { fr: new Name('est') },
+  },
+  west: {
+    key: 'west',
+    name: { fr: new Name('ouest') },
+  },
+  northEast: {
+    key: 'northWest',
+    name: { fr: new Name('nord-est') },
+  },
+  northWest: {
+    key: 'northWest',
+    name: { fr: new Name('nord-ouest') },
+  },
+  southEast: {
+    key: 'southEast',
+    name: { fr: new Name('sud-est') },
+  },
+  southWest: {
+    key: 'southWest',
+    name: { fr: new Name('sud-ouest') },
+  },
+  up: {
+    key: 'up',
+    name: { fr: new Name('haut') },
+  },
+  down: {
+    key: 'down',
+    name: { fr: new Name('bas') },
+  },
+  inside: {
+    key: 'inside',
+    name: { fr: new Name('dedans') },
+  },
+  outside: {
+    key: 'outside',
+    name: { fr: new Name('dehors') },
   },
   // TODO
 };
@@ -35,7 +84,39 @@ export function getOppositeDirection(key: DirectionKey): DirectionKey {
     case DirectionKeys.North:
       oppositeDirection = DirectionKeys.South;
       break;
-    // TODO
+    case DirectionKeys.South:
+      oppositeDirection = DirectionKeys.North;
+      break;
+    case DirectionKeys.East:
+      oppositeDirection = DirectionKeys.West;
+      break;
+    case DirectionKeys.West:
+      oppositeDirection = DirectionKeys.East;
+      break;
+    case DirectionKeys.NorthEast:
+      oppositeDirection = DirectionKeys.SouthWest;
+      break;
+    case DirectionKeys.NorthWest:
+      oppositeDirection = DirectionKeys.SouthEast;
+      break;
+    case DirectionKeys.SouthEast:
+      oppositeDirection = DirectionKeys.NorthWest;
+      break;
+    case DirectionKeys.SouthWest:
+      oppositeDirection = DirectionKeys.NorthEast;
+      break;
+    case DirectionKeys.Up:
+      oppositeDirection = DirectionKeys.Down;
+      break;
+    case DirectionKeys.Down:
+      oppositeDirection = DirectionKeys.Up;
+      break;
+    case DirectionKeys.Inside:
+      oppositeDirection = DirectionKeys.Outside;
+      break;
+    case DirectionKeys.Outside:
+      oppositeDirection = DirectionKeys.Inside;
+      break;
   }
 
   return oppositeDirection;
