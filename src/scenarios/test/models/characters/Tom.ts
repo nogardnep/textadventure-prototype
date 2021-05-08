@@ -1,6 +1,6 @@
-import { Play } from 'src/game/models/Play';
-import { entityConstructors } from '../../TestScenario';
-import { Character } from 'src/game/models/entities/material/Character';
+import { Play } from 'src/game/core/models/Play';
+import { TestScenario } from '../../TestScenario';
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
 
 export class Tom extends Character {
   constructor(play: Play) {
@@ -11,7 +11,7 @@ export class Tom extends Character {
   }
 
   init() {
-    const helmet = this.giveChildOfType(entityConstructors.Helmet.name, true);
+    const helmet = this.giveChildOfType(TestScenario.entityConstructors.Helmet.name, true);
     // TODO: this.put(helmet)
   }
 }

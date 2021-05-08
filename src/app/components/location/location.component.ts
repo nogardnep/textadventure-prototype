@@ -1,11 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MaterialEntity } from 'src/game/models/entities/MaterialEntity';
-import { Entity } from 'src/game/models/Entity';
+import { GameService } from 'src/app/services/game.service';
 import {
   Connection,
   Place,
-} from '../../../game/models/entities/material/Place';
-import { GameService } from '../../services/game.service';
+} from 'src/game/modules/base/models/entities/material/Place';
+import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 
 @Component({
   selector: 'app-location',

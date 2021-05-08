@@ -1,7 +1,6 @@
-import { GameController } from './../../../game/GameController';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { Entity, EntityId } from 'src/game/models/Entity';
-import { GameService } from './../../services/game.service';
+import { GameService } from 'src/app/services/game.service';
+import { Entity } from 'src/game/core/models/Entity';
 
 @Component({
   selector: 'app-entity',

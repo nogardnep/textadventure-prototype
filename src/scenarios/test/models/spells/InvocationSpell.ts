@@ -1,5 +1,5 @@
-import { Spell } from "src/game/models/entities/immaterial/Spell";
-import { Name } from "src/game/models/Name";
+import { Spell } from 'src/game/modules/base/models/entities/immaterial/Spell';
+import { Name } from 'src/game/core/models/Name';
 
 export class InvocationSpell extends Spell {
   getName() {

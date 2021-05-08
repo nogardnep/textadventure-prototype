@@ -1,9 +1,9 @@
-import { Connection, Place } from 'src/game/models/entities/material/Place';
-import { Spell } from 'src/game/models/entities/immaterial/Spell';
-import { Name } from 'src/game/models/Name';
-import { Play } from 'src/game/models/Play';
-import { entityConstructors } from '../../TestScenario';
-import { DirectionKeys } from 'src/game/dictionnaries/Direction';
+import { Place } from 'src/game/modules/base/models/entities/material/Place';
+import { Spell } from 'src/game/modules/base/models/entities/immaterial/Spell';
+import { Name } from 'src/game/core/models/Name';
+import { Play } from 'src/game/core/models/Play';
+import { TestScenario } from '../../TestScenario';
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
 
 export class Chamber extends Place {
   fire: boolean = false;
@@ -13,7 +13,7 @@ export class Chamber extends Place {
   }
 
   init() {
-    this.giveChildOfType(entityConstructors.Tom.name, false);
+    this.giveChildOfType(TestScenario.entityConstructors.Tom.name, false);
   }
 
   getName() {
@@ -41,19 +41,21 @@ export class Chamber extends Place {
       {
         text: { fr: 'go to corridor' },
         proceed: () => {
-          this.exitToPlace(entityConstructors.Corridor.name);
+          this.exitToPlace(TestScenario.entityConstructors.Corridor.name);
         },
       },
       {
         text: { fr: 'set fire' },
         proceed: () => {
           // this.fire = true;
-          this.getPlay()
-            .getPlayer()
-            .giveSpellOfType(entityConstructors.InvocationSpell.name, true);
-          this.getPlay()
-            .getPlayer()
-            .giveEffectOfType(entityConstructors.PoisonEffect.name, true);
+          (this.getPlay().getPlayer() as Character).giveSpellOfType(
+            TestScenario.entityConstructors.InvocationSpell.name,
+            true
+          );
+          (this.getPlay().getPlayer() as Character).giveEffectOfType(
+            TestScenario.entityConstructors.PoisonEffect.name,
+            true
+          );
         },
         condition: () => {
           return !this.fire;
@@ -66,7 +68,7 @@ export class Chamber extends Place {
     let response = null;
 
     switch (spell.getType()) {
-      case entityConstructors.DestructionSpell.name: {
+      case TestScenario.entityConstructors.DestructionSpell.name: {
         response = () => {
           this.getPlay().inform([{ text: { en: 'destroy all' } }]);
         };

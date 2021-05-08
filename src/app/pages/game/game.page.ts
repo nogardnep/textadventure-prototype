@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GameService } from 'src/app/services/game.service';
-import { GameController } from 'src/game/GameController';
-import { Character } from 'src/game/models/entities/material/Character';
-import { Entity } from 'src/game/models/Entity';
-import { Play } from 'src/game/models/Play';
-import { Narration } from './../../../game/models/Narration';
-
+import { GameController } from 'src/game/core/GameController';
+import { Entity } from 'src/game/core/models/Entity';
+import { Narration } from 'src/game/core/models/Narration';
+import { Play } from 'src/game/core/models/Play';
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
 
 @Component({
   selector: 'app-game',
@@ -72,5 +71,4 @@ export class GamePage implements OnInit {
   onClickConfig(): void {
     this.router.navigate(['/config']);
   }
-
 }

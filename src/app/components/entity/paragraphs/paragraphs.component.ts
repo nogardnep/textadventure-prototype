@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Paragraph } from '../../../../game/models/Paragraph';
+import { Paragraph } from 'src/game/core/models/Paragraph';
 
 @Component({
   selector: 'entity-paragraphs',

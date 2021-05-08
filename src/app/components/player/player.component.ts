@@ -1,9 +1,9 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
-import { Character } from 'src/game/models/entities/material/Character';
-import { CARACTERISTIC_NAMES } from '../../../game/dictionnaries/Caracteristic';
-import { Entity } from './../../../game/models/Entity';
-import { TextWrapper } from './../../../game/models/Text';
+import { Entity } from 'src/game/core/models/Entity';
+import { TextWrapper } from 'src/game/core/models/Text';
+import { CARACTERISTIC_NAMES } from 'src/game/modules/base/dictionnaries/caracteristics';
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
 
 @Component({
   selector: 'component-player',

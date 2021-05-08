@@ -1,8 +1,8 @@
-import { Paragraph } from './../../../game/models/Paragraph';
-import { TextWrapper } from './../../../game/models/Text';
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Choice } from 'src/game/models/Choice';
+import { Choice } from 'src/game/core/models/Choice';
+import { Paragraph } from 'src/game/core/models/Paragraph';
+import { TextWrapper } from 'src/game/core/models/Text';
 
 @Component({
   selector: 'app-inform',
@@ -18,8 +18,7 @@ export class InformComponent implements OnInit {
 
   constructor(private modalController: ModalController) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onClickOption(action?: Choice): void {
     this.modalController.dismiss();

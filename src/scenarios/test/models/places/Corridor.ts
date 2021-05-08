@@ -1,8 +1,6 @@
-import { Entity } from 'src/game/models/Entity';
-import { Name } from '../../../../game/models/Name';
-import { entityConstructors } from '../../TestScenario';
-import { GameController } from '../../../../game/GameController';
-import { Place } from '../../../../game/models/entities/material/Place';
+import { Name } from 'src/game/core/models/Name';
+import { TestScenario } from '../../TestScenario';
+import { Place } from 'src/game/modules/base/models/entities/material/Place';
 
 export class Corridor extends Place {
   toogle = false;
@@ -16,7 +14,7 @@ export class Corridor extends Place {
       {
         text: { fr: 'go to chamber' },
         proceed: () => {
-          this.exitToPlace(entityConstructors.Chamber.name);
+          this.exitToPlace(TestScenario.entityConstructors.Chamber.name);
         },
       },
     ]);

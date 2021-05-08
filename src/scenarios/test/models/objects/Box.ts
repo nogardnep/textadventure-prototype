@@ -1,6 +1,6 @@
-import { UsuableObject } from 'src/game/models/entities/material/thing/UsuableObject';
-import { Name } from 'src/game/models/Name';
-import { Play } from 'src/game/models/Play';
+import { UsuableObject } from 'src/game/modules/base/models/entities/material/thing/UsuableObject';
+import { Name } from 'src/game/core/models/Name';
+import { Play } from 'src/game/core/models/Play';
 
 export class Box extends UsuableObject {
   constructor(play: Play) {

@@ -1,6 +1,6 @@
-import { NameWrapper } from './../../game/models/Text';
 import { Pipe, PipeTransform } from '@angular/core';
-import { TextManager } from 'src/game/TextManager';
+import { NameWrapper } from 'src/game/core/models/Text';
+import { TextManager } from 'src/game/core/TextManager';
 
 @Pipe({ name: 'name' })
 export class NamePipe implements PipeTransform {

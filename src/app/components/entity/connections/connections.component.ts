@@ -1,11 +1,16 @@
+import { BaseActionKeys } from './../../../../game/modules/base/dictionnaries/actions';
+import { Component, Input, OnInit } from '@angular/core';
+import { Entity } from 'src/game/core/models/Entity';
 import {
   Direction,
   DirectionKey,
-} from './../../../../game/dictionnaries/Direction';
-import { Entity } from 'src/game/models/Entity';
-import { Component, Input, OnInit } from '@angular/core';
-import { Connection, Place } from 'src/game/models/entities/material/Place';
-import { Passage } from 'src/game/models/entities/material/thing/Passage';
+} from 'src/game/modules/base/dictionnaries/direction';
+import { BaseScenario } from 'src/game/modules/base/models/BaseScenario';
+import {
+  Connection,
+  Place,
+} from 'src/game/modules/base/models/entities/material/Place';
+import { Passage } from 'src/game/modules/base/models/entities/material/thing/Passage';
 
 @Component({
   selector: 'app-connections',
@@ -29,12 +34,16 @@ export class ConnectionsComponent implements OnInit {
   }
 
   onClickConnection(connection: Connection): void {
-    this.entity.getPlay().useConnection(connection);
-    // TODO
+    const action = this.entity.getPlay().getAction(BaseActionKeys.GoingTo);
+    const player = this.entity.getPlay().getPlayer();
+
+    action.use(player, [connection]);
   }
 
   getDirection(key: DirectionKey): Direction {
-    return this.entity.getPlay().getDirection(key);
+    return (this.entity.getPlay().getScenario() as BaseScenario).directions[
+      key
+    ];
   }
 
   getPassage(connection: Connection): Passage {

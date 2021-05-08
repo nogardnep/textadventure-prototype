@@ -1,19 +1,18 @@
-import { Scenario } from 'src/game/models/Scenario';
 import { ConfigService } from './config.service';
-import { GameController } from 'src/game/GameController';
-import { Play, StoredPlay } from './../../game/models/Play';
-import { Jean } from '../../scenarios/test/models/characters/Jean';
+import { GameController } from 'src/game/core/GameController';
 import { Router } from '@angular/router';
-import { InformComponent } from './../components/inform/inform.component';
 import { ModalController } from '@ionic/angular';
-import { Choice } from '../../game/models/Choice';
-import { Paragraph } from './../../game/models/Paragraph';
-import { Character } from '../../game/models/entities/material/Character';
 import { StorageService } from './storage.service';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Entity, EntityId } from 'src/game/models/Entity';
 import { SCENARIOS } from 'src/scenarios/scenarios';
+import { Entity } from 'src/game/core/models/Entity';
+import { Play, StoredPlay } from 'src/game/core/models/Play';
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
+import { Paragraph } from 'src/game/core/models/Paragraph';
+import { Choice } from 'src/game/core/models/Choice';
+import { Scenario } from 'src/game/core/models/Scenario';
+import { InformComponent } from 'src/app/components/inform/inform.component';
 
 const PLAY_STORAGE_KEY = 'play';
 
@@ -65,8 +64,8 @@ export class GameService {
   }
 
   // TODO: temp
-  getCurrentScenario() : Scenario{
-    return SCENARIOS['test']
+  getCurrentScenario(): Scenario {
+    return SCENARIOS['test'];
   }
 
   async inform(paragraphs: Paragraph[], actions?: Choice[]) {

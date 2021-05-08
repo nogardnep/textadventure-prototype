@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { Action } from 'src/game/models/Action';
-import { Entity } from 'src/game/models/Entity';
+import { Action } from 'src/game/core/models/Action';
+import { Entity } from 'src/game/core/models/Entity';
 
 @Component({
   selector: 'app-actions',
@@ -28,7 +28,7 @@ export class ActionsComponent implements OnInit, OnChanges {
   }
 
   onClickAction(action: Action): void {
-    action.execute(this.entity.getPlay().getPlayer(), [this.entity]);
+    action.use(this.entity.getPlay().getPlayer(), [this.entity]);
   }
 
   isVisible(action: Action): boolean {

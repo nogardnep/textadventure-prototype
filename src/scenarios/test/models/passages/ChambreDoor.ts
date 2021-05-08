@@ -1,6 +1,6 @@
-import { Passage } from 'src/game/models/entities/material/thing/Passage';
-import { Name } from 'src/game/models/Name';
-import { Play } from 'src/game/models/Play';
+import { Passage } from 'src/game/modules/base/models/entities/material/thing/Passage';
+import { Name } from 'src/game/core/models/Name';
+import { Play } from 'src/game/core/models/Play';
 
 export class Door extends Passage {
   constructor(play: Play) {

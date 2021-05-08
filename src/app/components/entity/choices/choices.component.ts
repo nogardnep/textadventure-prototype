@@ -1,7 +1,6 @@
-import { GameController } from '../../../../game/GameController';
-import { Choice } from '../../../../game/models/Choice';
 import { Component, Input, OnInit } from '@angular/core';
-import { Entity } from 'src/game/models/Entity';
+import { Choice } from 'src/game/core/models/Choice';
+import { Entity } from 'src/game/core/models/Entity';
 
 @Component({
   selector: 'app-choices',

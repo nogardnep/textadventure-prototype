@@ -1,7 +1,7 @@
-import { GameController } from 'src/game/GameController';
-import { Entity } from 'src/game/models/Entity';
 import { Component, Input, OnInit } from '@angular/core';
-import { MaterialEntity } from 'src/game/models/entities/MaterialEntity';
+import { GameController } from 'src/game/core/GameController';
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
+import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 
 @Component({
   selector: 'app-entity-list',
@@ -16,7 +16,7 @@ export class EntityListComponent implements OnInit {
   ngOnInit() {}
 
   isVisible(entity: MaterialEntity): boolean {
-    return GameController.getPlay().getPlayer().canSee(entity);
+    return (GameController.getPlay().getPlayer() as Character).canSee(entity);
   }
 
   isThePlayer(entity: MaterialEntity): boolean {

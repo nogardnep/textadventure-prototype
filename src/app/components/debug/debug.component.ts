@@ -1,6 +1,6 @@
 import { GameService } from 'src/app/services/game.service';
 import { Subscription } from 'rxjs';
-import { Play } from 'src/game/models/Play';
+import { Play } from 'src/game/core/models/Play';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 @Component({

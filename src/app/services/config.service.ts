@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { TextManager } from 'src/game/TextManager';
-import { Utils } from 'src/game/Utils';
-import { LanguageKey } from '../../game/dictionnaries/Language';
+import { LanguageKey } from 'src/game/core/dictionnaries/Language';
+import { TextManager } from 'src/game/core/TextManager';
+import { Utils } from 'src/game/core/Utils';
 import { StorageService } from './storage.service';
 
 export type ConfigData = {

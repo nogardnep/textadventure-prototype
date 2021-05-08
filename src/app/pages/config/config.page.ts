@@ -1,8 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { LanguageKey, LANGUAGE_NAMES } from 'src/game/dictionnaries/Language';
-import { ConfigData, ConfigService } from '../../services/config.service';
+import { ConfigData, ConfigService } from 'src/app/services/config.service';
+import {
+  LanguageKey,
+  LANGUAGE_NAMES,
+} from 'src/game/core/dictionnaries/Language';
 
 @Component({
   selector: 'app-config',

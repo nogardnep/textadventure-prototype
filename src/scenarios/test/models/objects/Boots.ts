@@ -1,9 +1,8 @@
-import { EMPLACEMENT_KEYS } from 'src/game/dictionnaries/Emplacement';
-import { WithModifiers } from 'src/game/models/entities/constraints/WithModifiers';
-import { WearableObject } from 'src/game/models/entities/material/thing/object/WearableObject';
-import { UsuableObject } from 'src/game/models/entities/material/thing/UsuableObject';
-import { Name } from 'src/game/models/Name';
-import { Play } from 'src/game/models/Play';
+import { EmplacementKey } from './../../../../game/modules/base/dictionnaries/emplacement';
+import { WithModifiers } from 'src/game/modules/base/models/entities/constraints/WithModifiers';
+import { WearableObject } from 'src/game/modules/base/models/entities/material/thing/object/WearableObject';
+import { Name } from 'src/game/core/models/Name';
+import { Play } from 'src/game/core/models/Play';
 
 export class Boots extends WearableObject implements WithModifiers {
   constructor(play: Play) {
@@ -26,6 +25,6 @@ export class Boots extends WearableObject implements WithModifiers {
   }
 
   getEmplacement() {
-    return EMPLACEMENT_KEYS.foot;
+    return EmplacementKey.Foot;
   }
 }

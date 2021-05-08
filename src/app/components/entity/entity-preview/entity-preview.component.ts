@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Character } from 'src/game/models/entities/material/Character';
-import { Thing } from 'src/game/models/entities/material/Thing';
-import { WearableObject } from 'src/game/models/entities/material/thing/object/WearableObject';
-import { Entity } from 'src/game/models/Entity';
-import { EMPLACEMENT_NAMES } from '../../../../game/dictionnaries/Emplacement';
-import { NameWrapper } from './../../../../game/models/Text';
-import { GameService } from './../../../services/game.service';
+import { GameService } from 'src/app/services/game.service';
+import { Entity } from 'src/game/core/models/Entity';
+import { NameWrapper } from 'src/game/core/models/Text';
+import { EMPLACEMENT_NAMES } from 'src/game/modules/base/dictionnaries/emplacement';
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
+import { Thing } from 'src/game/modules/base/models/entities/material/Thing';
+import { WearableObject } from 'src/game/modules/base/models/entities/material/thing/object/WearableObject';
 
 @Component({
   selector: 'app-entity-preview',

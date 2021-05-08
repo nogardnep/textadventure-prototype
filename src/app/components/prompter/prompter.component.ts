@@ -1,4 +1,4 @@
-import { GameController } from 'src/game/GameController';
+import { GameController } from 'src/game/core/GameController';
 import { GameService } from 'src/app/services/game.service';
 import { Component, OnInit } from '@angular/core';
 

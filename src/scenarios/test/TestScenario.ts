@@ -1,10 +1,13 @@
-import { DirectionKeys } from 'src/game/dictionnaries/Direction';
-import { GameController } from 'src/game/GameController';
-import { Character } from 'src/game/models/entities/material/Character';
-import { Place } from 'src/game/models/entities/material/Place';
-import { Play } from 'src/game/models/Play';
-import { Scenario } from 'src/game/models/Scenario';
-import { TextManager } from 'src/game/TextManager';
+import { Gender } from 'src/game/core/dictionnaries/Gender';
+import { GameController } from 'src/game/core/GameController';
+import { ConjugationTime } from 'src/game/core/models/Glossary';
+import { Play } from 'src/game/core/models/Play';
+import { TextManager } from 'src/game/core/TextManager';
+import { DirectionKeys } from 'src/game/modules/base/dictionnaries/direction'
+import { BaseScenario } from 'src/game/modules/base/models/BaseScenario';
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
+import { Place } from 'src/game/modules/base/models/entities/material/Place';
+import { Person } from './../../game/core/models/Glossary';
 import { Jean } from './models/characters/Jean';
 import { Tom } from './models/characters/Tom';
 import { PoisonEffect } from './models/effects/PoisonEffect';
@@ -21,69 +24,83 @@ import { IllusionSpell } from './models/spells/IllustionSpell';
 import { InvocationSpell } from './models/spells/InvocationSpell';
 import { ModifiedFrenchBaseGlossary } from './ModifiedFrenchBaseGlossary';
 
-export const entityConstructors = {
-  Chamber,
-  Corridor,
-  Jean,
-  Helmet,
-  Boots,
-  DestructionSpell,
-  PoisonEffect,
-  IllusionSpell,
-  InvocationSpell,
-  Box,
-  Tom,
-  Sword,
-  Shield,
-  Door,
-};
-
-export class TestScenario implements Scenario {
-  id = 'test';
-
-  title = { fr: 'Test' };
-
-  glossaries = { fr: new ModifiedFrenchBaseGlossary() };
-
-  entityConstructors = entityConstructors;
-
-  actions = {
-    //   look,
+export class TestScenario extends BaseScenario {
+  static entityConstructors = {
+    Chamber,
+    Corridor,
+    Jean,
+    Helmet,
+    Boots,
+    DestructionSpell,
+    PoisonEffect,
+    IllusionSpell,
+    InvocationSpell,
+    Box,
+    Tom,
+    Sword,
+    Shield,
+    Door,
   };
+
+  constructor() {
+    super();
+
+    this.id = 'test';
+    this.title = { fr: 'Test' };
+    this.glossaries = { fr: new ModifiedFrenchBaseGlossary() };
+    this.entityConstructors = Object.assign(
+      {},
+      this.entityConstructors,
+      TestScenario.entityConstructors
+    );
+    this.actions = Object.assign({}, this.actions, {
+      // look
+    });
+
+    this.glossaryConfiguration = {
+      conjugationTime: ConjugationTime.Present,
+      receiverGender: Gender.Male,
+      receiverPerson: Person.SecondPersonPlural,
+    };
+  }
 
   starting = {
     maxSpells: 2,
     caracteristicsPoints: 5,
     availableSpells: [
-      entityConstructors.DestructionSpell.name,
-      entityConstructors.IllusionSpell.name,
-      entityConstructors.InvocationSpell.name,
+      TestScenario.entityConstructors.DestructionSpell.name,
+      TestScenario.entityConstructors.IllusionSpell.name,
+      TestScenario.entityConstructors.InvocationSpell.name,
     ],
     askForName: false,
   };
 
   init(play: Play) {
-    const player = play.addEntity(entityConstructors.Jean.name) as Character;
+    const player = play.addEntity(
+      this.entityConstructors.Jean.name
+    ) as Character;
     const chamber = play.getFirstEntityOfType(
-      entityConstructors.Chamber.name
+      this.entityConstructors.Chamber.name
     ) as Place;
 
     player.moveTo(chamber);
 
     for (let i = 0; i < 4; i++) {
-      (play.addEntity(entityConstructors.Sword.name) as Sword).moveTo(player);
+      (play.addEntity(this.entityConstructors.Sword.name) as Sword).moveTo(
+        player
+      );
     }
 
-    play.createConnection({
+    this.createConnection(play, {
       first: {
-        placeType: entityConstructors.Chamber.name,
+        placeType: TestScenario.entityConstructors.Chamber.name,
         text: { fr: 'a scale leads to a door' },
       },
       second: {
-        placeType: entityConstructors.Corridor.name,
+        placeType: TestScenario.entityConstructors.Corridor.name,
         text: { fr: 'a door at the end of the corridor' },
       },
-      connectionType: entityConstructors.Door.name,
+      connectionType: TestScenario.entityConstructors.Door.name,
       directionKeyForFirst: DirectionKeys.North,
       distance: 10,
     });

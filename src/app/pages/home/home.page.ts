@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { GameService } from '../../services/game.service';
+import { GameService } from 'src/app/services/game.service';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +8,8 @@ import { GameService } from '../../services/game.service';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  constructor(private gameService: GameService, private router: Router) {}
+  constructor(private gameService: GameService, private router: Router) {
+  }
 
   onClickNew(): void {
     this.router.navigate(['/new-play']);

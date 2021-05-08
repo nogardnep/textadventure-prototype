@@ -1,5 +1,5 @@
-import { Effect } from "src/game/models/entities/immaterial/Effect";
-import { Name } from "src/game/models/Name";
+import { Effect } from "src/game/modules/base/models/entities/immaterial/Effect";
+import { Name } from "src/game/core/models/Name";
 
 export class PoisonEffect extends Effect {
   getName() {
