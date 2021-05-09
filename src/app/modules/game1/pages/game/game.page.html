@@ -8,6 +8,19 @@
     <div *ngIf="play.getPlayer()">
       <div>Time: {{play.getTime()}}</div>
       <ion-grid>
+        <!--ion-row>
+          <ion-col>
+            <h2>Prompter</h2>
+            <app-prompter></app-prompter>
+          </ion-col>
+          <ion-col>
+            <h2>Narration</h2>
+            <app-narration [narration]="play.getNarration()"></app-narration>
+            <div *ngIf="play.getPlayer()">
+              <app-choices [entity]="getLocation()"></app-choices>
+            </div>
+          </ion-col>
+        </ion-row-->
         <ion-row>
           <ion-col>
             <div>
@@ -21,17 +34,7 @@
           </ion-col>
           <ion-col>
             <h2>Player</h2>
-            <component-player [player]="play.getPlayer()"></component-player>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <h2>Prompter</h2>
-            <app-prompter></app-prompter>
-          </ion-col>
-          <ion-col>
-            <h2>Narration</h2>
-            <app-narration [narration]="play.getNarration()"></app-narration>
+            <component-player [entity]="play.getPlayer()"></component-player>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -39,10 +42,10 @@
     <div *ngIf="!play.getPlayer()">
       <p>No player found</p>
     </div>
-    <div>
+    <!--div>
       <h2>Debug</h2>
       <app-debug></app-debug>
-    </div>
+    </div-->
   </div>
   <div *ngIf="!play">
     <p>loading...</p>

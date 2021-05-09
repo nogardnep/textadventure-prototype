@@ -3,6 +3,7 @@ import { WithModifiers } from 'src/game/modules/base/models/entities/constraints
 import { WearableObject } from 'src/game/modules/base/models/entities/material/thing/object/WearableObject';
 import { Name } from 'src/game/core/models/Name';
 import { Play } from 'src/game/core/models/Play';
+import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 
 export class Helmet extends WearableObject implements WithModifiers {
   constructor(play: Play) {

@@ -50,4 +50,8 @@ export abstract class Glossary {
   protected extractName(name: NameWrapper): Name {
     return TextManager.extractName(name);
   }
+
+  getPhrase(key: string, args: any[]): string {
+    return null;
+  }
 }

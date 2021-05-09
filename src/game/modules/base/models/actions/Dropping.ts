@@ -3,7 +3,7 @@ import { Character } from '../entities/material/Character';
 import { UsuableObject } from '../entities/material/thing/UsuableObject';
 
 export class Dropping extends Action {
-  getDuraction() {
+  getDuration() {
     return 0;
   }
 
@@ -25,6 +25,7 @@ export class Dropping extends Action {
   }
   proceed(author: Character, args: any[]) {
     const target = args[0] as UsuableObject;
-    target.drop();
+
+    return target.droppedBy(author);
   }
 }

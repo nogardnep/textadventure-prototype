@@ -12,7 +12,7 @@ export class Holding extends Action {
     const target = args[0];
 
     if (
-      target instanceof HoldableObject &&
+      // target instanceof HoldableObject &&
       author.isOwning(target, false) &&
       !target.held
     ) {
@@ -25,10 +25,8 @@ export class Holding extends Action {
   }
 
   proceed(author: Character, args: any[]) {
-    const target = args[0];
+    const target = args[0] as HoldableObject;
 
-    if (target instanceof HoldableObject) {
-      target.hold();
-    }
+    return target.heldBy(author);
   }
 }

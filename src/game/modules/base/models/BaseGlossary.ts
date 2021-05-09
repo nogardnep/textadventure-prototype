@@ -6,3 +6,12 @@ export interface BaseGlossary {
   fixed(entity: Entity): string;
   notTakable(entity: Entity): string;
 }
+
+export enum BaseGlossaryKey {
+  OutOfReach = 'outOfReach',
+  AlreadyOwned = 'alreadyOwned',
+  Fixed = 'fixed',
+  NotTakable = 'notTakable',
+  GetPhrase = 'getPhrase',
+  Take = 'take',
+}

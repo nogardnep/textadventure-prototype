@@ -1,18 +1,18 @@
-import { ConfigService } from './config.service';
-import { GameController } from 'src/game/core/GameController';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { StorageService } from './storage.service';
-import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { SCENARIOS } from 'src/scenarios/scenarios';
-import { Entity } from 'src/game/core/models/Entity';
-import { Play, StoredPlay } from 'src/game/core/models/Play';
-import { Character } from 'src/game/modules/base/models/entities/material/Character';
-import { Paragraph } from 'src/game/core/models/Paragraph';
 import { Choice } from 'src/game/core/models/Choice';
+import { Entity } from 'src/game/core/models/Entity';
+import { Paragraph } from 'src/game/core/models/Paragraph';
+import { Play, StoredPlay } from 'src/game/core/models/Play';
 import { Scenario } from 'src/game/core/models/Scenario';
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
+import { SCENARIOS } from 'src/scenarios/scenarios';
 import { InformComponent } from '../modules/shared/components/inform/inform.component';
+import { AudioService } from './audio.service';
+import { ConfigService } from './config.service';
+import { StorageService } from './storage.service';
 
 const PLAY_STORAGE_KEY = 'play';
 
@@ -31,36 +31,10 @@ export class GameService {
     private storageService: StorageService,
     private modalController: ModalController,
     private router: Router,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private audioService: AudioService
   ) {
     this.configService.load(); // TODO: move?
-
-    GameController.init(
-      {
-        onLoad: () => {
-          return this.loadLastPlay();
-        },
-        onInform: (paragraphs: Paragraph[], actions?: Choice[]) => {
-          this.inform(paragraphs, actions);
-        },
-        onLoaded: (play: Play) => {
-          this.play = play;
-          this.emitPlay();
-          this.setSelection(null);
-        },
-        onSave: (storedPlay: StoredPlay) => {
-          this.savePlay(storedPlay);
-        },
-        onStart: () => {
-          this.setSelection(null);
-        },
-      },
-      SCENARIOS
-    );
-
-    // this.loadLastPlay().then(() => {
-    // this.startNewPlay();
-    // });
   }
 
   // TODO: temp
@@ -100,21 +74,44 @@ export class GameService {
     return this.selection;
   }
 
-  savePlay(storedPlay: StoredPlay): void {
-    this.storageService.set(PLAY_STORAGE_KEY, storedPlay);
+  savePlay(): void {
+    this.storageService.set(PLAY_STORAGE_KEY, this.play.getStored());
   }
 
-  loadLastPlay(): Promise<StoredPlay> {
-    return new Promise((resolve, reject) => {
-      this.storageService
-        .get(PLAY_STORAGE_KEY)
-        .then((storedPlay: StoredPlay) => {
-          if (storedPlay) {
-            resolve(storedPlay);
-          } else {
-            reject('no play found');
-          }
-        });
+  private setPlay(play: Play): void {
+    this.play = play;
+    this.emitPlay();
+    this.setSelection(null);
+    this.audioService.stopAllSounds();
+  }
+
+  startNewPlay(scenario: Scenario): void {
+    this.setPlay(this.createPlay(scenario));
+    this.play.init();
+    this.savePlay();
+  }
+
+  loadLastPlay(): void {
+    this.storageService.get(PLAY_STORAGE_KEY).then((storedPlay: StoredPlay) => {
+      if (storedPlay) {
+        this.setPlay(this.createPlay(SCENARIOS[storedPlay.scenarioId]));
+        this.play.load(storedPlay);
+      } else {
+        console.error('no play found');
+      }
+    });
+  }
+
+  private createPlay(scenario: Scenario): Play {
+    return new Play(scenario, {
+      onSave: () => {
+        this.savePlay();
+      },
+      onInform: (paragraphs: Paragraph[], actions?: Choice[]) => {
+        this.inform(paragraphs, actions);
+      },
+      onStartConversation: (interlocutor: Entity) => {
+      },
     });
   }
 }

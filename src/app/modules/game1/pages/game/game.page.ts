@@ -1,3 +1,4 @@
+import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -21,7 +22,7 @@ export class GamePage implements OnInit {
   private selectionSubscription: Subscription;
 
   constructor(private gameService: GameService, private router: Router) {
-    GameController.loadPlay();
+    gameService.loadLastPlay();
     // GameController.startNewPlay(this.gameService.getCurrentScenario())
     // GameController.getPlay().getScenario().start()
   }
@@ -52,11 +53,16 @@ export class GamePage implements OnInit {
   }
 
   getPlayer(): Character {
-    return GameController.getPlay().getPlayer() as Character;
+    return this.play.getPlayer() as Character;
+  }
+
+  // TODO: move
+  getLocation(): MaterialEntity {
+    return (this.play.getPlayer() as MaterialEntity).getParent();
   }
 
   getNarration(): Narration {
-    return GameController.getPlay().getNarration();
+    return this.play.getNarration();
   }
 
   ngOnDestroy(): void {

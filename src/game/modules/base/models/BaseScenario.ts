@@ -11,6 +11,7 @@ import {
   getOppositeDirection,
 } from '../dictionnaries/direction';
 import { Place } from './entities/material/Place';
+import { EnglishBaseGlossary } from './glossaries/EnglishBaseGlossary';
 
 export abstract class BaseScenario extends Scenario {
   directions: { [key: string]: Direction } = {};
@@ -27,6 +28,7 @@ export abstract class BaseScenario extends Scenario {
     this.actions = Object.assign({}, this.actions, BASE_ACTIONS);
     this.glossaries = Object.assign({}, this.glossaries, {
       fr: new FrenchBaseGlossary(),
+      en: new EnglishBaseGlossary()
     });
     this.directions = BASE_DIRECTIONS;
   }

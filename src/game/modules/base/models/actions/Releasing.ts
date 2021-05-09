@@ -4,7 +4,7 @@ import { HoldableObject } from '../entities/material/thing/object/HoldableObject
 
 export class Releasing extends Action {
   getText() {
-    return { fr: 'lâcher' };
+    return { fr: 'ranger' };
   }
 
   check(author: Character, args: any[]) {
@@ -12,7 +12,7 @@ export class Releasing extends Action {
     const target = args[0];
 
     if (
-      target instanceof HoldableObject &&
+      //target instanceof HoldableObject &&
       author.isOwning(target, false) &&
       target.held
     ) {
@@ -25,10 +25,8 @@ export class Releasing extends Action {
   }
 
   proceed(author: Character, args: any[]) {
-    const target = args[0];
+    const target = args[0] as HoldableObject;
 
-    if (target instanceof HoldableObject) {
-      target.release();
-    }
+    return target.releasedBy(author);
   }
 }

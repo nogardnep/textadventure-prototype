@@ -11,7 +11,11 @@ export class Opening extends Action {
     let usable = false;
     const target = args[0];
 
-    if (target instanceof Thing && target.openable && target.closed) {
+    if (
+      // target instanceof Thing &&
+      target.openable &&
+      target.closed
+    ) {
       usable = true;
     }
 
@@ -22,6 +26,7 @@ export class Opening extends Action {
 
   proceed(author: Character, args: any[]) {
     const target = args[0] as Thing;
-    target.open();
+
+    return target.openedBy(author);
   }
 }

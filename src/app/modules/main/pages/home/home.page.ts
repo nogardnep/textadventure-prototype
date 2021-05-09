@@ -12,27 +12,26 @@ export class HomePage {
   }
 
   onClickNew(): void {
-    this.router.navigate(['/new-play']);
-    // this.gameService.inform(
-    //   [{ text: { fr: 'Êtes-vous sûr&nbsp;?' } }],
-    //   [
-    //     {
-    //       text: { fr: 'Oui' },
-    //       proceed: () => {
-    //         this.router.navigate(['/new-play']);
-    //       },
-    //     },
-    //     {
-    //       text: { fr: 'Non' },
-    //       proceed: () => {},
-    //     },
-    //   ]
-    // );
+    this.gameService.inform(
+      [{ text: { fr: 'Êtes-vous sûr&nbsp;?' } }],
+      [
+        {
+          text: { fr: 'Oui' },
+          proceed: () => {
+            this.router.navigate(['/new-play']);
+          },
+        },
+        {
+          text: { fr: 'Non' },
+          proceed: () => {},
+        },
+      ]
+    );
   }
 
   onClickLoad(): void {
     this.gameService.loadLastPlay();
-    this.router.navigate(['/game']);
+    this.router.navigate(['/game1']);
   }
 
   onClickConfig(): void {

@@ -1,7 +1,9 @@
 import { Gender } from './../dictionnaries/Gender';
 import { Action } from './Action';
+import { Audio } from './Audio';
 import { Entity } from './Entity';
 import { ConjugationTime, Glossary, Person } from './Glossary';
+import { Image } from './Image';
 import { Play } from './Play';
 import { TextWrapper } from './Text';
 
@@ -36,6 +38,8 @@ export abstract class Scenario {
     receiverGender: Gender;
     receiverPerson: Person;
   };
+  images: { [key: string]: Image } = {};
+  audios: { [key: string]: Audio } = {};
 
   init(play: Play): void {}
 

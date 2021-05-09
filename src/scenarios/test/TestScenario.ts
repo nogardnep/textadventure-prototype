@@ -1,53 +1,31 @@
 import { Gender } from 'src/game/core/dictionnaries/Gender';
-import { GameController } from 'src/game/core/GameController';
 import { ConjugationTime } from 'src/game/core/models/Glossary';
 import { Play } from 'src/game/core/models/Play';
-import { TextManager } from 'src/game/core/TextManager';
-import { DirectionKeys } from 'src/game/modules/base/dictionnaries/direction'
+import { DirectionKeys } from 'src/game/modules/base/dictionnaries/direction';
 import { BaseScenario } from 'src/game/modules/base/models/BaseScenario';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { Place } from 'src/game/modules/base/models/entities/material/Place';
 import { Person } from './../../game/core/models/Glossary';
-import { Jean } from './models/characters/Jean';
-import { Tom } from './models/characters/Tom';
-import { PoisonEffect } from './models/effects/PoisonEffect';
-import { Boots } from './models/objects/Boots';
-import { Box } from './models/objects/Box';
-import { Helmet } from './models/objects/Helmet';
-import { Shield } from './models/objects/Shield';
+import { AUDIOS } from './audios';
+import { ENTITY_CONSTRUCTORS } from './entityConstructors';
+import { IMAGES } from './images';
 import { Sword } from './models/objects/Sword';
-import { Door } from './models/passages/ChambreDoor';
-import { Chamber } from './models/places/Chamber';
-import { Corridor } from './models/places/Corridor';
-import { DestructionSpell } from './models/spells/DestructionSpell';
-import { IllusionSpell } from './models/spells/IllustionSpell';
-import { InvocationSpell } from './models/spells/InvocationSpell';
 import { ModifiedFrenchBaseGlossary } from './ModifiedFrenchBaseGlossary';
 
 export class TestScenario extends BaseScenario {
-  static entityConstructors = {
-    Chamber,
-    Corridor,
-    Jean,
-    Helmet,
-    Boots,
-    DestructionSpell,
-    PoisonEffect,
-    IllusionSpell,
-    InvocationSpell,
-    Box,
-    Tom,
-    Sword,
-    Shield,
-    Door,
-  };
+  static entityConstructors = ENTITY_CONSTRUCTORS;
+
+  static images = IMAGES;
+  static audios = AUDIOS;
 
   constructor() {
     super();
 
     this.id = 'test';
     this.title = { fr: 'Test' };
-    this.glossaries = { fr: new ModifiedFrenchBaseGlossary() };
+    this.glossaries = Object.assign({}, this.glossaries, {
+      fr: new ModifiedFrenchBaseGlossary(),
+    });
     this.entityConstructors = Object.assign(
       {},
       this.entityConstructors,
@@ -56,12 +34,13 @@ export class TestScenario extends BaseScenario {
     this.actions = Object.assign({}, this.actions, {
       // look
     });
-
     this.glossaryConfiguration = {
       conjugationTime: ConjugationTime.Present,
       receiverGender: Gender.Male,
       receiverPerson: Person.SecondPersonPlural,
     };
+    this.images = Object.assign({}, this.images, TestScenario.images);
+    this.audios = Object.assign({}, this.audios, TestScenario.audios);
   }
 
   starting = {
@@ -123,18 +102,16 @@ export class TestScenario extends BaseScenario {
   }
 
   start(play: Play): void {
-    play.inform([
-      {
-        text: {
-          fr:
-            "L'histoire de " +
-            TextManager.extractName(
-              GameController.getPlay().getPlayer().getName()
-            ).printSimple() +
-            ' commence ici',
-        },
-      },
-    ]);
+    // play.inform([
+    //   {
+    //     text: {
+    //       fr:
+    //         "L'histoire de " +
+    //         TextManager.extractName(play.getPlayer().getName()).printSimple() +
+    //         ' commence ici',
+    //     },
+    //   },
+    // ]);
   }
 
   update(play: Play): void {}

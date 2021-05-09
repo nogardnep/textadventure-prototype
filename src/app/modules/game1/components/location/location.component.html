@@ -1,24 +1,12 @@
 <div *ngIf="entity">
+  <div id="container"></div>
+  <app-entity-window [entity]="entity"></app-entity-window>
   <div><b>{{ entity.getName()|name }}</b></div>
   <entity-paragraphs [paragraphs]="entity.getInteriorDescription()"></entity-paragraphs>
-  <app-entity-list [parent]="entity"></app-entity-list>
-
+  <app-entity-list [entity]="entity"></app-entity-list>
   <app-actions [entity]="entity"></app-actions>
   <app-connections [entity]="entity"></app-connections>
   <app-choices [entity]="entity"></app-choices>
-
-  <!-- <div>
-    <ng-container *ngFor="let exit of getExits()">
-      <li>
-        <span>{{ exit.text}}</span>
-        <ul>
-          <li>
-            <button (click)="onClickExit(exit)">go</button>
-          </li>
-        </ul>
-      </li>
-    </ng-container>
-  </div> -->
 </div>
 <div *ngIf="!entity">
   <p>Entity not found</p>

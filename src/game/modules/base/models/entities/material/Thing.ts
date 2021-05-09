@@ -1,3 +1,4 @@
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { BaseActionKeys } from '../../../dictionnaries/actions';
 import { MaterialEntity } from '../MaterialEntity';
 
@@ -11,13 +12,17 @@ export  class Thing extends MaterialEntity {
     return super.getDisplayedActionKeys().concat([BaseActionKeys.Opening, BaseActionKeys.Closing]);
   }
 
-  close(): void {
+  closedBy(target: Character): boolean {
     this.closed = true;
     this.save()
+
+    return true;
   }
 
-  open(): void {
+  openedBy(target: Character): boolean {
     this.closed = false;
     this.save()
+
+    return true
   }
 }

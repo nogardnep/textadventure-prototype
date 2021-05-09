@@ -1,3 +1,5 @@
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
+import { TextWrapper } from 'src/game/core/models/Text';
 import { Component, Input, OnInit } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
 import { Entity } from 'src/game/core/models/Entity';

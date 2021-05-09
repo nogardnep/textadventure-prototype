@@ -1,5 +1,8 @@
 {
   "name": "textadventure-prototype",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
   "type": "angular"
 }

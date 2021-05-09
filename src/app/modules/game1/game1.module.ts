@@ -1,9 +1,9 @@
+import { ConversationComponent } from './components/conversation/conversation.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
 import { SharedModule } from './../shared/shared.module';
 import { DebugComponent } from './components/debug/debug.component';
+import { EntityWindowComponent } from './components/entity-window/entity-window.component';
 import { ActionsComponent } from './components/entity/actions/actions.component';
 import { ChoicesComponent } from './components/entity/choices/choices.component';
 import { ConnectionsComponent } from './components/entity/connections/connections.component';
@@ -23,11 +23,11 @@ import { GamePage } from './pages/game/game.page';
 
 @NgModule({
   imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    Game1RoutingModule,
     SharedModule,
+    Game1RoutingModule,
+    CommonModule,
+    // FormsModule,
+    // IonicModule,
   ],
   declarations: [
     GamePage,
@@ -46,6 +46,8 @@ import { GamePage } from './pages/game/game.page';
     InfoComponent,
     ParagraphsComponent,
     ConnectionsComponent,
+    EntityWindowComponent,
+    ConversationComponent,
   ],
 })
 export class Game1Module {}

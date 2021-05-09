@@ -2,7 +2,7 @@ import { GameController } from 'src/game/core/GameController';
 import { Router } from '@angular/router';
 import { GameService } from 'src/app/services/game.service';
 import { Subscription } from 'rxjs';
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Play } from 'src/game/core/models/Play';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { Narration } from 'src/game/core/models/Narration';
@@ -12,13 +12,13 @@ import { Narration } from 'src/game/core/models/Narration';
   templateUrl: './game.page.html',
   styleUrls: ['./game.page.scss'],
 })
-export class GamePage {
+export class GamePage implements OnInit, OnDestroy {
   play: Play;
 
   private playSubscription: Subscription;
 
   constructor(private gameService: GameService, private router: Router) {
-    GameController.loadPlay();
+    this.gameService.loadLastPlay();
     // GameController.startNewPlay(this.gameService.getCurrentScenario())
     // GameController.getPlay().getScenario().start()
   }
@@ -35,18 +35,17 @@ export class GamePage {
     );
 
     this.gameService.emitPlay();
-    this.gameService.emitSelection();
-  }
-
-  getPlayer(): Character {
-    return GameController.getPlay().getPlayer() as Character;
-  }
-
-  getNarration(): Narration {
-    return GameController.getPlay().getNarration();
   }
 
   ngOnDestroy(): void {
     this.playSubscription.unsubscribe();
+  }
+
+  getPlayer(): Character {
+    return this.play.getPlayer() as Character;
+  }
+
+  getNarration(): Narration {
+    return this.play.getNarration();
   }
 }

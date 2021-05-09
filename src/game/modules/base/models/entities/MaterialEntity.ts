@@ -27,7 +27,6 @@ export class MaterialEntity extends Entity {
   }
 
   onVisitedBy(entity: MaterialEntity): void {
-    // TODO
     // To be override in other classes
   }
 
@@ -59,6 +58,7 @@ export class MaterialEntity extends Entity {
 
     if (entity) {
       entity.parentId = this.getId();
+      entity.save();
     }
 
     return entity;
@@ -78,16 +78,12 @@ export class MaterialEntity extends Entity {
     return found;
   }
 
-  moveTo(entity: MaterialEntity): void {
-    const previousParentId = this.parentId;
+  moveTo(target: MaterialEntity): boolean {
+    const previousParent = this.getParent();
 
-    if (previousParentId) {
-      const previousParent = this.getPlay().getEntity(
-        previousParentId
-      ) as MaterialEntity;
-
-      previousParent.childrenId.forEach((item, index) => {
-        if (item === this.id) {
+    if (previousParent) {
+      previousParent.getChildren().forEach((item, index) => {
+        if (item.equals(this)) {
           previousParent.childrenId.splice(index, 1);
         }
       });
@@ -95,15 +91,17 @@ export class MaterialEntity extends Entity {
       previousParent.save();
     }
 
-    if (entity) {
-      entity.childrenId.push(this.id);
-      entity.save();
+    if (target) {
+      target.childrenId.push(this.id);
+      target.save();
     }
 
-    this.parentId = entity.id;
+    this.parentId = target.id;
     this.save();
 
-    entity.onVisitedBy(this);
+    target.onVisitedBy(this);
+
+    return true;
   }
 
   getResponseToSpell(spell: Spell, additionnal?: {}): {} {
@@ -122,10 +120,6 @@ export class MaterialEntity extends Entity {
     });
 
     return children;
-  }
-
-  setParent(entity: MaterialEntity): void {
-    this.parentId = entity.getId();
   }
 
   getEffectiveCaracteristics(): { [key: string]: number } {

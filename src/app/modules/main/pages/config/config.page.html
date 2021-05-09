@@ -2,15 +2,27 @@
   <h1>Config</h1>
   <div *ngIf="data">
     <div>
-      <label>Volume</label>
-      <input name="volume" type="range" min="0" max="1" step="0.01" [(ngModel)]="data.audio.volume"
-        (ngModelChange)="onValueChange()">
+      <h2>Audio</h2>
+      <div>
+        <label>Muet</label>
+        <input type="checkbox" [(ngModel)]="data.audio.muted" (ngModelChange)="onValueChange()" />
+      </div>
+      <div>
+        <h3>Volumes</h3>
+        <div *ngFor="let item of audioLayerKey | keyvalue">
+          <label>{{item.key}}</label>
+          <input name="volume" type="range" min="0" max="1" step="0.01" [(ngModel)]="data.audio.volumes[item.value]"
+            (ngModelChange)="onValueChange()">
+        </div>
+      </div>
     </div>
     <div>
       <div>
+        <h2>Langage</h2>
         <select [(ngModel)]="data.language" (ngModelChange)="onValueChange()">
           <ng-container *ngFor="let item of languageKeys | keyvalue ">
-            <option [innerHTML]="languageNames[item.key]|name" [ngValue]="item.key"></option>
+            {{item|json}}
+            <option [innerHTML]="languageNames[item.value]|name" [ngValue]="item.value"></option>
           </ng-container>
         </select>
         <!-- <select>

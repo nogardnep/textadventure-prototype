@@ -1,8 +1,10 @@
 import { Name } from './Name';
 
+type Text = string;
+
 export type TextWrapper = {
-  fr?: string;
-  en?: string;
+  fr?: Text;
+  en?: Text;
 };
 
 export type NameWrapper = {

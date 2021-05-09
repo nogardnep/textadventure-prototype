@@ -19,5 +19,7 @@ export class Casting extends Action {
     const target = args[0] as Spell;
     const location = author.getParent();
     location.getResponseToSpell(target);
+
+    return true;
   }
 }

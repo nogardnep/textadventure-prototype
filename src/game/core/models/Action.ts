@@ -1,4 +1,4 @@
-import { GameController } from '../GameController';
+import { GameController } from 'src/game/core/GameController';
 import { TextManager } from '../TextManager';
 import { Entity } from './Entity';
 import { Play } from './Play';
@@ -10,7 +10,9 @@ type Pattern = string | (new () => Entity)[];
 export abstract class Action {
   patterns: { [languageKey: string]: Pattern[] };
 
-  getDuraction(): number {
+  constructor() {}
+
+  getDuration(): number {
     return 1;
   }
 
@@ -78,7 +80,9 @@ export abstract class Action {
     return success;
   }
 
-  proceed(author: Entity, args: any[]) {}
+  proceed(author: Entity, args: any[]): boolean {
+    return true;
+  }
 
   check(
     author: Entity,
@@ -96,7 +100,7 @@ export abstract class Action {
 
   protected onEnded(withSuccess: boolean): void {
     if (withSuccess) {
-      this.getPlay().increaseTime(this.getDuraction());
+      this.getPlay().increaseTime(this.getDuration());
     }
   }
 }

@@ -1,9 +1,11 @@
+import { GameController } from 'src/game/core/GameController';
+import { stringify } from '@angular/compiler/src/util';
 import { TextManager } from '../TextManager';
 import { Action } from './Action';
 import { Choice } from './Choice';
 import { Entity, EntityId, EntityType, StoredEntity } from './Entity';
 import { ConjugationTime, Glossary, Person } from './Glossary';
-import { Narration, StoredNarration } from './Narration';
+import { Narration, StoredNarration, Tag } from './Narration';
 import { Paragraph } from './Paragraph';
 import { Scenario, ScenarioId } from './Scenario';
 
@@ -18,6 +20,7 @@ export interface StoredPlay {
 type PlayCallBacks = {
   onSave: () => void;
   onInform: (paragraphs: Paragraph[], actions?: Choice[]) => void;
+  onStartConversation: (interlocutor: Entity) => void;
 };
 
 export class Play {
@@ -48,6 +51,8 @@ export class Play {
 
     Glossary.setReceiverPerson(Person.SecondPersonPlural);
     Glossary.setConjugationTime(ConjugationTime.Present);
+
+    GameController.setPlay(this);
   }
 
   init(): void {
@@ -110,8 +115,44 @@ export class Play {
     return this.scenario;
   }
 
-  getGlossary(): Glossary {
-    return TextManager.extract(this.getScenario().glossaries);
+  getPhrase(phraseKey: string, args: any[]): string {
+    let foundPhrase = '(missing)';
+
+    foundPhrase = this.searchForPhraseInOneGlossary(
+      TextManager.currentLanguageKey,
+      phraseKey,
+      args
+    );
+
+    if (!foundPhrase) {
+      for (let languageKey in this.getScenario().glossaries) {
+        if (!foundPhrase) {
+          foundPhrase = this.searchForPhraseInOneGlossary(
+            languageKey,
+            phraseKey,
+            args
+          );
+        }
+      }
+    }
+
+    return foundPhrase;
+  }
+
+  private searchForPhraseInOneGlossary(
+    languageKey: string,
+    phraseKey: string,
+    args: any[]
+  ): string {
+    let foundPhrase: string;
+
+    let glossary = this.getScenario().glossaries[languageKey];
+
+    if (glossary) {
+      foundPhrase = glossary.getPhrase(phraseKey, args);
+    }
+
+    return foundPhrase;
   }
 
   addEntity(type: EntityType): Entity {
@@ -198,8 +239,8 @@ export class Play {
     this.callbacks.onSave();
   }
 
-  inform(paragraphs: Paragraph[], actions?: Choice[]): void {
-    this.callbacks.onInform(paragraphs, actions);
+  inform(paragraphs: Paragraph[], choices?: Choice[]): void {
+    this.callbacks.onInform(paragraphs, choices);
   }
 
   getAction(key: string): Action {
@@ -210,5 +251,21 @@ export class Play {
     }
 
     return action;
+  }
+
+  useChoice(choice: Choice): void {
+    // this.narration.addSection({
+    //   paragraphs: [{ text: choice.text }],
+    //   tag: Tag.Choice,
+    // });
+    console.log('dfqd');
+
+    console.log(choice);
+
+    choice.proceed();
+  }
+
+  startConversation(interlocutor: Entity): void {
+    this.callbacks.onStartConversation(interlocutor);
   }
 }

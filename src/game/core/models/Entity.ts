@@ -1,9 +1,11 @@
+import { GameController } from 'src/game/core/GameController';
 import { Play } from './Play';
 import { Choice } from './Choice';
 import { Image } from './Image';
 import { Name } from './Name';
 import { Paragraph } from './Paragraph';
 import { NameWrapper } from './Text';
+import { Audio } from './Audio';
 
 export type EntityId = string;
 export type EntityType = string;
@@ -17,12 +19,12 @@ export class Entity implements StoredEntity {
   name: string;
   id: EntityId;
   type: EntityType;
-  protected onGetPlay: () => Play;
+  // protected onGetPlay: () => Play;
 
   constructor(play: Play) {
-    this.onGetPlay = () => {
-      return play;
-    };
+    // this.onGetPlay = () => {
+    //   return play;
+    // };
     this.id = Math.floor(Math.random() * 1000).toString();
     this.type = this.constructor.name;
   }
@@ -48,7 +50,8 @@ export class Entity implements StoredEntity {
   }
 
   getPlay(): Play {
-    return this.onGetPlay();
+    return GameController.getPlay();
+    // return this.onGetPlay();
   }
 
   getType(): string {
@@ -79,8 +82,12 @@ export class Entity implements StoredEntity {
     return null;
   }
 
-  getFullImage(): Image {
-    return null;
+  getAudioAmbiance(): { audio: Audio; check?: () => boolean }[] {
+    return [];
+  }
+
+  getFullImages(): { image: Image; check?: () => boolean }[] {
+    return [];
   }
 
   getChoices(additionnal?: Choice[]): Choice[] {
@@ -105,5 +112,11 @@ export class Entity implements StoredEntity {
 
   isOfType(type: EntityType): boolean {
     return this.type === type;
+  }
+
+  inform(paragraphs: Paragraph[], choices?: Choice[]): void {
+    if (this.equals(this.getPlay().getPlayer())) {
+      this.getPlay().inform(paragraphs, choices);
+    }
   }
 }

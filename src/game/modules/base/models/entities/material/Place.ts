@@ -1,9 +1,10 @@
 import { EntityId, EntityType } from 'src/game/core/models/Entity';
+import { Tag } from 'src/game/core/models/Narration';
 import { Section } from 'src/game/core/models/Section';
 import { TextWrapper } from 'src/game/core/models/Text';
-import { Character } from './Character';
 import { DirectionKey } from '../../../dictionnaries/direction';
 import { MaterialEntity } from '../MaterialEntity';
+import { Character } from './Character';
 
 export type Connection = {
   destinationId: EntityId;
@@ -24,6 +25,15 @@ export class Place extends MaterialEntity {
     (this.getPlay().getPlayer() as Character).moveTo(
       this.getPlay().getEntity(connection.destinationId) as MaterialEntity
     );
+  }
+
+  onVisitedBy(entity: MaterialEntity): void {
+    console.log('arrived');
+
+    this.getPlay().getNarration().addSection({
+      paragraphs: this.getInteriorDescription(),
+      tag: Tag.Description,
+    });
   }
 
   exitToPlace(type: EntityType): void {

@@ -12,7 +12,7 @@ export class Pulling extends Action {
     const target = args[0];
 
     if (
-      target instanceof WearableObject &&
+      // target instanceof WearableObject &&
       author.isOwning(target, false) &&
       target.worn
     ) {
@@ -25,10 +25,8 @@ export class Pulling extends Action {
   }
 
   proceed(author: Character, args: any[]) {
-    const target = args[0];
+    const target = args[0] as WearableObject;
 
-    if (target instanceof WearableObject) {
-      target.pull();
-    }
+    return target.pulledBy(author);
   }
 }

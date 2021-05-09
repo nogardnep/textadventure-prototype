@@ -1,5 +1,9 @@
 import { Action } from 'src/game/core/models/Action';
-import { Connection, DEFAULT_DISTANCE, DEFAULT_SPEED } from 'src/game/modules/base/models/entities/material/Place';
+import {
+  Connection,
+  DEFAULT_DISTANCE,
+  DEFAULT_SPEED,
+} from 'src/game/modules/base/models/entities/material/Place';
 import { Character } from '../entities/material/Character';
 import { MaterialEntity } from '../entities/MaterialEntity';
 
@@ -28,10 +32,13 @@ export class GoingTo extends Action {
       .getPlay()
       .getEntity(connection.destinationId) as MaterialEntity;
 
-    author.moveTo(destination);
-    author.getPlay().increaseTime(
+    this.getPlay().increaseTime(
       (connection.distance ? connection.distance : DEFAULT_DISTANCE) *
         DEFAULT_SPEED
     );
+
+    return author.moveTo(destination);
   }
+
+  onEnded(withSuccess: boolean) {}
 }

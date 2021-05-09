@@ -16,6 +16,10 @@ export class ActionsComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   ngOnChanges() {
+    this.update();
+  }
+
+  private update() {
     this.visibleActions = {};
 
     this.entity.getDisplayedActionKeys().forEach((key: string) => {
@@ -29,6 +33,7 @@ export class ActionsComponent implements OnInit, OnChanges {
 
   onClickAction(action: Action): void {
     action.use(this.entity.getPlay().getPlayer(), [this.entity]);
+    this.update();
   }
 
   isVisible(action: Action): boolean {

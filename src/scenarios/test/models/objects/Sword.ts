@@ -1,5 +1,5 @@
-import { Play } from 'src/game/core/models/Play';
 import { Name } from 'src/game/core/models/Name';
+import { Play } from 'src/game/core/models/Play';
 import { HoldableObject } from 'src/game/modules/base/models/entities/material/thing/object/HoldableObject';
 
 export class Sword extends HoldableObject {
@@ -8,6 +8,14 @@ export class Sword extends HoldableObject {
   }
 
   getName() {
-    return { fr: new Name('sword') };
+    return { fr: new Name('épee') };
   }
+
+  // getFullImages() {
+  //   return [{ image: TestScenario.images.swordFull }];
+  // }
+
+  // getPreviewImage() {
+  //   return TestScenario.images.swordPreview;
+  // }
 }

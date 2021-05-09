@@ -9,6 +9,20 @@ export class Corridor extends Place {
     return { fr: new Name('Corridor ' + this.toogle) };
   }
 
+  // getInteriorDescription() {
+  //   return [{ text: { fr: 'Un long couloir.' } }];
+  // }
+
+  // getFullImages() {
+  //   return [{ image: TestScenario.images.castle2Full }];
+  // }
+
+  // getAudioAmbiance() {
+  //   return [
+  //     { audio: TestScenario.audios.demon },
+  //   ];
+  // }
+
   getChoices() {
     return super.getChoices([
       {

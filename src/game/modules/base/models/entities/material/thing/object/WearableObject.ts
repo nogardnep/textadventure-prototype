@@ -11,54 +11,47 @@ export class WearableObject extends UsuableObject {
 
   getDisplayedActionKeys() {
     return Utils.removeDuplications(
-      super.getDisplayedActionKeys().concat([BaseActionKeys.Putting, BaseActionKeys.Pulling])
+      super
+        .getDisplayedActionKeys()
+        .concat([BaseActionKeys.Putting, BaseActionKeys.Pulling])
     );
   }
 
-  drop(): boolean {
-    let canProceed = true;
+  moveTo(newParent: MaterialEntity) {
+    let canProceed = false;
 
     if (this.worn) {
-      canProceed = this.pull();
+      canProceed = this.pulledBy(newParent as Character);
+    } else {
+      canProceed = true;
     }
 
     if (canProceed) {
-      super.drop();
+      super.moveTo(newParent);
     }
 
     return canProceed;
   }
 
-  moveTo(newParent: MaterialEntity) {
-    if (this.worn) {
-      const pulled = this.pull();
-
-      if (pulled) {
-        super.moveTo(newParent);
-      }
-    } else {
-      super.moveTo(newParent);
-    }
-  }
-
-  put(): boolean {
+  puttedBy(target: Character): boolean {
     let canProceed = false;
-    let owner: Character = this.getPlay().getEntity(this.parentId) as Character;
+    let owner: Character = this.getParent() as Character;
 
     const alreadyWornObject = owner.getWornObject(this.getEmplacement());
 
     if (alreadyWornObject) {
-      this.getPlay().inform([
-        {
-          text: {
-            fr:
-              'Something already worn at ' +
-              TextManager.extractName(
-                EMPLACEMENT_NAMES[this.getEmplacement()]
-              ).printSimple(),
-          },
-        },
-      ]);
+      // TODO: use glossary
+      // target.inform([
+      //   {
+      //     text: {
+      //       fr:
+      //         'Something already worn at ' +
+      //         TextManager.extractName(
+      //           EMPLACEMENT_NAMES[this.getEmplacement()]
+      //         ).printSimple(),
+      //     },
+      //   },
+      // ]);
       canProceed = false;
     } else {
       canProceed = true;
@@ -72,12 +65,26 @@ export class WearableObject extends UsuableObject {
     return canProceed;
   }
 
-  pull(): boolean {
+  pulledBy(target: Character): boolean {
     let canProceed = true;
 
     if (canProceed) {
       this.worn = false;
       this.save();
+    }
+
+    return canProceed;
+  }
+
+  droppedBy(target: Character): boolean {
+    let canProceed = true;
+
+    if (this.worn) {
+      canProceed = this.pulledBy(target);
+    }
+
+    if (canProceed) {
+      super.droppedBy(target);
     }
 
     return canProceed;

@@ -1,3 +1,4 @@
+import { AudioLayerKey } from 'src/app/services/audio.service';
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -15,6 +16,7 @@ import {
 export class ConfigPage implements OnInit, OnDestroy {
   data: ConfigData;
   languageKeys = LanguageKey;
+  audioLayerKey = AudioLayerKey;
   languageNames = LANGUAGE_NAMES;
 
   private dataSubscription: Subscription;

@@ -1,0 +1,9 @@
+<div *ngIf="entity && subjects.length > 0">
+  <div>Intégroger sur</div>
+  <div>
+    <ng-container *ngFor="let item of subjects">
+      <button *ngIf="!item.check || item.check() " (click)="onClickSubject(item)"
+        [innerHTML]="item.title|text"></button>
+    </ng-container>
+  </div>
+</div>

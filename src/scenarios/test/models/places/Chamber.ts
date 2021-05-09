@@ -13,7 +13,58 @@ export class Chamber extends Place {
   }
 
   init() {
-    this.giveChildOfType(TestScenario.entityConstructors.Tom.name, false);
+    const tom = this.getPlay().addEntity(
+      TestScenario.entityConstructors.Tom.name
+    ) as Character;
+    tom.moveTo(this);
+
+    // this.giveChildOfType(TestScenario.entityConstructors.Tom.name, false);
+  }
+
+  // getFullImages() {
+  //   return [
+  //     { image: TestScenario.images.sky },
+  //     { image: TestScenario.images.castle1Full },
+  //   ];
+  // }
+
+  // getAudioAmbiance() {
+  //   return [
+  //     { audio: TestScenario.audios.birds },
+  //     { audio: TestScenario.audios.ghost },
+  //   ];
+  // }
+
+  getInteriorDescription() {
+    return [
+      {
+        items: [
+          { text: { fr: 'Une grande pièce aux murs rouges.' } },
+          {
+            text: { fr: 'Un homme' },
+            entity: this.getPlay().getFirstEntityOfType(
+              TestScenario.entityConstructors.Tom.name
+            ),
+          },
+          { text: { fr: '.' } },
+        ],
+      },
+      // {
+      //   text: {
+      //     fr: [
+      //       { text: 'Une grande pièce aux murs rouges. ' },
+      //       {
+      //         text: 'Un homme',
+      //         entity: this.getPlay().getFirstEntityOfType(
+      //           TestScenario.entityConstructors.Tom.name
+      //         ),
+      //       },
+      //       { text: ' ici.' },
+      //     ],
+      //   },
+      // },
+    ];
+    // return [{ text: { fr: 'Une grande pièce aux murs rouges.' } }];
   }
 
   getName() {
@@ -47,7 +98,7 @@ export class Chamber extends Place {
       {
         text: { fr: 'set fire' },
         proceed: () => {
-          // this.fire = true;
+          this.fire = true;
           (this.getPlay().getPlayer() as Character).giveSpellOfType(
             TestScenario.entityConstructors.InvocationSpell.name,
             true
@@ -67,14 +118,14 @@ export class Chamber extends Place {
   getResponseToSpell(spell: Spell) {
     let response = null;
 
-    switch (spell.getType()) {
-      case TestScenario.entityConstructors.DestructionSpell.name: {
-        response = () => {
-          this.getPlay().inform([{ text: { en: 'destroy all' } }]);
-        };
-        break;
-      }
-    }
+    // switch (spell.getType()) {
+    //   case TestScenario.entityConstructors.DestructionSpell.name: {
+    //     response = () => {
+    //       this.getPlay().inform([{ text: { en: 'destroy all' } }]);
+    //     };
+    //     break;
+    //   }
+    // }
 
     return response;
   }

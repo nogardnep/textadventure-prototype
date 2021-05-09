@@ -1,3 +1,4 @@
+import { templateJitUrl } from '@angular/compiler';
 import { Action } from 'src/game/core/models/Action';
 import { Character } from '../entities/material/Character';
 import { Thing } from '../entities/material/Thing';
@@ -22,6 +23,7 @@ export class Closing extends Action {
 
   proceed(author: Character, args: any[]) {
     const target = args[0] as Thing;
-    target.close();
+
+    return target.closedBy(author);
   }
 }

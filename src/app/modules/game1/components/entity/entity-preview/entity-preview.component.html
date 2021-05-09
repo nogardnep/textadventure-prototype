@@ -1,4 +1,9 @@
 <div *ngIf="entity">
+  <ng-container *ngIf="entity.getPreviewImage() && entity.getPreviewImage()">
+    <img src="assets/{{entity.getPreviewImage().source}}" alt="" width="50" />
+  </ng-container>
+
+
   <button (click)="onClickEntity()">
     <b>{{ entity.getName()|name }}</b>
     <span *ngIf="isSelected()">(selected)</span>
@@ -9,7 +14,7 @@
   </button>
   <p>{{ entity.getInteriorDescription() }}</p>
   <app-actions [entity]="entity"></app-actions>
-  <app-entity-list *ngIf="contentIsVisible()" [parent]="entity"></app-entity-list>
+  <app-entity-list *ngIf="contentIsVisible()" [entity]="entity"></app-entity-list>
 </div>
 <div *ngIf="!entity">
   <p>(entity not found)</p>

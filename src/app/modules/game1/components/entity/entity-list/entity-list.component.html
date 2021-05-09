@@ -1,6 +1,7 @@
-<div>
+<div *ngIf="entity && getChildren().length > 0">
+  <div [innerHTML]="getLabel()|text"></div>
   <ul>
-    <ng-container *ngFor="let child of parent.getChildren()">
+    <ng-container *ngFor="let child of getChildren()">
       <li *ngIf="!isThePlayer(child) && isVisible(child)">
         <app-entity-preview [entity]="child"></app-entity-preview>
       </li>

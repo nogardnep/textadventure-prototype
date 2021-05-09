@@ -1,5 +1,8 @@
+import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 import { Action } from 'src/game/core/models/Action';
+import { Entity } from 'src/game/core/models/Entity';
 import { UsuableObject } from '../../models/entities/material/thing/UsuableObject';
+import { BaseGlossaryKey } from '../BaseGlossary';
 import { Character } from '../entities/material/Character';
 
 export class Taking extends Action {
@@ -19,7 +22,9 @@ export class Taking extends Action {
         if (author.canReach(target)) {
           usable = true;
         } else {
-          // failureMessage = this.getPlay().getGlossary().outOfReach(target);
+          // failureMessage = this.getPlay()
+          //   .getGlossary()
+          //   .getPhrase(BaseGlossaryKey.OutOfReach, [target]);
         }
       } else {
         // failureMessage = this.getPlay().getGlossary().alreadyOwned(target);
@@ -37,11 +42,9 @@ export class Taking extends Action {
     };
   }
 
-  proceed(author: Character, args: any[]) {
-    // TODO
+  proceed(author: Character, args: any[]): boolean {
     const target = args[0] as UsuableObject;
-    // if (target instanceof UsuableObject) {
-    target.giveTo(author);
-    // }
+
+    return target.takenBy(author as MaterialEntity);
   }
 }

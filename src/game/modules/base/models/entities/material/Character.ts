@@ -7,6 +7,9 @@ import { MaterialEntity } from '../MaterialEntity';
 import { HoldableObject } from './thing/object/HoldableObject';
 import { WearableObject } from './thing/object/WearableObject';
 import { UsuableObject } from './thing/UsuableObject';
+import { Subject } from '../../Subject';
+import { BaseActionKeys } from '../../../dictionnaries/actions';
+import { TextWrapper } from 'src/game/core/models/Text';
 
 export class Character extends MaterialEntity {
   dead = false;
@@ -28,6 +31,18 @@ export class Character extends MaterialEntity {
         min: 0,
       },
     };
+  }
+
+  getDisplayedActionKeys() {
+    return super
+      .getDisplayedActionKeys()
+      .concat([BaseActionKeys.Attacking, BaseActionKeys.Talking]);
+  }
+
+  getDialogFor(subject: Subject) {}
+
+  getConversationSubjects(): Subject[] {
+    return [];
   }
 
   getGender(): Gender {
@@ -81,9 +96,7 @@ export class Character extends MaterialEntity {
   getWornObject(emplacementKey: string): UsuableObject {
     let found: UsuableObject = null;
 
-    this.childrenId.forEach((id: EntityId) => {
-      const entity = this.getPlay().getEntity(id);
-
+    this.getChildren().forEach((entity: MaterialEntity) => {
       if (
         entity instanceof WearableObject &&
         entity.worn &&
@@ -113,20 +126,6 @@ export class Character extends MaterialEntity {
 
   giveSpell(entity: Entity): void {
     this.addToList(entity, this.spellsId);
-  }
-
-  giveChildOfType(type: EntityType, doNotCreateNew: boolean): MaterialEntity {
-    const entity = this.giveEntityOfTypeInList(
-      type,
-      this.childrenId,
-      doNotCreateNew
-    ) as MaterialEntity;
-
-    if (entity) {
-      entity.setParent(this);
-    }
-
-    return entity;
   }
 
   giveSpellOfType(type: EntityType, doNotCreateNew: boolean): Spell {
@@ -183,6 +182,41 @@ export class Character extends MaterialEntity {
     }
 
     return response;
+  }
+
+  talkedBy(target: Character): boolean {
+    this.getPlay().inform(
+      [{ text: { fr: 'Que voulez vous demander ?' } }],
+      [
+        {
+          text: { fr: 'a' },
+          proceed: () => {
+            this.getPlay().inform(
+              [{ text: { fr: 'humhum' } }],
+              [
+                {
+                  text: { fr: 'continuer' },
+                  proceed: () => {
+                    this.talkedBy(target);
+                  },
+                },
+              ]
+            );
+          },
+        },
+        {
+          text: { fr: 'arrêter' },
+          proceed: () => {},
+        },
+      ]
+    );
+
+    return true;
+  }
+
+  attackedBy(target: Character): boolean {
+    // TODO
+    return true;
   }
 
   private checkVisible(entity: MaterialEntity): boolean {

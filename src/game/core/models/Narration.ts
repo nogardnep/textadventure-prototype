@@ -1,7 +1,6 @@
-import { Play } from './Play';
-import { GameController } from '../GameController';
-import { TextWrapper } from './Text';
 import { Paragraph } from './Paragraph';
+import { Play } from './Play';
+import { TextWrapper } from './Text';
 
 export type Chapter = {
   title?: TextWrapper;
@@ -11,10 +10,17 @@ export type Chapter = {
 export type Section = {
   title?: TextWrapper;
   paragraphs: Paragraph[];
+  tag?: Tag;
 };
 
 export interface StoredNarration {
   chapters: Chapter[];
+}
+
+export enum Tag {
+  Action = 'action',
+  Description = 'description',
+  Choice = 'input',
 }
 
 export class Narration implements StoredNarration {
@@ -73,6 +79,7 @@ export class Narration implements StoredNarration {
 
   save(): void {
     // TODO: move
-    GameController.getPlay().storeNarration();
+    this.getPlay().storeNarration();
+    this.getPlay().save();
   }
 }

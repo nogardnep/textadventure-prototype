@@ -34,10 +34,10 @@ export class NewPlayPage implements OnInit {
   constructor(private gameService: GameService, private router: Router) {}
 
   ngOnInit(): void {
-    GameController.startNewPlay(this.gameService.getCurrentScenario());
+    this.gameService.startNewPlay(this.gameService.getCurrentScenario());
 
-    this.player = GameController.getPlay().getPlayer() as Character;
-    this.scenario = GameController.getPlay().getScenario();
+    this.player = this.gameService.getPlay().getPlayer() as Character;
+    this.scenario = this.gameService.getPlay().getScenario();
 
     if (this.player) {
       for (let key in this.player.caracteristics) {
@@ -51,8 +51,6 @@ export class NewPlayPage implements OnInit {
       //     ) as Spell
       //   );
       // });
-
-      this.onClickValidate();
     } else {
       console.error('No player found in this scenario');
     }
@@ -77,8 +75,8 @@ export class NewPlayPage implements OnInit {
         caracteristic.current = caracteristic.max;
       }
 
-      GameController.getPlay().start();
-      this.router.navigate(['/game2']);
+      this.gameService.getPlay().start();
+      this.router.navigate(['/game1']);
     }
   }
 

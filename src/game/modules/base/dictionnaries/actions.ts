@@ -1,13 +1,15 @@
-import { GoingTo } from '../models/actions/GoingTo';
 import { Casting } from '../models/actions/Casting';
 import { Closing } from '../models/actions/Closing';
 import { Dropping } from '../models/actions/Dropping';
+import { GoingTo } from '../models/actions/GoingTo';
 import { Holding } from '../models/actions/Holding';
 import { Opening } from '../models/actions/Opening';
 import { Pulling } from '../models/actions/Pulling';
 import { Putting } from '../models/actions/Putting';
 import { Releasing } from '../models/actions/Releasing';
 import { Taking } from '../models/actions/Taking';
+import { Attacking } from '../models/actions/Attacking';
+import { Talking } from '../models/actions/Talking';
 
 export enum BaseActionKeys {
   Taking = 'taking',
@@ -20,6 +22,8 @@ export enum BaseActionKeys {
   Holding = 'holding',
   Releasing = 'releasing',
   GoingTo = 'goingTo',
+  Attacking = 'attacking',
+  Talking = 'talking',
 }
 
 export const BASE_ACTIONS: { [key in BaseActionKeys] } = {
@@ -33,4 +37,6 @@ export const BASE_ACTIONS: { [key in BaseActionKeys] } = {
   holding: new Holding(),
   releasing: new Releasing(),
   goingTo: new GoingTo(),
+  attacking: new Attacking(),
+  talking: new Talking(),
 };
