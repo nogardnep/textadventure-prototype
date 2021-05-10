@@ -1,5 +1,7 @@
-import { BaseActionKeys } from '../../../../../dictionnaries/actions';
+import { ActionReport } from 'src/game/core/models/Action';
 import { Utils } from 'src/game/core/Utils';
+import { BaseActionKeys } from '../../../../../dictionnaries/actions';
+import { BaseGlossaryKey } from '../../../../BaseGlossary';
 import { MaterialEntity } from '../../../MaterialEntity';
 import { Character } from '../../Character';
 import { UsuableObject } from '../UsuableObject';
@@ -15,72 +17,64 @@ export class HoldableObject extends UsuableObject {
     );
   }
 
-  moveTo(target: MaterialEntity) {
-    let canProceed = false;
-
+  moveTo(newParent: MaterialEntity) {
     if (this.held) {
-      canProceed = this.releasedBy(target as Character);
-    } else {
-      canProceed = true;
+      this.held = false;
     }
 
-    if (canProceed) {
-      super.moveTo(target);
-    }
-
-    return canProceed;
+    return super.moveTo(newParent);
   }
 
-  heldBy(target: Character): boolean {
-    let canProceed = false;
+  heldBy(target: Character): ActionReport {
+    let success = false;
+    let failureMessage: string;
     let owner = this.getPlay().getEntity(this.parentId) as Character;
 
     const allHandsUsed = owner.getHeldObjects().length >= owner.hands;
 
     if (allHandsUsed) {
-      // this.getPlay().inform([
-      //   {
-      //     text: {
-      //       fr: 'Toutes vos mains sont prises',
-      //     },
-      //   },
-      // ]);
-      canProceed = false;
+      failureMessage = BaseGlossaryKey.AllHandsUsed;
+      success = false;
     } else {
-      canProceed = true;
+      success = true;
     }
 
-    if (canProceed) {
+    if (success) {
       this.held = true;
       this.save();
     }
 
-    return canProceed;
+    return {
+      success,
+      message: failureMessage,
+    };
   }
 
-  releasedBy(target: Character): boolean {
-    let canProceed = true;
+  releasedBy(target: Character): ActionReport {
+    let success = true;
 
-    if (canProceed) {
+    if (success) {
       this.held = false;
       this.save();
     }
 
-    return canProceed;
+    return { success };
   }
 
-  droppedBy(target: Character): boolean {
-    let canProceed = true;
+  droppedBy(target: Character): ActionReport {
+    let success = true;
 
     if (this.held) {
-      canProceed = this.releasedBy(target);
+      success = this.getPlay()
+        .getAction(BaseActionKeys.Releasing)
+        .use(target, [this]);
     }
 
-    if (canProceed) {
+    if (success) {
       super.droppedBy(target);
     }
 
-    return canProceed;
+    return { success };
   }
 
   getEmplacement(): string {

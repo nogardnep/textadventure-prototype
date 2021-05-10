@@ -114,6 +114,10 @@ export class Entity implements StoredEntity {
     return this.type === type;
   }
 
+  isThePlayer(): boolean {
+    return this.equals(this.getPlay().getPlayer());
+  }
+
   inform(paragraphs: Paragraph[], choices?: Choice[]): void {
     if (this.equals(this.getPlay().getPlayer())) {
       this.getPlay().inform(paragraphs, choices);

@@ -1,11 +1,11 @@
-import { GameController } from 'src/game/core/GameController';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { GameService } from 'src/app/services/game.service';
 import { Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { GameService } from 'src/app/services/game.service';
+import { Entity } from 'src/game/core/models/Entity';
+import { Narration } from 'src/game/core/models/Narration';
 import { Play } from 'src/game/core/models/Play';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
-import { Narration } from 'src/game/core/models/Narration';
 
 @Component({
   selector: 'app-game',
@@ -47,5 +47,9 @@ export class GamePage implements OnInit, OnDestroy {
 
   getNarration(): Narration {
     return this.play.getNarration();
+  }
+
+  getLocation(): Entity {
+    return (this.play.getPlayer() as Character).getParent();
   }
 }

@@ -1,6 +1,7 @@
-import { Scenarios } from 'src/game/core/models/Scenario';
+import { TheFortress } from './TheFortress/TheFortress';
 import { TestScenario } from './test/TestScenario';
 
-export const SCENARIOS: Scenarios = {
+export const SCENARIOS = {
   test: new TestScenario(),
+  theFortress: new TheFortress(),
 };

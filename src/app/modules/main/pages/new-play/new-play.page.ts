@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { GameService } from 'src/app/services/game.service';
-import { GameController } from 'src/game/core/GameController';
-import { EntityType } from 'src/game/core/models/Entity';
+import { GameService, INTERFACE_ID } from 'src/app/services/game.service';
 import { Scenario } from 'src/game/core/models/Scenario';
 import { TextWrapper } from 'src/game/core/models/Text';
 import { CARACTERISTIC_NAMES } from 'src/game/modules/base/dictionnaries/caracteristics';
@@ -76,7 +74,7 @@ export class NewPlayPage implements OnInit {
       }
 
       this.gameService.getPlay().start();
-      this.router.navigate(['/game1']);
+      this.router.navigate(['/' + INTERFACE_ID]);
     }
   }
 

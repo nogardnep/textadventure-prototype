@@ -115,7 +115,7 @@ export class Chamber extends Place {
     ];
   }
 
-  getResponseToSpell(spell: Spell) {
+  affectedBySpell(spell: Spell) {
     let response = null;
 
     // switch (spell.getType()) {

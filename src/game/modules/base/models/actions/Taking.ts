@@ -42,7 +42,7 @@ export class Taking extends Action {
     };
   }
 
-  proceed(author: Character, args: any[]): boolean {
+  proceed(author: Character, args: any[]) {
     const target = args[0] as UsuableObject;
 
     return target.takenBy(author as MaterialEntity);

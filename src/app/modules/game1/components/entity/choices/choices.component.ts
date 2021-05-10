@@ -7,17 +7,12 @@ import { Entity } from 'src/game/core/models/Entity';
   templateUrl: './choices.component.html',
   styleUrls: ['./choices.component.scss'],
 })
-export class ChoicesComponent implements OnInit, OnChanges {
+export class ChoicesComponent implements OnInit {
   @Input() entity: Entity;
-  choices = [];
 
   constructor() {}
 
   ngOnInit() {}
-
-  ngOnChanges() {
-    this.choices = this.entity.getChoices();
-  }
 
   onClickChoice(choice: Choice): void {
     console.log(this.entity.getPlay());
@@ -26,5 +21,9 @@ export class ChoicesComponent implements OnInit, OnChanges {
 
   isVisible(choice: Choice): boolean {
     return !choice.check || choice.check();
+  }
+
+  getChoices(): Choice[] {
+    return this.entity.getChoices();
   }
 }

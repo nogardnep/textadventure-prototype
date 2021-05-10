@@ -1,3 +1,4 @@
+import { ActionReport } from './../../../../../core/models/Action';
 import { Thing } from './Thing';
 import { EntityId, EntityType, Entity } from 'src/game/core/models/Entity';
 import { Gender } from 'src/game/core/dictionnaries/Gender';
@@ -184,7 +185,7 @@ export class Character extends MaterialEntity {
     return response;
   }
 
-  talkedBy(target: Character): boolean {
+  talkedBy(target: Character): ActionReport {
     this.getPlay().inform(
       [{ text: { fr: 'Que voulez vous demander ?' } }],
       [
@@ -211,12 +212,12 @@ export class Character extends MaterialEntity {
       ]
     );
 
-    return true;
+    return { success: true };
   }
 
-  attackedBy(target: Character): boolean {
+  attackedBy(target: Character): ActionReport {
     // TODO
-    return true;
+    return { success: false };
   }
 
   private checkVisible(entity: MaterialEntity): boolean {

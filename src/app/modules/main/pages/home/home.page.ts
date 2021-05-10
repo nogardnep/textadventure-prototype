@@ -1,3 +1,4 @@
+import { INTERFACE_ID } from './../../../../services/game.service';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameService } from 'src/app/services/game.service';
@@ -31,7 +32,7 @@ export class HomePage {
 
   onClickLoad(): void {
     this.gameService.loadLastPlay();
-    this.router.navigate(['/game1']);
+    this.router.navigate(['/' + INTERFACE_ID]);
   }
 
   onClickConfig(): void {

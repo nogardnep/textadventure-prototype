@@ -1,3 +1,4 @@
+import { DestructionSpell } from '../test/models/spells/DestructionSpell';
 import { Gender } from 'src/game/core/dictionnaries/Gender';
 import { ConjugationTime } from 'src/game/core/models/Glossary';
 import { Play } from 'src/game/core/models/Play';
@@ -37,13 +38,32 @@ export class TheFortress extends BaseScenario {
       TheFortress.entityConstructors.MountainousPath.name
     ) as Place;
 
+    [
+      TheFortress.entityConstructors.DestructionSpell.name,
+      TheFortress.entityConstructors.IllusionSpell.name,
+      TheFortress.entityConstructors.InvocationSpell.name,
+      TheFortress.entityConstructors.PrescienceSpell.name,
+      TheFortress.entityConstructors.ProtectionSpell.name,
+      TheFortress.entityConstructors.HealingSpell.name,
+      TheFortress.entityConstructors.LevitationSpell.name,
+      TheFortress.entityConstructors.ControlSpell.name,
+    ].forEach((item) => {
+      player.giveSpellOfType(item, false);
+    });
+
     player.moveTo(firstRoom);
 
     play.setPlayer(player);
   }
 
-  start(play: Play): void {
-  }
+  starting = {
+    maxSpells: 2,
+    caracteristicsPoints: 5,
+    availableSpells: [],
+    askForName: false,
+  };
+
+  start(play: Play): void {}
 
   update(play: Play): void {}
 }

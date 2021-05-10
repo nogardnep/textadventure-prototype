@@ -1,3 +1,4 @@
+import { Place } from './../entities/material/Place';
 import { Action } from 'src/game/core/models/Action';
 import {
   Connection,
@@ -5,7 +6,6 @@ import {
   DEFAULT_SPEED,
 } from 'src/game/modules/base/models/entities/material/Place';
 import { Character } from '../entities/material/Character';
-import { MaterialEntity } from '../entities/MaterialEntity';
 
 export class GoingTo extends Action {
   getText() {
@@ -28,17 +28,20 @@ export class GoingTo extends Action {
 
   proceed(author: Character, args: any[]) {
     const connection = args[0] as Connection;
-    const destination = author
-      .getPlay()
-      .getEntity(connection.destinationId) as MaterialEntity;
 
-    this.getPlay().increaseTime(
-      (connection.distance ? connection.distance : DEFAULT_DISTANCE) *
-        DEFAULT_SPEED
-    );
+    const startingPlace = author.getParent() as Place; // TODO: ugly
 
-    return author.moveTo(destination);
+    return startingPlace.connectionUsed(author, connection);
   }
 
-  onEnded(withSuccess: boolean) {}
+  onEnded(withSuccess: boolean, author: Character, args: any[]) {
+    const connection = args[0] as Connection;
+
+    if (withSuccess) {
+      this.getPlay().increaseTime(
+        (connection.distance ? connection.distance : DEFAULT_DISTANCE) *
+          DEFAULT_SPEED
+      );
+    }
+  }
 }

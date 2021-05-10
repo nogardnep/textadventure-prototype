@@ -1,0 +1,16 @@
+<div>
+  <ul>
+    <ng-container *ngFor="let connection of connections">
+      <li *ngIf="isVisible(connection)">
+        <ng-container *ngIf="connection.directionKey">
+          (<span [innerHTML]="getDirection(connection.directionKey).name|name"></span>)
+        </ng-container>
+        <p [innerHTML]="connection.text|text"></p>
+        <ng-container *ngIf="connection.passageId">
+          <!-- <app-entity-preview [entity]="getPassage(connection)"></app-entity-preview> -->
+        </ng-container>
+        <button *ngIf="isUsable(connection)" (click)="onClickConnection(connection)">Aller</button>
+      </li>
+    </ng-container>
+  </ul>
+</div>

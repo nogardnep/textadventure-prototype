@@ -1,6 +1,6 @@
 <div>
   <ul>
-    <ng-container *ngFor="let item of visibleActions | keyvalue">
+    <ng-container *ngFor="let item of getActions() | keyvalue">
       <li>
         <button (click)="onClickAction(item.value)">{{item.value.getText()|text}}</button>
       </li>

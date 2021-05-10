@@ -1,3 +1,4 @@
+import { MainMenuComponent } from './components/main-menu/main-menu.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +10,7 @@ import { NamePipe } from './pipes/name.pipe';
 import { TextPipe } from './pipes/text.pipe';
 
 @NgModule({
-  declarations: [NamePipe, TextPipe, InformComponent],
+  declarations: [NamePipe, TextPipe, InformComponent, MainMenuComponent],
   entryComponents: [],
   imports: [
     CommonModule,
@@ -21,6 +22,6 @@ import { TextPipe } from './pipes/text.pipe';
     Storage,
   ],
   bootstrap: [],
-  exports: [NamePipe, TextPipe],
+  exports: [NamePipe, TextPipe, MainMenuComponent],
 })
 export class SharedModule {}

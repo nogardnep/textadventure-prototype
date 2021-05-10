@@ -1,8 +1,9 @@
 import { Action } from 'src/game/core/models/Action';
 import { Spell } from '../entities/immaterial/Spell';
 import { Character } from '../entities/material/Character';
+import { MaterialEntity } from '../entities/MaterialEntity';
 
-export class Casting extends Action {
+export class CastingOn extends Action {
   getText() {
     return { fr: 'lancer' };
   }
@@ -16,10 +17,10 @@ export class Casting extends Action {
   }
 
   proceed(author: Character, args: any[]) {
-    const target = args[0] as Spell;
-    const location = author.getParent();
-    location.getResponseToSpell(target);
+    const spell = args[0] as Spell;
+    const target = author.getParent();
+    // const target = args[1] as MaterialEntity; // TODO
 
-    return true;
+    return target.affectedBySpell(author, spell);
   }
 }

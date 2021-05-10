@@ -3,6 +3,7 @@ import { BaseActionKeys } from '../../../../dictionnaries/actions';
 import { Utils } from 'src/game/core/Utils';
 import { MaterialEntity } from '../../MaterialEntity';
 import { Thing } from '../Thing';
+import { ActionReport } from 'src/game/core/models/Action';
 
 export class UsuableObject extends Thing {
   getDisplayedActionKeys() {
@@ -19,15 +20,15 @@ export class UsuableObject extends Thing {
     return true;
   }
 
-  droppedBy(target: Character): boolean {
+  droppedBy(target: Character): ActionReport {
     this.moveTo(target.getParent());
 
-    return true;
+    return { success: true };
   }
 
-  takenBy(target: MaterialEntity): boolean {
+  takenBy(target: MaterialEntity): ActionReport {
     this.moveTo(target);
 
-    return true;
+    return { success: true };
   }
 }

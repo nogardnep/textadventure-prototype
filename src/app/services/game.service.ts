@@ -15,6 +15,7 @@ import { ConfigService } from './config.service';
 import { StorageService } from './storage.service';
 
 const PLAY_STORAGE_KEY = 'play';
+export const INTERFACE_ID = 'game2'; // TODO: temp
 
 @Injectable({
   providedIn: 'root',
@@ -39,7 +40,7 @@ export class GameService {
 
   // TODO: temp
   getCurrentScenario(): Scenario {
-    return SCENARIOS['test'];
+    return SCENARIOS.theFortress;
   }
 
   async inform(paragraphs: Paragraph[], actions?: Choice[]) {
@@ -94,12 +95,28 @@ export class GameService {
   loadLastPlay(): void {
     this.storageService.get(PLAY_STORAGE_KEY).then((storedPlay: StoredPlay) => {
       if (storedPlay) {
-        this.setPlay(this.createPlay(SCENARIOS[storedPlay.scenarioId]));
+        this.setPlay(this.createPlay(this.getScenario(storedPlay.scenarioId)));
         this.play.load(storedPlay);
       } else {
         console.error('no play found');
       }
     });
+  }
+
+  private getScenario(id: string) {
+    let found: Scenario;
+
+    for (let key in SCENARIOS) {
+      if (SCENARIOS[key].id === id) {
+        found = SCENARIOS[key];
+      }
+    }
+
+    if (!found) {
+      console.error('unfound scenario (' + id + ')');
+    }
+
+    return found;
   }
 
   private createPlay(scenario: Scenario): Play {
@@ -110,8 +127,7 @@ export class GameService {
       onInform: (paragraphs: Paragraph[], actions?: Choice[]) => {
         this.inform(paragraphs, actions);
       },
-      onStartConversation: (interlocutor: Entity) => {
-      },
+      onStartConversation: (interlocutor: Entity) => {},
     });
   }
 }

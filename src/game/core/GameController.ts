@@ -1,8 +1,6 @@
-import { Scenario, Scenarios } from './models/Scenario';
 import { Choice } from './models/Choice';
 import { Paragraph } from './models/Paragraph';
 import { Play, StoredPlay } from './models/Play';
-import { TextWrapper } from './models/Text';
 
 type Callbacks = {
   onInform: (paragraphs: Paragraph[], actions?: Choice[]) => void;

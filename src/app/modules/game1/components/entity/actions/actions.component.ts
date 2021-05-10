@@ -7,33 +7,29 @@ import { Entity } from 'src/game/core/models/Entity';
   templateUrl: './actions.component.html',
   styleUrls: ['./actions.component.scss'],
 })
-export class ActionsComponent implements OnInit, OnChanges {
+export class ActionsComponent implements OnInit {
   @Input() entity: Entity;
-  visibleActions: { [key: string]: Action } = {};
 
   constructor() {}
 
   ngOnInit() {}
 
-  ngOnChanges() {
-    this.update();
-  }
-
-  private update() {
-    this.visibleActions = {};
+  getActions(): { [key: string]: Action }  {
+    const actions = {};
 
     this.entity.getDisplayedActionKeys().forEach((key: string) => {
       const action = this.entity.getPlay().getAction(key);
 
       if (this.isVisible(action)) {
-        this.visibleActions[key] = action;
+        actions[key] = action;
       }
     });
+
+    return actions
   }
 
   onClickAction(action: Action): void {
     action.use(this.entity.getPlay().getPlayer(), [this.entity]);
-    this.update();
   }
 
   isVisible(action: Action): boolean {

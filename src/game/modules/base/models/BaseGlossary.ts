@@ -14,4 +14,7 @@ export enum BaseGlossaryKey {
   NotTakable = 'notTakable',
   GetPhrase = 'getPhrase',
   Take = 'take',
+  AllHandsUsed = 'allHandsUsed',
+  SomethingAlreadyWorn = 'somethingAlreadyWorn',
+  UnusefulSpell = 'unusefulSpell',
 }

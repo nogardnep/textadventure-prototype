@@ -1,3 +1,7 @@
-<div *ngIf="play">
-
-</div>
+<ion-content [fullscreen]="true">
+  <app-main-menu></app-main-menu>
+  <div *ngIf="play">
+    <div>Time: {{play.getTime()}}</div>
+    <app-location [entity]="getLocation()"></app-location>
+  </div>
+</ion-content>

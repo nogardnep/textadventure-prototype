@@ -1,4 +1,4 @@
-import { Casting } from '../models/actions/Casting';
+import { CastingOn } from '../models/actions/CastingOn';
 import { Closing } from '../models/actions/Closing';
 import { Dropping } from '../models/actions/Dropping';
 import { GoingTo } from '../models/actions/GoingTo';
@@ -18,7 +18,7 @@ export enum BaseActionKeys {
   Closing = 'closing',
   Putting = 'putting',
   Pulling = 'pulling',
-  Casting = 'casting',
+  CastingOn = 'castingOn',
   Holding = 'holding',
   Releasing = 'releasing',
   GoingTo = 'goingTo',
@@ -33,7 +33,7 @@ export const BASE_ACTIONS: { [key in BaseActionKeys] } = {
   closing: new Closing(),
   putting: new Putting(),
   pulling: new Pulling(),
-  casting: new Casting(),
+  castingOn: new CastingOn(),
   holding: new Holding(),
   releasing: new Releasing(),
   goingTo: new GoingTo(),

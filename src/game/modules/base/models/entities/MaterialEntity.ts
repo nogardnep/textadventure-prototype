@@ -1,3 +1,6 @@
+import { BaseGlossaryKey } from './../BaseGlossary';
+import { ActionReport } from './../../../../core/models/Action';
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { Entity, EntityId, EntityType } from 'src/game/core/models/Entity';
 import { Caracteristic } from '../Caracteristic';
 import { WithModifiers } from './constraints/WithModifiers';
@@ -18,7 +21,7 @@ export class MaterialEntity extends Entity {
     this.getChildren().forEach((item: MaterialEntity) => {
       if (item.equals(entity)) {
         found = true;
-      } else if (deepSearch) {
+      } else if (!found && deepSearch) {
         found = item.isOwning(entity, deepSearch);
       }
     });
@@ -104,8 +107,15 @@ export class MaterialEntity extends Entity {
     return true;
   }
 
-  getResponseToSpell(spell: Spell, additionnal?: {}): {} {
-    return additionnal ? additionnal : {};
+  affectedBySpell(author: Character, spell: Spell): ActionReport {
+    return {
+      success: false,
+      message: this.getPlay().getPhrase(BaseGlossaryKey.UnusefulSpell, [
+        author,
+        spell,
+        this,
+      ]),
+    };
   }
 
   getParent(): MaterialEntity {

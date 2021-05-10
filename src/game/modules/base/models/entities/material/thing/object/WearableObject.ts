@@ -1,3 +1,5 @@
+import { BaseGlossaryKey } from 'src/game/modules/base/models/BaseGlossary';
+import { ActionReport } from 'src/game/core/models/Action';
 import { BaseActionKeys } from '../../../../../dictionnaries/actions';
 import { EMPLACEMENT_NAMES } from '../../../../../dictionnaries/emplacement';
 import { Character } from '../../Character';
@@ -18,76 +20,63 @@ export class WearableObject extends UsuableObject {
   }
 
   moveTo(newParent: MaterialEntity) {
-    let canProceed = false;
-
     if (this.worn) {
-      canProceed = this.pulledBy(newParent as Character);
-    } else {
-      canProceed = true;
+      this.worn = false;
     }
 
-    if (canProceed) {
-      super.moveTo(newParent);
-    }
-
-    return canProceed;
+    return super.moveTo(newParent);
   }
 
-  puttedBy(target: Character): boolean {
-    let canProceed = false;
+  puttedBy(target: Character): ActionReport {
+    let success = false;
+    let failureMessage: string;
     let owner: Character = this.getParent() as Character;
 
     const alreadyWornObject = owner.getWornObject(this.getEmplacement());
 
     if (alreadyWornObject) {
-      // TODO: use glossary
-      // target.inform([
-      //   {
-      //     text: {
-      //       fr:
-      //         'Something already worn at ' +
-      //         TextManager.extractName(
-      //           EMPLACEMENT_NAMES[this.getEmplacement()]
-      //         ).printSimple(),
-      //     },
-      //   },
-      // ]);
-      canProceed = false;
+      failureMessage = this.getPlay().getPhrase(
+        BaseGlossaryKey.SomethingAlreadyWorn,
+        [target, this]
+      );
+      success = false;
     } else {
-      canProceed = true;
+      success = true;
     }
 
-    if (canProceed) {
+    if (success) {
       this.worn = true;
       this.save();
     }
 
-    return canProceed;
+    return { success, message: failureMessage };
   }
 
-  pulledBy(target: Character): boolean {
-    let canProceed = true;
+  pulledBy(target: Character): ActionReport {
+    let success = true;
 
-    if (canProceed) {
+    if (success) {
       this.worn = false;
       this.save();
     }
 
-    return canProceed;
+    return { success };
   }
 
-  droppedBy(target: Character): boolean {
-    let canProceed = true;
+  droppedBy(target: Character): ActionReport {
+    let success = true;
 
     if (this.worn) {
-      canProceed = this.pulledBy(target);
+      success = this.getPlay()
+        .getAction(BaseActionKeys.Pulling)
+        .use(target, [this]);
     }
 
-    if (canProceed) {
+    if (success) {
       super.droppedBy(target);
     }
 
-    return canProceed;
+    return { success };
   }
 
   getEmplacement(): string {

@@ -1,3 +1,4 @@
+import { Paragraph } from './Paragraph';
 import { GameController } from 'src/game/core/GameController';
 import { TextManager } from '../TextManager';
 import { Entity } from './Entity';
@@ -6,6 +7,11 @@ import { TextWrapper } from './Text';
 
 // TODO: good?
 type Pattern = string | (new () => Entity)[];
+
+export type ActionReport = {
+  success: boolean;
+  message?: string;
+};
 
 export abstract class Action {
   patterns: { [languageKey: string]: Pattern[] };
@@ -57,31 +63,25 @@ export abstract class Action {
     return matching;
   }
 
-  try(author: Entity, args: any[]): boolean {
-    let success = false;
+  use(author: Entity, args: any[]): boolean {
+    let report = this.proceed(author, args);
 
     if (this.check(author, args, false)) {
-      success = this.use(author, args);
+      if (author.isThePlayer()) {
+        this.report(report, author, args);
+        this.onEnded(report.success, author, args);
+      }
     }
 
-    return success;
+    return report.success;
   }
 
-  use(author: Entity, args: any[]): boolean {
-    let success = false;
-    let response = this.proceed(author, args);
-
-    if (response === undefined || response) {
-      success = true;
-    }
-
-    this.onEnded(success);
-
-    return success;
+  protected proceed(author: Entity, args: any[]): ActionReport {
+    return { success: true };
   }
 
-  proceed(author: Entity, args: any[]): boolean {
-    return true;
+  protected report(report: ActionReport, author: Entity, args: any[]) {
+    console.log(report);
   }
 
   check(
@@ -98,7 +98,7 @@ export abstract class Action {
     };
   }
 
-  protected onEnded(withSuccess: boolean): void {
+  protected onEnded(withSuccess: boolean, author: Entity, args: any[]): void {
     if (withSuccess) {
       this.getPlay().increaseTime(this.getDuration());
     }

@@ -3,6 +3,6 @@ import { ImmaterialEntity } from '../ImmaterialEntity';
 
 export class Spell extends ImmaterialEntity {
   getDisplayedActionKeys() {
-    return super.getDisplayedActionKeys().concat([BaseActionKeys.Casting]);
+    return super.getDisplayedActionKeys().concat([BaseActionKeys.CastingOn]);
   }
 }

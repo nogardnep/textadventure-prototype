@@ -1,4 +1,3 @@
-import { NameWrapper } from './../../../../core/models/Text';
 import { Entity } from 'src/game/core/models/Entity';
 import { FrenchGlossary } from 'src/game/core/models/FrenchGlossary';
 import { TextManager } from 'src/game/core/TextManager';
@@ -24,7 +23,7 @@ export class FrenchBaseGlossary extends FrenchGlossary implements BaseGlossary {
   }
 
   getPhrase(key: string, args: any[]) {
-    let phrase: string;
+    let phrase: string = '(texte manquant)';
 
     switch (key) {
       case BaseGlossaryKey.OutOfReach:
@@ -37,6 +36,10 @@ export class FrenchBaseGlossary extends FrenchGlossary implements BaseGlossary {
           'vous prenez ' +
             TextManager.extractName(target.getName()).printWithDefiniteArticle()
         );
+        break;
+
+      case BaseGlossaryKey.AllHandsUsed:
+        phrase = this.asSentence('toutes vos mains sont prises')
         break;
     }
 
