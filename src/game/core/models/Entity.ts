@@ -1,11 +1,8 @@
-import { GameController } from 'src/game/core/GameController';
-import { Play } from './Play';
+import { GameManager } from 'src/game/core/GameManager';
 import { Choice } from './Choice';
-import { Image } from './Image';
 import { Name } from './Name';
 import { Paragraph } from './Paragraph';
-import { NameWrapper } from './Text';
-import { Audio } from './Audio';
+import { Play } from './Play';
 
 export type EntityId = string;
 export type EntityType = string;
@@ -50,7 +47,7 @@ export class Entity implements StoredEntity {
   }
 
   getPlay(): Play {
-    return GameController.getPlay();
+    return GameManager.getPlay();
     // return this.onGetPlay();
   }
 
@@ -58,40 +55,16 @@ export class Entity implements StoredEntity {
     return this.type;
   }
 
-  getName(): NameWrapper {
-    return { fr: new Name(this.name) };
-  }
-
-  getExteriorDescription(): Paragraph[] {
-    return [];
-  }
-
-  getInteriorDescription(): Paragraph[] {
-    return [];
-  }
-
-  getPreviewDescription(): Paragraph[] {
-    return [];
+  getName(): Name {
+    return new Name(this.name);
   }
 
   getDisplayedActionKeys(): string[] {
     return [];
   }
 
-  getPreviewImage(): Image {
-    return null;
-  }
-
-  getAudioAmbiance(): { audio: Audio; check?: () => boolean }[] {
+  getChoices(): Choice[] {
     return [];
-  }
-
-  getFullImages(): { image: Image; check?: () => boolean }[] {
-    return [];
-  }
-
-  getChoices(additionnal?: Choice[]): Choice[] {
-    return additionnal ? additionnal : [];
   }
 
   getResponseToAction(key: string): void {}

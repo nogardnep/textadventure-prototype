@@ -5,7 +5,7 @@ import { MaterialEntity } from '../entities/MaterialEntity';
 
 export class CastingOn extends Action {
   getText() {
-    return { fr: 'lancer' };
+    return  'lancer' ;
   }
 
   check(author: Character, args: any[]) {

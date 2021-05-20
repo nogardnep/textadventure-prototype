@@ -1,0 +1,168 @@
+.entity-window-container {
+  background-image: url($imagePath + "/texture-1.png");
+  background-size: 100% auto;
+  padding: 0 20px;
+
+  .entity-window-canvas {
+    $shadowWith: 3px;
+    margin: 40px 0 -5px;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    // padding: 5px 0 0;
+
+    box-shadow: 0 0 0 $shadowWith rgba(0, 0, 0, 0.6);
+  }
+}
+
+.entity-content-list,
+.connection-list {
+  margin: 0;
+  padding: 0;
+
+  .entity-content-list-item,
+  .connection-list-item {
+    list-style: none;
+
+    .entity-preview,
+    .connection {
+      $edgeWidth: 15px;
+
+      padding: 0 0 0 $edgeWidth;
+      list-style: none;
+      position: relative;
+      background: rgba(0, 0, 0, 0.05);
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05), inset 0 -2px 10px rgba(0, 0, 0, 0.05);
+
+      &:before {
+        content: "";
+        opacity: 0.5;
+        background-image: url($imagePath + "/decoration-4.png");
+        background-repeat: repeat;
+        background-size: 100% auto;
+        display: inline-block;
+        width: $edgeWidth;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+      }
+    }
+
+    &:before,
+    &:last-child:after {
+      content: "";
+      display: block;
+      background-image: url($imagePath + "/border-3.png");
+      background-repeat: repeat;
+      background-size: 100% 100%;
+      height: 5px;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+      opacity: 0.8;
+    }
+  }
+}
+
+.connection-list-item {
+  .connection-direction-name {
+    font-size: 0.9em;
+    font-style: italic;
+    opacity: 0.8;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .connection-text {
+    font-size: 0.8em;
+    margin: 0;
+  }
+}
+
+.entity-preview,
+.connection-inner {
+  font-size: 1em;
+
+  .entity-preview-name {
+    display: inline-block;
+
+    button {
+      font-size: 1em;
+      font-style: italic;
+      font-weight: bold;
+      background: transparent;
+      padding: 0;
+      color: $interactiveTextFontColor;
+
+      &:before {
+        $size: 12px;
+
+        content: "";
+        background-image: url($imagePath + "/chip-1.png");
+        background-size: 100% 100%;
+        display: inline-block;
+        vertical-align: top;
+        margin: 2px 5px 0 0;
+        width: $size;
+        height: $size;
+      }
+    }
+  }
+
+  .entity-preview-situation {
+    display: inline-block;
+    font-size: 0.9em;
+    margin: 0 5px;
+    font-style: italic;
+    opacity: 0.6;
+  }
+
+  .entity-preview-core,
+  .entity-preview-header,
+  .connection-core,
+  .connection-header {
+    margin: 0 0 0 5px;
+  }
+
+  .entity-preview-core,
+  .connection-core {
+    display: flex;
+
+    .entity-preview-description-container,
+    .connection-presentation-container {
+      width: 60%;
+
+      .entity-preview-image {
+        margin: 0 5px 0 0;
+      }
+
+      .entity-preview-description {
+        font-size: 0.8em;
+        display: inline-block;
+        vertical-align: top;
+
+        .paragraph {
+          padding: 0;
+          margin: 0;
+        }
+      }
+    }
+
+    .entity-preview-interactions,
+    .connection-interactions {
+      text-align: center;
+      width: 40%;
+
+      .action-list {
+        padding: 0;
+
+        .action-list-item {
+          list-style: none;
+          display: block;
+
+          .action-button {
+            @include button();
+          }
+        }
+      }
+    }
+  }
+}

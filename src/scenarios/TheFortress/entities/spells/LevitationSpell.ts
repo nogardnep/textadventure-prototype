@@ -3,6 +3,8 @@ import { Name } from 'src/game/core/models/Name';
 
 export class LevitationSpell extends Spell {
   getName() {
-    return { fr: new Name('levitation') };
+    return new Name('levitation',{
+      properNoun: true
+    });
   }
 }

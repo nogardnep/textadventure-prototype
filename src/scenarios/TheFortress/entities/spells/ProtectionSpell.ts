@@ -3,6 +3,8 @@ import { Name } from 'src/game/core/models/Name';
 
 export class ProtectionSpell extends Spell {
   getName() {
-    return { fr: new Name('protection') };
+    return new Name('protection', {
+      properNoun: true,
+    });
   }
 }

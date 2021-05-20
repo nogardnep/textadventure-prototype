@@ -1,8 +1,8 @@
-<div>
-  <ul>
+<div class="actions" *ngIf="toDisplay()">
+  <ul class="action-list">
     <ng-container *ngFor="let item of getActions() | keyvalue">
-      <li>
-        <button (click)="onClickAction(item.value)">{{item.value.getText()|text}}</button>
+      <li class="action-list-item">
+        <app-action-button [text]="item.value.getText()" (clickEvent)="onClickAction(item.value)"></app-action-button>
       </li>
     </ng-container>
   </ul>

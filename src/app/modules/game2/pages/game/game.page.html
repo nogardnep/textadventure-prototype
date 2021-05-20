@@ -2,6 +2,8 @@
   <app-main-menu></app-main-menu>
   <div *ngIf="play">
     <div>Time: {{play.getTime()}}</div>
-    <app-location [entity]="getLocation()"></app-location>
+    <app-location *ngIf="!getFirstUnreadedMessage()" [entity]="getLocation()"></app-location>
+    <app-messages *ngIf="getFirstUnreadedMessage()" [messages]="[getFirstUnreadedMessage()]"></app-messages>
   </div>
+
 </ion-content>

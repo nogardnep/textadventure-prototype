@@ -1,12 +1,16 @@
-<ng-container *ngFor="let paragraph of paragraphs">
-  <ng-container *ngIf="!paragraph.check || paragraph.check()">
-    <p>
-      <img *ngIf="paragraph.image" src="assets/{{paragraph.image.source}}" alt="" height="200"/>
-      <span *ngIf="paragraph.text" [innerHTML]="paragraph.text|text"></span>
-      <ng-container *ngFor="let item of paragraph.items">
-        <span *ngIf="!item.entity" [innerHTML]="item.text|text"></span>
-        <button *ngIf="item.entity" (click)="onClickItem(item.entity)" [innerHTML]="item.text|text"></button>
-      </ng-container>
-    </p>
+<div class="paragraphs">
+  <ng-container *ngFor="let paragraph of paragraphs">
+    <ng-container *ngIf="!paragraph.check || paragraph.check()">
+      <p class="paragraph">
+        <img class="paragraph-image" *ngIf="paragraph.image" src="assets/{{paragraph.image.source}}" alt=""
+          height="200" />
+        <span class="paragraph-text" *ngIf="paragraph.text" [innerHTML]="paragraph.text"></span>
+        <ng-container *ngFor="let item of paragraph.items">
+          <span class="paragraph-text" *ngIf="!item.entity" [innerHTML]="item.text"></span>
+          <button class="paragraph-interactive-text" *ngIf="item.entity" (click)="onClickItem(item.entity)"
+            [innerHTML]="item.text"></button>
+        </ng-container>
+      </p>
+    </ng-container>
   </ng-container>
-</ng-container>
+</div>

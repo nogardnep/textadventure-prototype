@@ -1,15 +1,13 @@
-import { ActionReport } from './../../../../../core/models/Action';
-import { Entity, EntityId, EntityType } from 'src/game/core/models/Entity';
-import { Tag } from 'src/game/core/models/Narration';
-import { Section } from 'src/game/core/models/Section';
-import { TextWrapper } from 'src/game/core/models/Text';
+import { EntityId, EntityType } from 'src/game/core/models/Entity';
+import { Region } from 'src/game/core/models/Section';
 import { DirectionKey } from '../../../dictionnaries/direction';
 import { MaterialEntity } from '../MaterialEntity';
+import { ActionReport } from 'src/game/core/models/Action';
 import { Character } from './Character';
 
 export type Connection = {
   destinationId: EntityId;
-  text: TextWrapper;
+  text: string;
   passageId?: EntityId;
   directionKey?: DirectionKey;
   check?: () => boolean;
@@ -51,7 +49,14 @@ export class Place extends MaterialEntity {
     return this.connections;
   }
 
-  getSection(): Section {
+  getRegion(): Region {
     return null;
+  }
+
+  protected connectionLeadsTo(
+    connection: Connection,
+    type: EntityType
+  ): boolean {
+    return this.getPlay().getEntity(connection.destinationId).isOfType(type);
   }
 }

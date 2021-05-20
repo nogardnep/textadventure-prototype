@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameService, INTERFACE_ID } from 'src/app/services/game.service';
+import { EntityType } from 'src/game/core/models/Entity';
+import { Play } from 'src/game/core/models/Play';
 import { Scenario } from 'src/game/core/models/Scenario';
-import { TextWrapper } from 'src/game/core/models/Text';
+import { TextWrapper } from 'src/game/core/TextManager';
 import { CARACTERISTIC_NAMES } from 'src/game/modules/base/dictionnaries/caracteristics';
+import { BaseScenario } from 'src/game/modules/base/models/BaseScenario';
 import { Spell } from 'src/game/modules/base/models/entities/immaterial/Spell';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 
@@ -15,7 +18,7 @@ import { Character } from 'src/game/modules/base/models/entities/material/Charac
 export class NewPlayPage implements OnInit {
   selectedSpells: Spell[] = [];
   usedPoints: number = 0;
-  scenario: Scenario;
+  scenario: BaseScenario;
   readonly text: { [key: string]: TextWrapper } = {
     validate: { fr: 'Valider', en: 'Validate' },
     cancel: { fr: 'Annuler', en: 'Cancel' },
@@ -35,20 +38,20 @@ export class NewPlayPage implements OnInit {
     this.gameService.startNewPlay(this.gameService.getCurrentScenario());
 
     this.player = this.gameService.getPlay().getPlayer() as Character;
-    this.scenario = this.gameService.getPlay().getScenario();
+    this.scenario = this.gameService.getPlay().getScenario() as BaseScenario;
 
     if (this.player) {
       for (let key in this.player.caracteristics) {
         this.caracteristicModifiers[key] = 0;
       }
 
-      // this.scenario.starting.availableSpells.forEach((type: EntityType) => {
-      //   this.availableSpells.push(
-      //     new this.scenario.entityConstructors[type](
-      //       GameController.getPlay()
-      //     ) as Spell
-      //   );
-      // });
+      this.scenario.starting.availableSpells.forEach((type: EntityType) => {
+        this.availableSpells.push(
+          new this.scenario.entityConstructors[type](
+            this.gameService.getPlay()
+          ) as Spell
+        );
+      });
     } else {
       console.error('No player found in this scenario');
     }
@@ -57,10 +60,10 @@ export class NewPlayPage implements OnInit {
   onClickValidate(): void {
     let valid = true;
 
-    // if (this.scenario.starting.askForName && !this.name) {
-    //   valid = false;
-    //   this.gameService.inform([{ text: { en: 'please enter a name' } }]);
-    // }
+    if (this.scenario.starting.askForName && !this.name) {
+      valid = false;
+      this.gameService.openPopup([{ text: 'Vous devez entrer un nom' }]);
+    }
 
     if (valid) {
       this.selectedSpells.forEach((item: Spell) => {
@@ -73,6 +76,7 @@ export class NewPlayPage implements OnInit {
         caracteristic.current = caracteristic.max;
       }
 
+      console.log(this.player);
       this.gameService.getPlay().start();
       this.router.navigate(['/' + INTERFACE_ID]);
     }
@@ -95,13 +99,21 @@ export class NewPlayPage implements OnInit {
   }
 
   onClickSpell(spell: Spell): void {
-    // if (this.spellIsSelected(spell)) {
-    //   this.unselectSpell(spell);
-    // } else {
-    //   if (this.selectedSpells.length < this.scenario.starting.maxSpells) {
-    //     this.selectSpell(spell);
-    //   }
-    // }
+    if (this.spellIsSelected(spell)) {
+      this.unselectSpell(spell);
+    } else {
+      if (this.selectedSpells.length < this.scenario.starting.maxSpells) {
+        this.selectSpell(spell);
+      }
+    }
+  }
+
+  onClickAddSpell(spell: Spell): void {
+    this.selectSpell(spell);
+  }
+
+  onClickRemoveSpell(spell: Spell): void {
+    this.unselectSpell(spell);
   }
 
   spellIsSelected(spell: Spell): boolean {

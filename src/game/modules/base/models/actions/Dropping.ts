@@ -8,7 +8,7 @@ export class Dropping extends Action {
   }
 
   getText() {
-    return { fr: 'poser' };
+    return  'poser';
   }
 
   check(author: Character, args: any[]) {

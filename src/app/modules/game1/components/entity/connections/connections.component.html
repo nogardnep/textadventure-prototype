@@ -1,16 +1,31 @@
-<div>
-  <ul>
-    <ng-container *ngFor="let connection of connections">
-      <li *ngIf="isVisible(connection)">
-        <ng-container *ngIf="connection.directionKey">
-          (<span [innerHTML]="getDirection(connection.directionKey).name|name"></span>)
-        </ng-container>
-        <p [innerHTML]="connection.text|text"></p>
-        <ng-container *ngIf="connection.passageId">
-          <app-entity-preview [entity]="getPassage(connection)"></app-entity-preview>
-        </ng-container>
-        <button *ngIf="isUsable(connection)" (click)="onClickConnection(connection)">Aller</button>
-      </li>
-    </ng-container>
-  </ul>
-</div>
+<ul class="connection-list" *ngIf="connections.length > 0">
+  <ng-container *ngFor="let connection of connections">
+    <li *ngIf="isVisible(connection)" class="connection-list-item">
+      <div class="connection">
+        <div class="connection-header">
+          <ng-container *ngIf="connection.directionKey">
+            <div class="connection-direction-name" [ngClass]="connection.directionKey|kebabCase"
+              [innerHTML]="getDirection(connection.directionKey).name.printWithPreposition()"></div>
+          </ng-container>
+        </div>
+        <div class="connection-core">
+          <div class="connection-presentation-container">
+            <p class="connection-text" [innerHTML]="connection.text"></p>
+            <ng-container *ngIf="connection.passageId">
+              <app-entity-preview [entity]="getPassage(connection)"></app-entity-preview>
+            </ng-container>
+          </div>
+          <div class="connection-interactions">
+            <ul class="action-list">
+              <li class="action-list-item">
+                <app-action-button *ngIf="isUsable(connection)" [text]="'aller'"
+                  (clickEvent)="onClickConnection(connection)">
+                </app-action-button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ng-container>
+</ul>

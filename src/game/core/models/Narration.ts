@@ -1,14 +1,13 @@
 import { Paragraph } from './Paragraph';
 import { Play } from './Play';
-import { TextWrapper } from './Text';
 
 export type Chapter = {
-  title?: TextWrapper;
+  title?: string;
   sections: Section[];
 };
 
 export type Section = {
-  title?: TextWrapper;
+  title?: string;
   paragraphs: Paragraph[];
   tag?: Tag;
 };
@@ -50,7 +49,7 @@ export class Narration implements StoredNarration {
     return stored as StoredNarration;
   }
 
-  addChapter(title?: TextWrapper): Chapter {
+  addChapter(title?: string): Chapter {
     const chapter = {
       title,
       sections: [],

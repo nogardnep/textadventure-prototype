@@ -1,0 +1,27 @@
+.inform-container {
+  $backgroundColor: rgba(255, 255, 255, 0.8);
+
+  display: flexbox;
+  flex-grow: 1;
+  box-shadow: inset 0 5px 5px 0 rgba(0, 0, 0, 0.2), inset 0 -5px 5px 0 rgba(0, 0, 0, 0.2);
+  background: linear-gradient(0deg, $backgroundColor, $backgroundColor), url($imagePath + "/texture-3.png");
+  background-size: 100% 100%;
+
+  .inform {
+    text-align: center;
+    padding: 10px 10px;
+
+    .choice-button {
+      @include button();
+    }
+
+    .choice-list {
+      padding: 0;
+      margin: 0;
+
+      .choice-list-item {
+        list-style: none;
+      }
+    }
+  }
+}

@@ -10,7 +10,7 @@ export class Boots extends WearableObject implements WithModifiers {
   }
 
   getName() {
-    return { fr: new Name('Boots') };
+    return  new Name('Boots');
   }
 
   getModifiers() {

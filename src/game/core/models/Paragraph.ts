@@ -1,6 +1,5 @@
 import { Entity } from 'src/game/core/models/Entity';
 import { Image } from './Image';
-import { TextWrapper } from './Text';
 
 export enum MessageTag {
   Warning = 'warning',
@@ -12,8 +11,8 @@ export enum MessageTag {
 
 export type Paragraph = {
   image?: Image;
-  text?: TextWrapper;
-  items?: { text: TextWrapper; entity?: Entity }[];
+  text?: string;
+  items?: { text: string; entity?: Entity }[];
   tag?: MessageTag;
   check?: () => boolean;
 };

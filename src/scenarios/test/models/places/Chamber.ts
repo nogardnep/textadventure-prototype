@@ -39,14 +39,14 @@ export class Chamber extends Place {
     return [
       {
         items: [
-          { text: { fr: 'Une grande pièce aux murs rouges.' } },
+          { text:  'Une grande pièce aux murs rouges.'  },
           {
-            text: { fr: 'Un homme' },
+            text:  'Un homme' ,
             entity: this.getPlay().getFirstEntityOfType(
               TestScenario.entityConstructors.Tom.name
             ),
           },
-          { text: { fr: '.' } },
+          { text: '.' } ,
         ],
       },
       // {
@@ -68,7 +68,7 @@ export class Chamber extends Place {
   }
 
   getName() {
-    return { en: new Name('Chamber'), fr: new Name('Chambre') };
+    return new Name('Chambre') ;
   }
 
   // getConnections(): Connection[] {
@@ -90,13 +90,13 @@ export class Chamber extends Place {
   getChoices() {
     return [
       {
-        text: { fr: 'go to corridor' },
+        text:  'go to corridor' ,
         proceed: () => {
           this.exitToPlace(TestScenario.entityConstructors.Corridor.name);
         },
       },
       {
-        text: { fr: 'set fire' },
+        text:  'set fire' ,
         proceed: () => {
           this.fire = true;
           (this.getPlay().getPlayer() as Character).giveSpellOfType(

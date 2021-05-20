@@ -1,16 +1,17 @@
-import { ActionReport } from './../../../../../core/models/Action';
-import { Thing } from './Thing';
-import { EntityId, EntityType, Entity } from 'src/game/core/models/Entity';
 import { Gender } from 'src/game/core/dictionnaries/Gender';
+import { ActionReport } from 'src/game/core/models/Action';
+import { Entity, EntityId, EntityType } from 'src/game/core/models/Entity';
 import { Play } from 'src/game/core/models/Play';
+import { BaseActionKeys } from '../../../dictionnaries/actions';
+import { Subject } from '../../Subject';
 import { Spell } from '../immaterial/Spell';
 import { MaterialEntity } from '../MaterialEntity';
+import { CaracteristicKey } from './../../../dictionnaries/caracteristics';
+import { Thing } from './Thing';
 import { HoldableObject } from './thing/object/HoldableObject';
 import { WearableObject } from './thing/object/WearableObject';
+import { Scenary } from './thing/Scenary';
 import { UsuableObject } from './thing/UsuableObject';
-import { Subject } from '../../Subject';
-import { BaseActionKeys } from '../../../dictionnaries/actions';
-import { TextWrapper } from 'src/game/core/models/Text';
 
 export class Character extends MaterialEntity {
   dead = false;
@@ -20,18 +21,18 @@ export class Character extends MaterialEntity {
   constructor(play: Play) {
     super(play);
 
-    this.caracteristics = {
-      life: {
+    for (let key in CaracteristicKey) {
+      this.caracteristics[CaracteristicKey[key]] = {
         current: 10,
         max: 10,
         min: 0,
-      },
-      resistance: {
-        current: 10,
-        max: 10,
-        min: 0,
-      },
-    };
+      };
+    }
+  }
+
+  kill() {
+    this.dead = true;
+    this.save();
   }
 
   getDisplayedActionKeys() {
@@ -171,13 +172,17 @@ export class Character extends MaterialEntity {
     let response = false;
 
     if (!entity.invisible) {
-      const parent = entity.getParent();
+      if (entity instanceof Scenary) {
+        response = true;
+      } else {
+        const parent = entity.getParent();
 
-      if (parent) {
-        if (parent.equals(this.getParent())) {
-          response = true;
-        } else {
-          response = this.checkVisible(parent);
+        if (parent) {
+          if (parent.equals(this.getParent())) {
+            response = true;
+          } else {
+            response = this.checkVisible(parent);
+          }
         }
       }
     }
@@ -186,31 +191,31 @@ export class Character extends MaterialEntity {
   }
 
   talkedBy(target: Character): ActionReport {
-    this.getPlay().inform(
-      [{ text: { fr: 'Que voulez vous demander ?' } }],
-      [
-        {
-          text: { fr: 'a' },
-          proceed: () => {
-            this.getPlay().inform(
-              [{ text: { fr: 'humhum' } }],
-              [
-                {
-                  text: { fr: 'continuer' },
-                  proceed: () => {
-                    this.talkedBy(target);
-                  },
-                },
-              ]
-            );
-          },
-        },
-        {
-          text: { fr: 'arrêter' },
-          proceed: () => {},
-        },
-      ]
-    );
+    // this.getPlay().inform(
+    //   [{ text: { fr: 'Que voulez vous demander ?' } }],
+    //   [
+    //     {
+    //       text: { fr: 'a' },
+    //       proceed: () => {
+    //         this.getPlay().inform(
+    //           [{ text: { fr: 'humhum' } }],
+    //           [
+    //             {
+    //               text: { fr: 'continuer' },
+    //               proceed: () => {
+    //                 this.talkedBy(target);
+    //               },
+    //             },
+    //           ]
+    //         );
+    //       },
+    //     },
+    //     {
+    //       text: { fr: 'arrêter' },
+    //       proceed: () => {},
+    //     },
+    //   ]
+    // );
 
     return { success: true };
   }

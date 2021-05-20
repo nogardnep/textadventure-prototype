@@ -1,0 +1,20 @@
+<div class="messages">
+  <ul class="message-list">
+    <ng-container *ngFor="let item of messages">
+      <li class="message-list-item">
+        <div class="message">
+          <entity-paragraphs [paragraphs]="item.paragraphs"></entity-paragraphs>
+          <ng-container *ngIf="item.choices && item.choices.length > 0">
+            <ul class="choice-list">
+              <ng-container *ngFor="let choice of item.choices">
+                <li *ngIf="isVisible(choice)" class="choice-list-item">
+                  <app-action-button [text]="choice.text" (clickEvent)="onClickChoice(choice)"></app-action-button>
+                </li>
+              </ng-container>
+            </ul>
+          </ng-container>
+        </div>
+      </li>
+    </ng-container>
+  </ul>
+</div>

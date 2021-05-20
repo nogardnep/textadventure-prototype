@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Choice } from 'src/game/core/models/Choice';
 import { Paragraph } from 'src/game/core/models/Paragraph';
-import { TextWrapper } from 'src/game/core/models/Text';
+import { TextWrapper } from 'src/game/core/TextManager';
 
 @Component({
   selector: 'app-inform',
@@ -10,7 +10,7 @@ import { TextWrapper } from 'src/game/core/models/Text';
   styleUrls: ['./inform.component.scss'],
 })
 export class InformComponent implements OnInit {
-  actions: Choice[];
+  choices: Choice[];
   paragraphs: Paragraph[];
   text: { [key: string]: TextWrapper } = {
     close: { fr: 'fermer', en: 'close' },

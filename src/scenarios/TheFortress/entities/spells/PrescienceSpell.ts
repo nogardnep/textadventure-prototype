@@ -3,6 +3,8 @@ import { Name } from 'src/game/core/models/Name';
 
 export class PrescienceSpell extends Spell {
   getName() {
-    return { fr: new Name('préscience') };
+    return new Name('préscience',{
+      properNoun: true
+    });
   }
 }

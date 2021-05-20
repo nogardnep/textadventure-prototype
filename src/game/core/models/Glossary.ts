@@ -1,6 +1,5 @@
-import { NameWrapper } from './Text';
 import { Name } from './Name';
-import { TextManager } from '../TextManager';
+import { NameWrapper, TextManager } from '../TextManager';
 import { Gender } from '../dictionnaries/Gender';
 
 export enum ConjugationTime {
@@ -22,6 +21,16 @@ export abstract class Glossary {
   static conjugationTime: ConjugationTime;
   static receiverPerson: Person;
   static receiverGender: Gender;
+  protected missingText: string;
+  protected phrases: { [key: string]: (args: any[]) => string };
+
+  constructor(
+    phrases: { [key: string]: (args: any[]) => string },
+    missingText: string
+  ) {
+    this.phrases = phrases;
+    this.missingText = missingText;
+  }
 
   static setConjugationTime(conjugationtime: ConjugationTime) {
     this.conjugationTime = conjugationtime;
@@ -47,11 +56,27 @@ export abstract class Glossary {
     return phrase;
   }
 
-  protected extractName(name: NameWrapper): Name {
-    return TextManager.extractName(name);
+  // protected extractName(name: NameWrapper): Name {
+  //   return TextManager.extractName(name);
+  // }
+
+  setPharses(phrases: { [key: string]: (args: any[]) => string }): void {
+    Object.assign(this.phrases, phrases);
   }
 
   getPhrase(key: string, args: any[]): string {
+    let phrase: string;
+
+    if (this.phrases[key]) {
+      phrase = this.phrases[key](args);
+    } else {
+      phrase = this.missingText;
+    }
+
+    return phrase;
+  }
+
+  getName(key: string, args: any[]): Name {
     return null;
   }
 }

@@ -3,9 +3,9 @@
     <ng-container *ngFor="let connection of connections">
       <li *ngIf="isVisible(connection)">
         <ng-container *ngIf="connection.directionKey">
-          (<span [innerHTML]="getDirection(connection.directionKey).name|name"></span>)
+          (<span [innerHTML]="getDirection(connection.directionKey).name.printSimple()"></span>)
         </ng-container>
-        <p [innerHTML]="connection.text|text"></p>
+        <p [innerHTML]="connection.text"></p>
         <ng-container *ngIf="connection.passageId">
           <!-- <app-entity-preview [entity]="getPassage(connection)"></app-entity-preview> -->
         </ng-container>

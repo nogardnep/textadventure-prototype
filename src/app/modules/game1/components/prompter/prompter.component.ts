@@ -1,4 +1,4 @@
-import { GameController } from 'src/game/core/GameController';
+import { GameManager } from 'src/game/core/GameManager';
 import { GameService } from 'src/app/services/game.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -30,7 +30,7 @@ export class PrompterComponent implements OnInit {
 
   private execute(): void {
     if (this.text) {
-      GameController.interpret(this.text)
+      GameManager.interpret(this.text)
     }
 
     this.empty();

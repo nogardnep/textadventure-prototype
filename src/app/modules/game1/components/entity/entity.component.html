@@ -1,8 +1,0 @@
-<div *ngIf="entity">
-  <button (click)="onClickEntity()"><b>{{ entity.getName()|name }}</b></button>
-  <entity-paragraphs [paragraphs]="entity.getInteriorDescription() "></entity-paragraphs>
-  <app-entity-list [entity]="entity"></app-entity-list>
-</div>
-<div *ngIf="!entity">
-  <p>(entity not found)</p>
-</div>

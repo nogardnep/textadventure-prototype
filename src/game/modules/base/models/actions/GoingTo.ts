@@ -9,7 +9,7 @@ import { Character } from '../entities/material/Character';
 
 export class GoingTo extends Action {
   getText() {
-    return { fr: 'going' };
+    return 'going';
   }
 
   check(author: Character, args: any[]) {

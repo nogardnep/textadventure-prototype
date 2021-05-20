@@ -1,0 +1,165 @@
+.new-play-page {
+  background-image: url($imagePath + "/texture-1.png");
+  padding: 0 0 20px;
+
+  .page-title-container {
+    $backgroundColor: rgba(255, 255, 255, 0.8);
+
+    background: linear-gradient(0deg, $backgroundColor, $backgroundColor), url($imagePath + "/texture-2.png");
+
+    .page-title {
+      font-family: $specialFont;
+      padding: 0 5px;
+      margin: 5px 0;
+      color: rgba(0, 0, 0, 0.774);
+      font-size: 2em;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    &:before {
+      content: "";
+      height: 20px;
+      background-image: url($imagePath + "/border-1.png");
+      width: 100%;
+      background-size: 100% 100%;
+      display: block;
+    }
+
+    &:after {
+      content: "";
+      width: 100%;
+      background-size: 100% 100%;
+      display: block;
+      height: 10px;
+      background-image: url($imagePath + "/border-2.png");
+    }
+  }
+
+  .page-core {
+    $backgroundColor: rgba(255, 255, 255, 0.8);
+
+    padding: 5px;
+    margin: 0 10px 20px;
+    box-shadow: inset 2px 2px 1px rgba(0, 0, 0, 0.5), inset -2px -2px 1px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(0deg, $backgroundColor, $backgroundColor), url($imagePath + "/texture-3.png");
+    background-size: 100% auto;
+
+    .sections {
+      .section-title {
+        font-family: $specialFont;
+        font-weight: bold;
+        font-size: 1.5em;
+      }
+
+      .name-section {
+        .player-name {
+          font-size: 1.5em;
+          font-style: italic;
+          color: rgba(219, 219, 219, 0.993);
+          text-shadow: -1px -1px 2px rgb(148, 148, 148), 1px 1px 2px rgba(0, 0, 0, 1);
+        }
+      }
+
+      .spells-section .remaining-spells,
+      .caracteristics-section .remaining-points {
+        font-style: italic;
+        color: rgba(0, 0, 0, 0.5);
+
+        .label {
+          display: inline-block;
+          margin: 0 5px 10px 0;
+          font-weight: bold;
+
+          &:after {
+            content: $nbsp + ":";
+          }
+        }
+
+        .value {
+          display: inline-block;
+        }
+      }
+
+      .add-remove-buttons {
+        display: inline-block;
+
+        button {
+          margin: 0 5px 5px;
+          font-weight: bold;
+          box-shadow: 2px 2px 2px rgba(59, 55, 55, 0.5);
+          background: rgba(0, 0, 0, 0.2);
+          padding: 2px 5px;
+          color: $interactiveTextFontColor;
+
+          &:disabled {
+            opacity: 0.5;
+          }
+        }
+      }
+
+      .spells-section {
+        .spell-list {
+          padding: 0;
+          margin: 0;
+
+          .spell-list-item {
+            list-style: none;
+
+            &.selected {
+              .spell .spell-name {
+                opacity: 1;
+              }
+            }
+
+            .spell {
+              display: flex;
+              max-width: 300px;
+
+              .spell-name,
+              .add-remove-buttons {
+                opacity: 0.6;
+                flex: 1 1 0px;
+              }
+            }
+          }
+        }
+      }
+
+      .caracteristics-section {
+        .caracteristic-list {
+          padding: 0;
+          margin: 0;
+
+          .caracteristic-list-item {
+            list-style: none;
+
+            .caracteristic {
+              display: flex;
+              max-width: 300px;
+
+              .label,
+              .value,
+              .add-remove-buttons {
+                flex: 1 1 0px;
+              }
+
+              .label {
+                margin: 0 5px 0 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .validation-buttons {
+      text-align: center;
+
+      margin: 20px 0;
+      button {
+        @include button();
+      }
+    }
+  }
+}

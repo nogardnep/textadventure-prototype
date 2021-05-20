@@ -6,6 +6,7 @@ import {
   DirectionKey,
 } from 'src/game/modules/base/dictionnaries/direction';
 import { BaseScenario } from 'src/game/modules/base/models/BaseScenario';
+import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 import {
   Connection,
   Place,
@@ -18,7 +19,7 @@ import { Passage } from 'src/game/modules/base/models/entities/material/thing/Pa
   styleUrls: ['./connections.component.scss'],
 })
 export class ConnectionsComponent implements OnInit {
-  @Input() entity: Entity;
+  @Input() entity: BaseEntity;
   connections: Connection[] = [];
 
   constructor() {}
@@ -26,7 +27,9 @@ export class ConnectionsComponent implements OnInit {
   ngOnInit() {}
 
   ngOnChanges() {
-    this.connections = (this.entity as Place).getConnections();
+    if (this.entity instanceof Place) {
+      this.connections = this.entity.getConnections();
+    }
   }
 
   isVisible(connection: Connection): boolean {
@@ -46,13 +49,13 @@ export class ConnectionsComponent implements OnInit {
     ];
   }
 
-  getPassage(connection: Connection): Passage {
-    return this.entity.getPlay().getEntity(connection.passageId) as Passage;
+  getPassage(connection: Connection): Entity {
+    return this.entity.getPlay().getEntity(connection.passageId);
   }
 
   isUsable(connection: Connection): boolean {
     const passage = connection.passageId ? this.getPassage(connection) : null;
 
-    return !passage || !passage.closed;
+    return !passage || !(passage as Passage).closed;
   }
 }

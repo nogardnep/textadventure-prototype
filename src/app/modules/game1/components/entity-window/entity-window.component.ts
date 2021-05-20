@@ -1,7 +1,4 @@
-import {
-  AudioService,
-  AudioLayerKey,
-} from './../../../../services/audio.service';
+import { AudioService, AudioLayerKey } from 'src/app/services/audio.service';
 import { Entity } from 'src/game/core/models/Entity';
 import {
   Component,
@@ -15,7 +12,7 @@ import {
 } from '@angular/core';
 import * as createjs from 'createjs-module';
 import { Image } from 'src/game/core/models/Image';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 
 const TICK_EVENT_ID = 'tick';
 
@@ -25,11 +22,11 @@ const TICK_EVENT_ID = 'tick';
   styleUrls: ['./entity-window.component.scss'],
 })
 export class EntityWindowComponent
-  implements OnInit, OnDestroy, OnChanges, AfterViewInit {
-  @Input() entity: Entity;
+  implements OnInit, OnDestroy, OnChanges, AfterViewInit
+{
+  @Input() entity: BaseEntity;
   @ViewChild('container') container: ElementRef;
   @ViewChild('canvas') canvas: ElementRef;
-  id: number;
   empty: boolean;
   canvasWidth: number;
   canvasHeight: number;
@@ -41,7 +38,6 @@ export class EntityWindowComponent
     this.entity = null;
     this.stage = null;
     this.empty = false;
-    this.id = Math.floor(Math.random() * 10000);
     // this.audioLayer = audioService.createLayer(this.id.toString());
   }
 
@@ -54,14 +50,14 @@ export class EntityWindowComponent
       this.empty = true;
     }
 
-    this.updateCanvas();
-    this.updateAudioAmbiance();
+    // this.updateCanvas();
+    // this.updateAudioAmbiance();
   }
 
   ngAfterViewInit(): void {
     if (!this.empty) {
-      this.initCanvas();
-      this.updateCanvas();
+      // this.initCanvas();
+      // this.updateCanvas();
     }
   }
 
@@ -131,12 +127,15 @@ export class EntityWindowComponent
   }
 
   private removeCanvas(): void {
-    this.clearCanvas();
+    if (this.stage) {
+      this.clearCanvas();
+    }
   }
 
   private tickCanvas = (event: any) => {
     this.canvas.nativeElement.width = this.container.nativeElement.offsetWidth;
-    this.canvas.nativeElement.heigth = this.container.nativeElement.offsetHeight;
+    this.canvas.nativeElement.heigth =
+      this.container.nativeElement.offsetHeight;
     this.stage.regX = -this.canvas.nativeElement.offsetWidth / 2;
     this.stage.regY = -this.canvas.nativeElement.offsetHeight;
     this.stage.update(event);

@@ -1,0 +1,23 @@
+<div class="entity-full" *ngIf="entity">
+  <div class="entity-full-name-container">
+    <div class="entity-full-name">
+      <span class="entity-full-name-inner">
+        {{ entity.getName().printWithIndefiniteArticle()|capitalizeFirst }}</span>
+    </div>
+  </div>
+  <app-entity-window [entity]="entity"></app-entity-window>
+  <div class="entity-full-description">
+    <entity-paragraphs [paragraphs]="description"></entity-paragraphs>
+  </div>
+  <div class="entity-full-content">
+    <div class="entity-full-content-inner">
+      <app-choices [entity]="entity"></app-choices>
+      <app-actions [entity]="entity"></app-actions>
+      <app-entity-list [entity]="entity"></app-entity-list>
+      <app-connections [entity]="entity"></app-connections>
+    </div>
+  </div>
+</div>
+<div *ngIf="!entity">
+  <p>Entity not found</p>
+</div>

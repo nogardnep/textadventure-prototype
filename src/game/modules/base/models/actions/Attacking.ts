@@ -3,7 +3,7 @@ import { Character } from '../entities/material/Character';
 
 export class Attacking extends Action {
   getText() {
-    return { fr: 'attaquer' };
+    return  'attaquer' ;
   }
 
   check(author: Character, args: any[]) {

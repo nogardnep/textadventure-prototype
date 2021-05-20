@@ -1,15 +1,19 @@
-import { BASE_DIRECTIONS } from './../dictionnaries/direction';
-import { FrenchBaseGlossary } from 'src/game/modules/base/models/glossaries/FrenchBaseGlossary';
-import { BASE_ACTIONS } from '../dictionnaries/actions';
+import { ScenarioId } from 'src/game/core/models/Scenario';
+import { Action } from 'src/game/core/models/Action';
+import { Audio } from 'src/game/core/models/Audio';
 import { Entity, EntityType } from 'src/game/core/models/Entity';
+import { Glossary } from 'src/game/core/models/Glossary';
+import { Image } from 'src/game/core/models/Image';
 import { Play } from 'src/game/core/models/Play';
 import { Scenario } from 'src/game/core/models/Scenario';
-import { TextWrapper } from 'src/game/core/models/Text';
+import { FrenchBaseGlossary } from 'src/game/modules/base/models/glossaries/FrenchBaseGlossary';
+import { BASE_ACTIONS } from '../dictionnaries/actions';
 import {
   Direction,
   DirectionKey,
   getOppositeDirection,
 } from '../dictionnaries/direction';
+import { BASE_DIRECTIONS } from './../dictionnaries/direction';
 import { Place } from './entities/material/Place';
 import { EnglishBaseGlossary } from './glossaries/EnglishBaseGlossary';
 
@@ -22,15 +26,36 @@ export abstract class BaseScenario extends Scenario {
     askForName: boolean;
   };
 
-  constructor() {
-    super();
+  constructor(
+    id: ScenarioId,
+    params: {
+      glossaries?: { [languageKey: string]: Glossary };
+      entityConstructors: { [key: string]: new (play: Play) => Entity };
+      images?: { [key: string]: Image };
+      audios?: { [key: string]: Audio };
+      actions?: { [key: string]: Action };
+    }
+  ) {
+    super(id, params);
 
-    this.actions = Object.assign({}, this.actions, BASE_ACTIONS);
-    this.glossaries = Object.assign({}, this.glossaries, {
+    this.setActions(BASE_ACTIONS);
+    this.setDirection(BASE_DIRECTIONS);
+    this.setGlossaries({
       fr: new FrenchBaseGlossary(),
-      en: new EnglishBaseGlossary()
+      en: new EnglishBaseGlossary(),
     });
-    this.directions = BASE_DIRECTIONS;
+
+    if (params.actions) {
+      this.setActions(params.actions);
+    }
+
+    if (params.glossaries) {
+      this.setGlossaries(params.glossaries);
+    }
+  }
+
+  protected setDirection(directions: { [key: string]: Direction }): void {
+    this.directions = Object.assign({}, this.directions, directions);
   }
 
   protected createConnection(
@@ -38,11 +63,11 @@ export abstract class BaseScenario extends Scenario {
     param: {
       first: {
         placeType: EntityType;
-        text: TextWrapper;
+        text: string;
       };
       second: {
         placeType: EntityType;
-        text: TextWrapper;
+        text: string;
       };
       connectionType?: EntityType;
       directionKeyForFirst?: DirectionKey;

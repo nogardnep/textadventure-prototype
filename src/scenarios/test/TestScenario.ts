@@ -19,28 +19,21 @@ export class TestScenario extends BaseScenario {
   static audios = AUDIOS;
 
   constructor() {
-    super();
+    super('test', {
+      entityConstructors: TestScenario.entityConstructors,
+      glossaries: {
+        fr: new ModifiedFrenchBaseGlossary(),
+      },
+      images: TestScenario.images,
+      audios: TestScenario.audios
+    });
 
-    this.id = 'test';
-    this.title = { fr: 'Test' };
-    this.glossaries = Object.assign({}, this.glossaries, {
-      fr: new ModifiedFrenchBaseGlossary(),
-    });
-    this.entityConstructors = Object.assign(
-      {},
-      this.entityConstructors,
-      TestScenario.entityConstructors
-    );
-    this.actions = Object.assign({}, this.actions, {
-      // look
-    });
+    // TODO: move
     this.glossaryConfiguration = {
       conjugationTime: ConjugationTime.Present,
       receiverGender: Gender.Male,
       receiverPerson: Person.SecondPersonPlural,
     };
-    this.images = Object.assign({}, this.images, TestScenario.images);
-    this.audios = Object.assign({}, this.audios, TestScenario.audios);
   }
 
   starting = {
@@ -53,6 +46,10 @@ export class TestScenario extends BaseScenario {
     ],
     askForName: false,
   };
+
+  getTitle() {
+    return 'Test';
+  }
 
   init(play: Play) {
     const player = play.addEntity(
@@ -73,11 +70,11 @@ export class TestScenario extends BaseScenario {
     this.createConnection(play, {
       first: {
         placeType: TestScenario.entityConstructors.Chamber.name,
-        text: { fr: 'a scale leads to a door' },
+        text: 'a scale leads to a door',
       },
       second: {
         placeType: TestScenario.entityConstructors.Corridor.name,
-        text: { fr: 'a door at the end of the corridor' },
+        text: 'a door at the end of the corridor',
       },
       connectionType: TestScenario.entityConstructors.Door.name,
       directionKeyForFirst: DirectionKeys.North,

@@ -1,12 +1,12 @@
 <div *ngFor="let chapter of narration.chapters">
-  <div *ngIf="chapter.title" [innerHTML]="chapter.title|text"></div>
+  <div *ngIf="chapter.title" [innerHTML]="chapter.title"></div>
   <div *ngFor="let section of chapter.sections">
     <div *ngIf="section.title">
       <span>></span>
-      <span [innerHTML]="section.title|text"></span>
+      <span [innerHTML]="section.title"></span>
     </div>
     <ng-container *ngFor="let paragraph of section.paragraphs">
-      <p [innerHTML]="paragraph.text|text"></p>
+      <p [innerHTML]="paragraph.text"></p>
     </ng-container>
   </div>
 </div>

@@ -1,0 +1,141 @@
+.player {
+  background-image: url($imagePath + "/texture-1.png");
+
+  .player-name-container {
+    $backgroundColor: rgba(255, 255, 255, 0.8);
+
+    background: linear-gradient(0deg, $backgroundColor, $backgroundColor), url($imagePath + "/texture-2.png");
+
+    .player-name {
+      padding: 0 5px;
+      font-size: 2em;
+      font-style: italic;
+      color: rgba(219, 219, 219, 0.993);
+      text-shadow: -1px -1px 2px rgb(148, 148, 148), 3px 3px 5px rgba(0, 0, 0, 1);
+    }
+
+    &:before {
+      content: "";
+      height: 20px;
+      background-image: url($imagePath + "/border-1.png");
+      width: 100%;
+      background-size: 100% 100%;
+      display: block;
+    }
+
+    &:after {
+      content: "";
+      width: 100%;
+      background-size: 100% 100%;
+      display: block;
+      height: 10px;
+      background-image: url($imagePath + "/border-2.png");
+    }
+  }
+
+  .player-description {
+    box-shadow: inset 1px 5px 5px 0 rgba(0, 0, 0, 0.5), 0px 5px 5px 0 rgba(0, 0, 0, 0.5);
+    position: relative;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.7));
+    margin: 0 0 20px;
+
+    .paragraphs {
+      padding: 10px;
+
+      .paragraph {
+        margin: 0 0 5px;
+
+        .paragraph-interactive-text {
+          background: none;
+          border: none;
+          text-decoration: underline;
+          font-weight: bold;
+          color: $interactiveTextFontColor;
+          padding: 0;
+          line-height: inherit;
+          font-size: inherit;
+        }
+      }
+    }
+  }
+
+  .section {
+    $backgroundColor: rgba(255, 255, 255, 0.8);
+
+    padding: 5px;
+    margin: 0 10px 20px;
+    box-shadow: inset 2px 2px 1px rgba(0, 0, 0, 0.5), inset -2px -2px 1px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(0deg, $backgroundColor, $backgroundColor), url($imagePath + "/texture-3.png");
+    background-size: 100% auto;
+
+    .section-title {
+      position: relative;
+      background-size: 50% auto;
+      margin: 0 0 5px;
+      font-family: $specialFont;
+      text-align: center;
+    }
+
+    .section-inner {
+      .list {
+        margin: 0;
+        padding: 0;
+
+        .list-item {
+          list-style: none;
+        }
+      }
+
+      .nothing {
+        opacity: 0.8;
+        font-size: 0.9em;
+        text-align: center;
+      }
+
+      .subsection {
+        padding: 0 0 10px;
+
+        .subsection-title {
+          font-weight: normal;
+          text-align: center;
+          font-size: 1em;
+          margin: 0;
+        }
+
+        &:not(:last-child):after {
+          content: "";
+          display: block;
+          background-image: url($imagePath + "/border-3.png");
+          background-repeat: repeat;
+          background-size: 100% 100%;
+          height: 5px;
+          box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+          opacity: 0.8;
+        }
+      }
+    }
+
+    &.caracteristics-section {
+      .list-item {
+        display: flex;
+
+        .caracteristic-name {
+          width: 50%;
+        }
+
+        .caracteristic-value {
+        }
+
+        .caracteristic-modifier {
+          &:before {
+            content: "(";
+          }
+
+          &:after {
+            content: ")";
+          }
+        }
+      }
+    }
+  }
+}

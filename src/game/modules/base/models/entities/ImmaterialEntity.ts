@@ -1,5 +1,5 @@
-import { Entity } from 'src/game/core/models/Entity';
+import { BaseEntity } from './BaseEntity';
 
-export class ImmaterialEntity extends Entity {
+export class ImmaterialEntity extends BaseEntity {
   invisible = false;
 }

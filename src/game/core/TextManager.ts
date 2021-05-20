@@ -1,6 +1,17 @@
 import { LanguageKey } from './dictionnaries/Language';
 import { Name } from './models/Name';
-import { NameWrapper, TextWrapper } from './models/Text';
+
+type Text = string;
+
+export type TextWrapper = {
+  fr?: Text;
+  en?: Text;
+};
+
+export type NameWrapper = {
+  fr?: Name;
+  en?: Name;
+};
 
 export abstract class TextManager {
   static currentLanguageKey: string;

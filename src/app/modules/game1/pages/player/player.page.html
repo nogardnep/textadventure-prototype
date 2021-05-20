@@ -1,0 +1,13 @@
+<ion-content>
+  <div class="page-container">
+    <div class="page-header">
+      <app-main-menu></app-main-menu>
+    </div>
+    <div class="page-core">
+      <app-back-button></app-back-button>
+      <div *ngIf="play">
+        <component-player [entity]="play.getPlayer()"></component-player>
+      </div>
+    </div>
+  </div>
+</ion-content>

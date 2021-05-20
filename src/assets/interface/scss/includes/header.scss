@@ -1,0 +1,64 @@
+.page-header {
+  position: relative;
+  $backgroundColor: rgba(255, 255, 255, 0.8);
+  background: linear-gradient(0deg, $backgroundColor, $backgroundColor), url($imagePath + "/texture-2.png");
+
+  &:before {
+    content: "";
+    @include fill();
+    background-repeat: no-repeat;
+    background-size: auto 300%;
+    background-position: -30px 30%;
+    background-image: url($imagePath + "/banner-1.png");
+    background-repeat: no-repeat;
+    display: inline-block;
+  }
+
+  .main-menu {
+    display: block;
+
+    ul {
+      padding: 5px 0;
+      margin: 0;
+      text-align: right;
+
+      li {
+        list-style: none;
+        display: inline-block;
+
+        .menu-link {
+          $verticalPadding: 15px;
+
+          font-family: $specialFont;
+          font-size: 0.9em;
+          background: transparent;
+          color: $menuFontColor;
+          vertical-align: middle;
+          position: relative;
+          padding: $verticalPadding 20px $verticalPadding 45px;
+          font-weight: bold;
+
+          &::first-letter {
+            text-decoration: underline;
+          }
+
+          &:before {
+            content: "";
+            display: inline-block;
+            background-repeat: no-repeat;
+            background-size: auto 100%;
+            @include fill();
+          }
+        }
+
+        &:nth-child(1) .menu-link:before {
+          background-image: url($imagePath + "/demon-head-1.png");
+        }
+
+        &:nth-child(2) .menu-link:before {
+          background-image: url($imagePath + "/demon-head-2.png");
+        }
+      }
+    }
+  }
+}

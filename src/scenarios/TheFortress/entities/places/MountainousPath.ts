@@ -5,7 +5,18 @@ import { DirectionKeys } from 'src/game/modules/base/dictionnaries/direction';
 
 export class MountainousPath extends Place {
   getName() {
-    return { fr: new Name('sentier') };
+    return new Name('sentier');
+  }
+
+  getFullImages() {
+    return [
+      { image: TheFortress.images.sky2 },
+      { image: TheFortress.images.moutainousPath },
+    ];
+  }
+
+  getInteriorDescription() {
+    return [{ text: 'Un chemin dans la montagne.' }];
   }
 
   getConnections() {
@@ -15,7 +26,7 @@ export class MountainousPath extends Place {
         destinationId: this.getPlay()
           .getFirstEntityOfType(TheFortress.entityConstructors.Plateau.name)
           .getId(),
-        text: { fr: 'le sentier monte vers un plateau' },
+        text: 'Le sentier monte vers un plateau.',
         distance: 20,
       },
     ];

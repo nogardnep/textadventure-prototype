@@ -6,7 +6,7 @@ export class Corridor extends Place {
   toogle = false;
 
   getName() {
-    return { fr: new Name('Corridor ' + this.toogle) };
+    return new Name('Corridor ' + this.toogle);
   }
 
   // getInteriorDescription() {
@@ -24,13 +24,13 @@ export class Corridor extends Place {
   // }
 
   getChoices() {
-    return super.getChoices([
+    return [
       {
-        text: { fr: 'go to chamber' },
+        text: 'go to chamber',
         proceed: () => {
           this.exitToPlace(TestScenario.entityConstructors.Chamber.name);
         },
       },
-    ]);
+    ];
   }
 }

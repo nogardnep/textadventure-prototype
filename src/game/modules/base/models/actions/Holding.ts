@@ -4,7 +4,7 @@ import { HoldableObject } from '../entities/material/thing/object/HoldableObject
 
 export class Holding extends Action {
   getText() {
-    return { fr: 'prendre en main' };
+    return 'prendre en main' ;
   }
 
   check(author: Character, args: any[]) {

@@ -1,8 +1,9 @@
+import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
-import { Entity } from 'src/game/core/models/Entity';
-import { NameWrapper } from 'src/game/core/models/Text';
+import { Name } from 'src/game/core/models/Name';
 import { EMPLACEMENT_NAMES } from 'src/game/modules/base/dictionnaries/emplacement';
+import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { Thing } from 'src/game/modules/base/models/entities/material/Thing';
 import { WearableObject } from 'src/game/modules/base/models/entities/material/thing/object/WearableObject';
@@ -13,7 +14,7 @@ import { WearableObject } from 'src/game/modules/base/models/entities/material/t
   styleUrls: ['./entity-preview.component.scss'],
 })
 export class EntityPreviewComponent implements OnInit {
-  @Input() entity: Entity;
+  @Input() entity: BaseEntity;
 
   constructor(private gameService: GameService) {}
 
@@ -50,7 +51,7 @@ export class EntityPreviewComponent implements OnInit {
     return !(this.entity as Thing).closed || (this.entity as Thing).transparent;
   }
 
-  getEmplacement(): NameWrapper {
+  getEmplacementName(): Name {
     return EMPLACEMENT_NAMES[(this.entity as WearableObject).getEmplacement()];
   }
 }

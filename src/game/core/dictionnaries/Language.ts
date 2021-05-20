@@ -1,5 +1,5 @@
 import { Name } from '../models/Name';
-import { NameWrapper } from '../models/Text';
+import { NameWrapper } from '../TextManager';
 
 export enum LanguageKey {
   English = 'en',

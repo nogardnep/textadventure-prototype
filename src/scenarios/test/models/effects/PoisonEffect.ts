@@ -3,7 +3,7 @@ import { Name } from "src/game/core/models/Name";
 
 export class PoisonEffect extends Effect {
   getName() {
-    return { fr: new Name('poison') };
+    return new Name('poison') ;
   }
 
   getModifiers() {

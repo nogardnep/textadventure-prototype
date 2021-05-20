@@ -4,7 +4,7 @@ import { WearableObject } from '../entities/material/thing/object/WearableObject
 
 export class Pulling extends Action {
   getText() {
-    return { fr: 'retirer' };
+    return  'retirer' ;
   }
 
   check(author: Character, args: any[]) {

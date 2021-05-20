@@ -14,7 +14,7 @@ export class ActionsComponent implements OnInit {
 
   ngOnInit() {}
 
-  getActions(): { [key: string]: Action }  {
+  getActions(): { [key: string]: Action } {
     const actions = {};
 
     this.entity.getDisplayedActionKeys().forEach((key: string) => {
@@ -25,7 +25,7 @@ export class ActionsComponent implements OnInit {
       }
     });
 
-    return actions
+    return actions;
   }
 
   onClickAction(action: Action): void {
@@ -35,5 +35,9 @@ export class ActionsComponent implements OnInit {
   isVisible(action: Action): boolean {
     return action.check(this.entity.getPlay().getPlayer(), [this.entity], true)
       .usable;
+  }
+
+  toDisplay(): boolean {
+    return Object.keys(this.getActions()).length > 0;
   }
 }

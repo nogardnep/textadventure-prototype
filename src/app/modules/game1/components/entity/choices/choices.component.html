@@ -1,9 +1,9 @@
-<div>
-  <ul>
+<ng-container *ngIf="getChoices().length > 0">
+  <ul class="choice-list">
     <ng-container *ngFor="let choice of getChoices()">
-      <li *ngIf="isVisible(choice)">
-        <button (click)="onClickChoice(choice)">{{choice.text|text}}</button>
+      <li *ngIf="isVisible(choice)" class="choice-list-item">
+        <app-action-button [text]="choice.text" (clickEvent)="onClickChoice(choice)"></app-action-button>
       </li>
     </ng-container>
   </ul>
-</div>
+</ng-container>

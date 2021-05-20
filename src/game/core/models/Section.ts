@@ -1,4 +1,4 @@
-export interface Section {
+export interface Region {
   name: string,
   image?: string
 }

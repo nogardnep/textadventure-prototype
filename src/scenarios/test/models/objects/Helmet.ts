@@ -15,7 +15,7 @@ export class Helmet extends WearableObject implements WithModifiers {
   // }
 
   getName() {
-    return { fr: new Name('Helmet') };
+    return  new Name('Helmet');
   }
 
   getModifiers() {

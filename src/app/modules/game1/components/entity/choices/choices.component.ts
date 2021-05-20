@@ -15,7 +15,6 @@ export class ChoicesComponent implements OnInit {
   ngOnInit() {}
 
   onClickChoice(choice: Choice): void {
-    console.log(this.entity.getPlay());
     this.entity.getPlay().useChoice(choice);
   }
 

@@ -3,6 +3,8 @@ import { Name } from 'src/game/core/models/Name';
 
 export class ControlSpell extends Spell {
   getName() {
-    return { fr: new Name('maîtrise') };
+    return  new Name('maîtrise',{
+      properNoun: true
+    }) ;
   }
 }

@@ -10,6 +10,7 @@ import { Releasing } from '../models/actions/Releasing';
 import { Taking } from '../models/actions/Taking';
 import { Attacking } from '../models/actions/Attacking';
 import { Talking } from '../models/actions/Talking';
+import { Action } from 'src/game/core/models/Action';
 
 export enum BaseActionKeys {
   Taking = 'taking',
@@ -26,7 +27,7 @@ export enum BaseActionKeys {
   Talking = 'talking',
 }
 
-export const BASE_ACTIONS: { [key in BaseActionKeys] } = {
+export const BASE_ACTIONS: { [key in BaseActionKeys]: Action } = {
   taking: new Taking(),
   dropping: new Dropping(),
   opening: new Opening(),

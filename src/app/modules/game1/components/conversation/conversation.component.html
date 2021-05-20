@@ -3,7 +3,7 @@
   <div>
     <ng-container *ngFor="let item of subjects">
       <button *ngIf="!item.check || item.check() " (click)="onClickSubject(item)"
-        [innerHTML]="item.title|text"></button>
+        [innerHTML]="item.title"></button>
     </ng-container>
   </div>
 </div>

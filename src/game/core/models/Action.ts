@@ -1,9 +1,9 @@
-import { Paragraph } from './Paragraph';
-import { GameController } from 'src/game/core/GameController';
+import { GameManager } from 'src/game/core/GameManager';
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { TextManager } from '../TextManager';
 import { Entity } from './Entity';
+import { MessageTag } from './Paragraph';
 import { Play } from './Play';
-import { TextWrapper } from './Text';
 
 // TODO: good?
 type Pattern = string | (new () => Entity)[];
@@ -23,11 +23,11 @@ export abstract class Action {
   }
 
   getPlay(): Play {
-    return GameController.getPlay();
+    return GameManager.getPlay();
   }
 
-  getText(): TextWrapper {
-    return { fr: 'Action' };
+  getText(): string {
+    return 'action';
   }
 
   // TODO
@@ -64,16 +64,19 @@ export abstract class Action {
   }
 
   use(author: Entity, args: any[]): boolean {
-    let report = this.proceed(author, args);
+    let success = false;
 
     if (this.check(author, args, false)) {
+      let report = this.proceed(author, args);
+      success = report.success;
+
       if (author.isThePlayer()) {
         this.report(report, author, args);
         this.onEnded(report.success, author, args);
       }
     }
 
-    return report.success;
+    return success;
   }
 
   protected proceed(author: Entity, args: any[]): ActionReport {
@@ -81,7 +84,16 @@ export abstract class Action {
   }
 
   protected report(report: ActionReport, author: Entity, args: any[]) {
-    console.log(report);
+    if ((author as Character).isThePlayer() && report.message) {
+      this.getPlay().inform([
+        {
+          text: report.message,
+          tag: report.success
+            ? MessageTag.ActionSuccess
+            : MessageTag.ActionFailure,
+        },
+      ]);
+    }
   }
 
   check(

@@ -4,7 +4,7 @@ import { WearableObject } from '../entities/material/thing/object/WearableObject
 
 export class Putting extends Action {
   getText() {
-    return { fr: 'mettre' };
+    return 'mettre';
   }
 
   check(author: Character, args: any[]) {

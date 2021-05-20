@@ -1,4 +1,4 @@
-import { INTERFACE_ID } from './../../../../services/game.service';
+import { INTERFACE_ID } from 'src/app/services/game.service';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameService } from 'src/app/services/game.service';
@@ -9,21 +9,20 @@ import { GameService } from 'src/app/services/game.service';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  constructor(private gameService: GameService, private router: Router) {
-  }
+  constructor(private gameService: GameService, private router: Router) {}
 
   onClickNew(): void {
-    this.gameService.inform(
-      [{ text: { fr: 'Êtes-vous sûr&nbsp;?' } }],
+    this.gameService.openPopup(
+      [{ text: 'Êtes-vous sûr&nbsp;?' }],
       [
         {
-          text: { fr: 'Oui' },
+          text: 'Oui',
           proceed: () => {
             this.router.navigate(['/new-play']);
           },
         },
         {
-          text: { fr: 'Non' },
+          text: 'Non',
           proceed: () => {},
         },
       ]

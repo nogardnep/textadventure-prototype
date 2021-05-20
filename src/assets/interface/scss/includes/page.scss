@@ -1,0 +1,71 @@
+ion-content {
+  --background: url("#{$imagePath}/texture-1.png");
+  color: $pageFontColor;
+}
+
+.page-container {
+  $headerHeight: 50px;
+  $footerHeight: 130px;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  // .page-header {
+  //   height: $headerHeight;
+  //   position: fixed;
+  //   top: 0;
+  //   left: 0;
+  //   right: 0;
+  // }
+
+  .page-core {
+    // margin: 0 0 $footerHeight;
+    // position: relative;
+
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 0px;
+      z-index: 10;
+      font-size: 1.1em;
+      font-style: italic;
+      background: transparent;
+
+      .button-inner {
+        padding: 0 5px;
+        vertical-align: middle;
+        color: rgba(255, 255, 255, 1);
+        padding: 2px 5px;
+        box-shadow: inset 2px 2px 2px rgba(255, 255, 255, 0.5), inset -2px -2px 2px rgba(252, 252, 252, 0.5),
+          5px 5px 10px rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      &:before {
+        content: "";
+        background: url($imagePath + "/back-arrow.png");
+        display: inline-block;
+        background-size: cover;
+        width: 20px;
+        height: 20px;
+        margin: 0 5px;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .page-footer {
+    flex-grow: 1;
+    background-image: url($imagePath + "/texture-1.png");
+    background-size: 100% auto;
+  }
+
+  // .page-footer {
+  //   height: $footerHeight;
+  //   position: fixed;
+  //   bottom: 0;
+  //   left: 0;
+  //   right: 0;
+  // }
+}

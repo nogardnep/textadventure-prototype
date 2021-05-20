@@ -8,13 +8,10 @@ type NameProps = {
 };
 
 export class Name {
-  private coreName: string;
-  private props: NameProps;
+  coreName: string;
+  props: NameProps;
 
-  constructor(
-    coreName: string,
-    props?: NameProps,
-  ) {
+  constructor(coreName: string, props?: NameProps) {
     this.coreName = coreName;
 
     this.props = {};
@@ -56,44 +53,48 @@ export class Name {
     }
   }
 
+  isFeminin(): boolean {
+    return this.props.feminin;
+  }
+
   printSimple(capitalizeFirstLetter?: boolean): string {
-    return this.checkForCaptial(this.coreName, capitalizeFirstLetter);
+    return this.printWithCaptial(this.coreName, capitalizeFirstLetter);
   }
 
   printPlural(capitalizeFirstLetter?: boolean): string {
-    return this.checkForCaptial(this.getPlural(), capitalizeFirstLetter);
+    return this.printWithCaptial(this.getPlural(), capitalizeFirstLetter);
   }
 
   printPluralWithDefiniteArticle(capitalizeFirstLetter?: boolean): string {
-    return this.checkForCaptial(
+    return this.printWithCaptial(
       this.getDefiniteArticle(true) + this.getPlural(),
       capitalizeFirstLetter
     );
   }
 
   printPluralWithIndefiniteArticle(capitalizeFirstLetter?: boolean): string {
-    return this.checkForCaptial(
+    return this.printWithCaptial(
       this.getIndefiniteArticle(true) + this.getPlural(),
       capitalizeFirstLetter
     );
   }
 
   printWithDefiniteArticle(capitalizeFirstLetter?: boolean): string {
-    return this.checkForCaptial(
+    return this.printWithCaptial(
       this.getDefiniteArticle() + this.coreName,
       capitalizeFirstLetter
     );
   }
 
   printWithIndefiniteArticle(capitalizeFirstLetter?: boolean): string {
-    return this.checkForCaptial(
+    return this.printWithCaptial(
       this.getIndefiniteArticle() + this.coreName,
       capitalizeFirstLetter
     );
   }
 
   printWithPreposition(capitalizeFirstLetter?: boolean): string {
-    return this.checkForCaptial(
+    return this.printWithCaptial(
       this.getPreposition() + this.coreName,
       capitalizeFirstLetter
     );
@@ -120,6 +121,20 @@ export class Name {
   getPreposition(forPlural?: boolean): string {
     let preposition: string;
 
+    // TODO: which is good?
+
+    // if (this.props.properNoun) {
+    //   if (this.props.plural || (forPlural && !this.props.invariable)) {
+    //     preposition = 'aux ';
+    //   } else if (this.props.feminin) {
+    //     preposition = 'en ';
+    //   } else {
+    //     preposition = 'au ';
+    //   }
+    // } else {
+    //   preposition = 'au ' + this.getDefiniteArticle(forPlural);
+    // }
+
     if (this.props.properNoun) {
       if (this.props.plural || (forPlural && !this.props.invariable)) {
         preposition = 'aux ';
@@ -129,7 +144,13 @@ export class Name {
         preposition = 'au ';
       }
     } else {
-      preposition = 'au ' + this.getDefiniteArticle(forPlural);
+      if (this.props.elision) {
+        preposition = "à l'";
+      } else if (this.props.feminin) {
+        preposition = 'à la ';
+      } else {
+        preposition = 'au ';
+    }
     }
 
     return preposition;
@@ -181,7 +202,7 @@ export class Name {
     return article;
   }
 
-  private checkForCaptial(
+  private printWithCaptial(
     given: string,
     capitalizeFirstLetter?: boolean
   ): string {

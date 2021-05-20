@@ -1,6 +1,6 @@
 <div *ngIf="entity">
   <div id="container"></div>
-  <div><b>{{ entity.getName()|name }}</b></div>
+  <div><b>{{ entity.getName().printSimple() }}</b></div>
   <entity-paragraphs [paragraphs]="entity.getInteriorDescription()"></entity-paragraphs>
   <!-- <app-entity-list [entity]="entity"></app-entity-list> -->
   <!-- <app-actions [entity]="entity"></app-actions> -->

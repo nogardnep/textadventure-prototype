@@ -36,7 +36,7 @@ export class Tom extends Character {
   getConversationSubjects() {
     return [
       {
-        title: { fr: 'lui' },
+        title: 'lui',
         onAsked: () => {
           this.alearyAsked = true;
           this.save();

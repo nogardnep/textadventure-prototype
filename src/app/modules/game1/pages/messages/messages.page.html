@@ -1,0 +1,12 @@
+<ion-content>
+  <div class="page-container">
+    <div class="page-header">
+      <app-main-menu></app-main-menu>
+    </div>
+    <div class="page-core">
+      <app-back-button (click)="onClickBack()"></app-back-button>
+      <app-messages *ngIf="getUnreadedMessages().length > 0" [messages]="getUnreadedMessages()"></app-messages>
+      <div class="no-message" *ngIf="getUnreadedMessages().length === 0">Aucun message</div>
+    </div>
+  </div>
+</ion-content>

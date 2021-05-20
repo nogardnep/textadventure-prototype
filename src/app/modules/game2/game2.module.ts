@@ -1,3 +1,4 @@
+import { MessagesComponent } from './components/messages/messages.component';
 import { ParagraphsComponent } from './components/paragraphs/paragraphs.component';
 import { LocationComponent } from './components/location/location.component';
 import { ConnectionsComponent } from './components/connections/connections.component';
@@ -23,6 +24,7 @@ import { GamePage } from './pages/game/game.page';
     ConnectionsComponent,
     LocationComponent,
     ParagraphsComponent,
+    MessagesComponent,
   ],
 })
 export class Game2Module {}

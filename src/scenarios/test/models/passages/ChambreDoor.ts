@@ -11,6 +11,6 @@ export class Door extends Passage {
   }
 
   getName() {
-    return { fr: new Name('porte') };
+    return  new Name('porte') ;
   }
 }

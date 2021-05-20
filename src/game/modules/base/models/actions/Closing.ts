@@ -5,7 +5,7 @@ import { Thing } from '../entities/material/Thing';
 
 export class Closing extends Action {
   getText() {
-    return { fr: 'fermer' };
+    return  'fermer' ;
   }
 
   check(author: Character, args: any[]) {

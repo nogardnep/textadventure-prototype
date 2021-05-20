@@ -1,0 +1,161 @@
+.invisible-entity {
+  padding: 10px 5px;
+  background-color: rgba(255, 255, 255, 0.9);
+
+  p {
+    margin: 0;
+  }
+}
+
+.entity-full {
+  .entity-full-name-container {
+    $backgroundColor: rgba(255, 255, 255, 0.8);
+
+    background: linear-gradient(0deg, $backgroundColor, $backgroundColor), url($imagePath + "/texture-2.png");
+    position: relative;
+    background-size: 50% auto;
+
+    .entity-full-name {
+      padding: 0 5px;
+      font-size: 2em;
+      font-style: italic;
+      color: rgba(219, 219, 219, 0.993);
+      text-shadow: -1px -1px 2px rgb(148, 148, 148), 3px 3px 5px rgba(0, 0, 0, 1);
+    }
+
+    &:before {
+      content: "";
+      height: 20px;
+      background-image: url($imagePath + "/border-1.png");
+      width: 100%;
+      background-size: 100% 100%;
+      display: block;
+    }
+
+    &:after {
+      content: "";
+      width: 100%;
+      background-size: 100% 100%;
+      display: block;
+      height: 10px;
+      background-image: url($imagePath + "/border-2.png");
+    }
+  }
+
+  .entity-full-description {
+    box-shadow: inset 1px 5px 5px 0 rgba(0, 0, 0, 0.5);
+    position: relative;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.7));
+    padding: 10px 0 10px;
+
+    .paragraphs {
+      padding: 5px;
+
+      .paragraph {
+        margin: 0 0 5px;
+
+        .paragraph-interactive-text {
+          background: none;
+          border: none;
+          text-decoration: underline;
+          font-weight: bold;
+          color: $interactiveTextFontColor;
+          padding: 0;
+          line-height: inherit;
+          font-size: inherit;
+        }
+      }
+    }
+
+    &:after {
+      content: "";
+      @include fill();
+      z-index: -10;
+      background-image: url($imagePath + "/texture-2.png");
+    }
+  }
+
+  .entity-full-content {
+    $edgeWidth: 30px;
+
+    position: relative;
+    padding: 0 $edgeWidth;
+
+    &:before,
+    &:after {
+      content: "";
+      background-image: url($imagePath + "/decoration-3.png");
+      background-size: 100% auto;
+      width: $edgeWidth;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+    }
+
+    &:before {
+      left: 0;
+    }
+
+    &:after {
+      right: 0;
+      transform: scaleX(-1);
+    }
+
+    .entity-full-content-inner {
+      $backgroundColor: rgba(255, 255, 255, 0.8);
+
+      background: linear-gradient(0deg, $backgroundColor, $backgroundColor), url($imagePath + "/texture-3.png");
+      background-size: 50% auto;
+      padding: 10px 0;
+      box-shadow: inset 1px 5px 5px 0 rgba(0, 0, 0, 0.4), inset 1px -5px 5px 0 rgba(0, 0, 0, 0.4);
+
+      .content-label {
+        $backgroundColor: rgba(255, 255, 255, 0.7);
+
+        font-size: 0.8em;
+        opacity: 0.8;
+        font-style: italic;
+        background: linear-gradient(0deg, $backgroundColor, $backgroundColor), url($imagePath + "/decoration-5.png");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        display: inline-block;
+        padding: 0 2px;
+        min-width: 100px;
+
+        &:after {
+          display: inline-block;
+          content: $nbsp + ":";
+        }
+      }
+
+      .choice-list,
+      .action-list {
+        padding: 0;
+        margin: 0 5px;
+        text-align: center;
+
+        .choice-list-item,
+        .action-list-item {
+          list-style: none;
+          display: inline-block;
+          margin: 0 5px;
+
+          .action-button {
+            @include button();
+          }
+        }
+      }
+    }
+  }
+}
+
+.location .entity-full-description {
+  padding-top: 0;
+
+  .paragraph:nth-child(1):first-letter {
+    background-image: url($imagePath + "/decoration-1.png");
+    background-size: 100% 100%;
+    padding: 0 5px;
+    font-size: 2em;
+  }
+}

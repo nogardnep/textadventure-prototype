@@ -1,11 +1,11 @@
-import { GameController } from 'src/game/core/GameController';
-import { stringify } from '@angular/compiler/src/util';
+import { GameManager } from 'src/game/core/GameManager';
 import { TextManager } from '../TextManager';
 import { Action } from './Action';
 import { Choice } from './Choice';
 import { Entity, EntityId, EntityType, StoredEntity } from './Entity';
 import { ConjugationTime, Glossary, Person } from './Glossary';
-import { Narration, StoredNarration, Tag } from './Narration';
+import { Name } from './Name';
+import { Narration, StoredNarration } from './Narration';
 import { Paragraph } from './Paragraph';
 import { Scenario, ScenarioId } from './Scenario';
 
@@ -21,6 +21,7 @@ type PlayCallBacks = {
   onSave: () => void;
   onInform: (paragraphs: Paragraph[], actions?: Choice[]) => void;
   onStartConversation: (interlocutor: Entity) => void;
+  onUpdateDisplay: () => void;
 };
 
 export class Play {
@@ -52,8 +53,10 @@ export class Play {
     Glossary.setReceiverPerson(Person.SecondPersonPlural);
     Glossary.setConjugationTime(ConjugationTime.Present);
 
-    GameController.setPlay(this);
+    GameManager.setPlay(this);
   }
+
+
 
   init(): void {
     this.scenario.init(this);
@@ -63,7 +66,7 @@ export class Play {
   }
 
   start(): void {
-    this.scenario.update(this);
+    this.scenario.start(this);
   }
 
   update(): void {
@@ -80,9 +83,8 @@ export class Play {
     for (let id in storedPlay.storedEntities) {
       let entity: Entity = null;
       const storedEntity = storedPlay.storedEntities[id];
-      const constructor = this.getScenario().entityConstructors[
-        storedEntity.type
-      ];
+      const constructor =
+        this.getScenario().entityConstructors[storedEntity.type];
 
       if (constructor) {
         entity = new constructor(this);
@@ -107,6 +109,10 @@ export class Play {
     }
   }
 
+  updateDisplay(): void {
+    this.callbacks.onUpdateDisplay();
+  }
+
   getStored(): StoredPlay {
     return this.stored;
   }
@@ -116,18 +122,18 @@ export class Play {
   }
 
   getPhrase(phraseKey: string, args: any[]): string {
-    let foundPhrase = '(missing)';
+    let found: string;
 
-    foundPhrase = this.searchForPhraseInOneGlossary(
+    found = this.searchForPhraseInOneGlossary(
       TextManager.currentLanguageKey,
       phraseKey,
       args
     );
 
-    if (!foundPhrase) {
+    if (!found) {
       for (let languageKey in this.getScenario().glossaries) {
-        if (!foundPhrase) {
-          foundPhrase = this.searchForPhraseInOneGlossary(
+        if (!found) {
+          found = this.searchForPhraseInOneGlossary(
             languageKey,
             phraseKey,
             args
@@ -136,7 +142,27 @@ export class Play {
       }
     }
 
-    return foundPhrase;
+    return found;
+  }
+
+  getName(nameKey: string, args: any[]): Name {
+    let found: Name;
+
+    found = this.searchForNameInOneGlossary(
+      TextManager.currentLanguageKey,
+      nameKey,
+      args
+    );
+
+    if (!found) {
+      for (let languageKey in this.getScenario().glossaries) {
+        if (!found) {
+          found = this.searchForNameInOneGlossary(languageKey, nameKey, args);
+        }
+      }
+    }
+
+    return found;
   }
 
   private searchForPhraseInOneGlossary(
@@ -144,15 +170,29 @@ export class Play {
     phraseKey: string,
     args: any[]
   ): string {
-    let foundPhrase: string;
-
+    let found: string;
     let glossary = this.getScenario().glossaries[languageKey];
 
     if (glossary) {
-      foundPhrase = glossary.getPhrase(phraseKey, args);
+      found = glossary.getPhrase(phraseKey, args);
     }
 
-    return foundPhrase;
+    return found;
+  }
+
+  private searchForNameInOneGlossary(
+    languageKey: string,
+    nameKey: string,
+    args: any[]
+  ): Name {
+    let found: Name;
+    let glossary = this.getScenario().glossaries[languageKey];
+
+    if (glossary) {
+      found = glossary.getName(nameKey, args);
+    }
+
+    return found;
   }
 
   addEntity(type: EntityType): Entity {
@@ -166,6 +206,10 @@ export class Play {
   }
 
   getEntity(id: EntityId) {
+    if (!this.entities[id]) {
+      console.error('Unfound entity (' + id + ')');
+    }
+
     return this.entities[id];
   }
 
@@ -258,9 +302,6 @@ export class Play {
     //   paragraphs: [{ text: choice.text }],
     //   tag: Tag.Choice,
     // });
-    console.log('dfqd');
-
-    console.log(choice);
 
     choice.proceed();
   }

@@ -8,6 +8,6 @@ export class Shield extends HoldableObject {
   }
 
   getName() {
-    return { fr: new Name('shield') };
+    return  new Name('shield');
   }
 }

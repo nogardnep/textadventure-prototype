@@ -4,7 +4,7 @@ import { Character } from '../entities/material/Character';
 
 export class Talking extends Action {
   getText() {
-    return { fr: 'parler' };
+    return 'parler';
   }
 
   check(author: Character, args: any[]) {
@@ -29,7 +29,7 @@ export class Talking extends Action {
     // TODO
     let target = args[0] as Character;
 
-    return target.talkedBy(author)
+    return target.talkedBy(author);
 
     // const choices: Choice[] = [];
     // const subjects = target.getKnownSubjects();

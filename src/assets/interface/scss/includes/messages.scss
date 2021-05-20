@@ -1,0 +1,106 @@
+.no-message {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px 5px;
+}
+
+.messages {
+  $backgroundColor: rgba(255, 255, 255, 0.8);
+
+  background: url($imagePath + "/texture-2.png");
+  position: relative;
+  background-size: 100% auto;
+
+  &:before {
+    content: "";
+    height: 20px;
+    background-image: url($imagePath + "/border-1.png");
+    width: 100%;
+    background-size: 100% 100%;
+    display: block;
+  }
+
+  &:after {
+    content: "";
+    width: 100%;
+    background-size: 100% 100%;
+    display: block;
+    height: 10px;
+    background-image: url($imagePath + "/border-2.png");
+  }
+
+  .message-list {
+    padding: 5px 0;
+    margin: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.7));
+
+    .message-list-item {
+      list-style: none;
+
+      .paragraphs {
+        padding: 5px;
+
+        .paragraph {
+          margin: 0 0 5px;
+
+          .paragraph-interactive-text {
+            background: none;
+            border: none;
+            text-decoration: underline;
+            font-weight: bold;
+            color: $interactiveTextFontColor;
+            padding: 0;
+            line-height: inherit;
+            font-size: inherit;
+          }
+        }
+      }
+
+      .choice-list {
+        padding: 0;
+        margin: 0;
+
+        .choice-list-item {
+          list-style: none;
+
+          .action-button {
+            @include button();
+          }
+        }
+      }
+
+      &:not(:last-child):after {
+        content: "";
+        display: block;
+        background-image: url($imagePath + "/border-3.png");
+        background-repeat: repeat;
+        background-size: 100% 100%;
+        height: 5px;
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+.entity-full-name {
+  padding: 0 5px;
+  font-size: 2em;
+  // @include text3d(yellow, $depth: 4, $primaryshadowcolour: green, $shadowopacity: 0.3);
+  font-style: italic;
+  color: rgba(219, 219, 219, 0.993);
+  text-shadow: -1px -1px 2px rgb(148, 148, 148), 3px 3px 5px rgba(0, 0, 0, 1);
+}
+
+.entity-full-description {
+  box-shadow: inset 1px 5px 5px 0 rgba(0, 0, 0, 0.5);
+  color: $pageFontColor;
+  position: relative;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.7));
+
+  &:after {
+    content: "";
+    @include fill();
+    z-index: -10;
+    background-image: url($imagePath + "/texture-2.png");
+  }
+}

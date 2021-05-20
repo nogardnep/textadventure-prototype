@@ -2,6 +2,7 @@ import { Gender } from '../dictionnaries/Gender';
 import { Glossary, Person } from './Glossary';
 
 export abstract class FrenchGlossary extends Glossary {
+
   getPerson(followedByVowel = false): string {
     let found = '';
 

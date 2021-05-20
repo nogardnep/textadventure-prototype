@@ -12,6 +12,6 @@ export class Box extends UsuableObject {
   }
 
   getName() {
-    return { fr: new Name('Box') };
+    return new Name('Box')
   }
 }

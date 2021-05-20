@@ -1,7 +1,6 @@
-import { TextWrapper } from './Text';
 
 export type Choice = {
-  text: TextWrapper;
+  text: string;
   proceed: () => void;
   check?: () => boolean;
 };

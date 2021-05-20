@@ -1,20 +1,31 @@
-<div *ngIf="entity">
-  <ng-container *ngIf="entity.getPreviewImage() && entity.getPreviewImage()">
-    <img src="assets/{{entity.getPreviewImage().source}}" alt="" width="50" />
-  </ng-container>
-
-
-  <button (click)="onClickEntity()">
-    <b>{{ entity.getName()|name }}</b>
-    <span *ngIf="isSelected()">(selected)</span>
-    <span *ngIf="isWorn()">(on {{getEmplacement()|name}})</span>
-    <span *ngIf="isOpen()">(open)</span>
-    <span *ngIf="isClosed()">(closed)</span>
-    <span *ngIf="isDead()">(dead)</span>
-  </button>
-  <p>{{ entity.getInteriorDescription() }}</p>
-  <app-actions [entity]="entity"></app-actions>
-  <app-entity-list *ngIf="contentIsVisible()" [entity]="entity"></app-entity-list>
+<div class="entity-preview" *ngIf="entity" [ngClass]="{'selected': isSelected()}">
+  <div class="entity-preview-header">
+    <div class="entity-preview-name">
+      <button (click)="onClickEntity()" [innerHTML]="entity.getName().printWithIndefiniteArticle()"></button>
+    </div>
+    <div class="entity-preview-situation">
+      <span *ngIf="isWorn()">sur {{getEmplacementName().printWithDefiniteArticle()}}</span>
+      <span *ngIf="isOpen()">ouvert{{entity.getName().isFeminin()? 'e':''}}</span>
+      <span *ngIf="isClosed()">fermé{{entity.getName().isFeminin()? 'e':''}}</span>
+      <span *ngIf="isDead()">mort{{entity.getName().isFeminin()? 'e':''}}</span>
+    </div>
+  </div>
+  <div class="entity-preview-core">
+    <div class="entity-preview-description-container">
+      <ng-container *ngIf="entity.getPreviewImage() && entity.getPreviewImage()">
+        <img class="entity-preview-image" src="assets/{{entity.getPreviewImage().source}}" alt="" width="50" />
+      </ng-container>
+      <div class="entity-preview-description">
+        <entity-paragraphs [paragraphs]="entity.getPreviewDescription()"></entity-paragraphs>
+      </div>
+    </div>
+    <div class="entity-preview-interactions">
+      <app-actions [entity]="entity"></app-actions>
+    </div>
+  </div>
+  <div class="entity-preview-footer">
+    <app-entity-list *ngIf="contentIsVisible()" [entity]="entity"></app-entity-list>
+  </div>
 </div>
 <div *ngIf="!entity">
   <p>(entity not found)</p>

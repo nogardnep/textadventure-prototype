@@ -1,11 +1,10 @@
 import { Name } from 'src/game/core/models/Name';
-import { NameWrapper } from 'src/game/core/models/Text';
 
 export type DirectionKey = string;
 
 export type Direction = {
   key: DirectionKey;
-  name: NameWrapper;
+  name: Name;
 };
 
 export enum DirectionKeys {
@@ -28,51 +27,53 @@ export const BASE_DIRECTIONS: {
 } = {
   north: {
     key: 'north',
-    name: { fr: new Name('nord') },
+    name: new Name('nord'),
   },
   south: {
     key: 'south',
-    name: { fr: new Name('sud') },
+    name: new Name('sud'),
   },
   east: {
     key: 'east',
-    name: { fr: new Name('est') },
+    name: new Name('est', {
+      elision: true,
+    }),
   },
   west: {
     key: 'west',
-    name: { fr: new Name('ouest') },
+    name: new Name('ouest'),
   },
   northEast: {
     key: 'northWest',
-    name: { fr: new Name('nord-est') },
+    name: new Name('nord-est'),
   },
   northWest: {
     key: 'northWest',
-    name: { fr: new Name('nord-ouest') },
+    name: new Name('nord-ouest'),
   },
   southEast: {
     key: 'southEast',
-    name: { fr: new Name('sud-est') },
+    name: new Name('sud-est'),
   },
   southWest: {
     key: 'southWest',
-    name: { fr: new Name('sud-ouest') },
+    name: new Name('sud-ouest'),
   },
   up: {
     key: 'up',
-    name: { fr: new Name('haut') },
+    name: new Name('haut'),
   },
   down: {
     key: 'down',
-    name: { fr: new Name('bas') },
+    name: new Name('bas'),
   },
   inside: {
     key: 'inside',
-    name: { fr: new Name('dedans') },
+    name: new Name('dedans'),
   },
   outside: {
     key: 'outside',
-    name: { fr: new Name('dehors') },
+    name: new Name('dehors'),
   },
   // TODO
 };

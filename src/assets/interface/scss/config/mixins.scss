@@ -1,0 +1,98 @@
+$LIGHTING_FLOOR: 1;
+$LIGHTING_CEIL: 2;
+$LIGHTING_FLAT: 3;
+
+@mixin fill() {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+@mixin text3d(
+  $primary,
+  $depth: 5,
+  $shadowsteps: 5,
+  $shadowincrementer: 3px,
+  $shadowopacity: 0.5,
+  $primaryshadowcolour: #000,
+  $lighting: $LIGHTING_CEIL
+) {
+  $predefinedShadows: (
+    0 0 5px rgba($primaryshadowcolour, 0.05),
+    0 -1px 3px rgba($primaryshadowcolour, 0.2),
+    0 3px 5px rgba($primaryshadowcolour, 0.2)
+  );
+  $value: ();
+  @for $i from 1 through $depth {
+    $num: $i + px;
+    $hueadjust: $i;
+    @if ($lighting == $LIGHTING_FLOOR) {
+      $hueadjust: ($i * 2 - $depth - 5) * 1%;
+    }
+    @elseif ($lighting == $LIGHTING_CEIL) {
+      $hueadjust: -($i * 2 + $depth - 10) * 1%;
+    }
+    @elseif ($lighting == $LIGHTING_FLAT) {
+      $hueadjust: -$depth * 1%;
+    }
+    $colour: adjust-color($primary, $lightness: $hueadjust);
+    $theShadow: 0 $num 0 $colour;
+    $value: append($value, $theShadow, comma);
+  }
+
+  @for $i from 1 through $shadowsteps {
+    @if ($i >= length($predefinedShadows)) {
+      $dist: $i * $shadowincrementer;
+      $value: append($value, 0 $dist $dist rgba($primaryshadowcolour, $shadowopacity));
+    } @else {
+      $value: append($value, nth($predefinedShadows, $i));
+    }
+  }
+
+  text-shadow: $value;
+}
+
+@mixin shadow($color, $steps, $glow) {
+  $all: ();
+  $all: append($all, -1px 1px 0 rgba($color, 0.1), comma);
+  $all: append($all, 1px -1px 0 rgba($glow, 0.1), comma);
+  $all: append($all, 1px -1px 25px $glow, comma);
+  @for $i from 1 through $steps {
+    $all: append($all, append($i * -1px $i * 1.9px $i * 1px, rgba($color, 2 / $i)));
+  }
+  text-shadow: $all;
+}
+
+// Second mixin as I still have to figure out the direction parameters...
+@mixin shadow-alternate($color, $steps, $glow) {
+  $all: ();
+  $all: append($all, -1px -1px 0 rgba($color, 0.1), comma);
+  $all: append($all, 1px 1px 0 rgba($glow, 0.1), comma);
+  $all: append($all, 1px -1px 25px $glow, comma);
+  @for $i from 1 through $steps {
+    $all: append($all, append($i * -1px $i * -1.9px $i * 1px, rgba($color, 2 / $i)));
+  }
+  text-shadow: $all;
+}
+
+@mixin button() {
+  position: relative;
+  padding: 10px 20px;
+  color: $interactiveTextFontColor;
+  font-size: 0.9em;
+  max-width: 150px;
+  background-color: transparent;
+  background-image: url($imagePath + "/button-1.png");
+  background-size: 100% 100%;
+  line-height: 0.9em;
+
+  .button-inner {
+    background: white;
+    display: block;
+    padding: 2px 5px;
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: inset 2px 2px 1px rgba(0, 0, 0, 0.5), inset -2px -2px 1px rgba(0, 0, 0, 0.2);
+  }
+}

@@ -2,10 +2,10 @@
   <ng-container *ngIf="!paragraph.check || paragraph.check()">
     <p>
       <img *ngIf="paragraph.image" src="assets/{{paragraph.image.source}}" alt="" height="200"/>
-      <span *ngIf="paragraph.text" [innerHTML]="paragraph.text|text"></span>
+      <span *ngIf="paragraph.text" [innerHTML]="paragraph.text"></span>
       <ng-container *ngFor="let item of paragraph.items">
-        <span *ngIf="!item.entity" [innerHTML]="item.text|text"></span>
-        <button *ngIf="item.entity" (click)="onClickItem(item.entity)" [innerHTML]="item.text|text"></button>
+        <span *ngIf="!item.entity" [innerHTML]="item.text"></span>
+        <button *ngIf="item.entity" (click)="onClickItem(item.entity)" [innerHTML]="item.text"></button>
       </ng-container>
     </p>
   </ng-container>

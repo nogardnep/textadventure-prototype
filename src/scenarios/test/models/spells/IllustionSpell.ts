@@ -3,6 +3,6 @@ import { Name } from 'src/game/core/models/Name';
 
 export class IllusionSpell extends Spell {
   getName() {
-    return { fr: new Name('invocation') };
+    return  new Name('invocation') ;
   }
 }

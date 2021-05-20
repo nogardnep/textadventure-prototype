@@ -1,48 +1,51 @@
 import { Entity } from 'src/game/core/models/Entity';
 import { FrenchGlossary } from 'src/game/core/models/FrenchGlossary';
-import { TextManager } from 'src/game/core/TextManager';
 import { UsuableObject } from '../entities/material/thing/UsuableObject';
-import { BaseGlossary, BaseGlossaryKey } from './../BaseGlossary';
+import { BaseGlossaryKey } from './../BaseGlossary';
 
-export class FrenchBaseGlossary extends FrenchGlossary implements BaseGlossary {
-  outOfReach(entity: Entity): string {
-    return this.asSentence("c'est hors d'atteinte");
-  }
-  alreadyOwned(entity: Entity): string {
-    let phrase = '';
-
-    return this.asSentence(this.getPerson() + "vous l'avez déjà");
-  }
-  fixed(entity: Entity): string {
-    return this.asSentence(
-      this.extractName(entity.getName()).printSimple() + ' est immobile'
+export class FrenchBaseGlossary extends FrenchGlossary {
+  constructor() {
+    super(
+      {
+        allHandsUsed: (args: any[]) => {
+          return this.asSentence('toutes vos mains sont prises');
+        },
+        fixed: (args: any[]) => {
+          return null;
+        },
+        alreadyOwned: (args: any[]) => {
+          return null;
+        },
+        notTakable: (args: any[]) => {
+          return null;
+        },
+        nothingToSayAboutEntity: (args: any[]) => {
+          const entity = args[0] as Entity;
+          return this.asSentence(
+            'rien de particulier concernant ' +
+              entity.getName().printWithDefiniteArticle()
+          );
+        },
+        outOfReach: (args: any[]) => {
+          return this.asSentence("c'est hors d'atteinte");
+        },
+        somethingAlreadyWorn: (args: any[]) => {
+          return null;
+        },
+        take: (args: any[]) => {
+          const target = args[1] as UsuableObject;
+          return this.asSentence(
+            'vous prenez ' + target.getName().printWithDefiniteArticle()
+          );
+        },
+        unusefulSpell: (args: any[]) => {
+          return this.asSentence('ce sortilège est sans effet ici');
+        },
+        getPhrase: (args: any[]) => {
+          return null;
+        },
+      } as { [key in BaseGlossaryKey]: (args: any[]) => string },
+      '(texte manquant)'
     );
-  }
-  notTakable(entity: Entity): string {
-    return this.asSentence('vous ne pouvez prendre une telle chose');
-  }
-
-  getPhrase(key: string, args: any[]) {
-    let phrase: string = '(texte manquant)';
-
-    switch (key) {
-      case BaseGlossaryKey.OutOfReach:
-        phrase = this.asSentence("c'est hors d'atteinte");
-        break;
-
-      case BaseGlossaryKey.Take:
-        const target = args[1] as UsuableObject;
-        phrase = this.asSentence(
-          'vous prenez ' +
-            TextManager.extractName(target.getName()).printWithDefiniteArticle()
-        );
-        break;
-
-      case BaseGlossaryKey.AllHandsUsed:
-        phrase = this.asSentence('toutes vos mains sont prises')
-        break;
-    }
-
-    return phrase;
   }
 }

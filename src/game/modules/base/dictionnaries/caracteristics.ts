@@ -1,14 +1,29 @@
 import { Name } from 'src/game/core/models/Name';
-import { NameWrapper } from 'src/game/core/models/Text';
 
 export enum CaracteristicKey {
   Life = 'life',
   Resistance = 'resistance',
+  Force = 'force',
+  Dexterity = 'dexterity',
+  Magic = 'magic',
 }
 
 export const CARACTERISTIC_NAMES: {
-  [key in CaracteristicKey]: NameWrapper;
+  [key in CaracteristicKey]: Name;
 } = {
-  life: { fr: new Name('life') },
-  resistance: { fr: new Name('resistance') },
+  life: new Name('vitalité', {
+    properNoun: true,
+  }),
+  magic: new Name('magie', {
+    properNoun: true,
+  }),
+  resistance: new Name('résistance', {
+    properNoun: true,
+  }),
+  force: new Name('force', {
+    properNoun: true,
+  }),
+  dexterity: new Name('dextérité', {
+    properNoun: true,
+  }),
 };

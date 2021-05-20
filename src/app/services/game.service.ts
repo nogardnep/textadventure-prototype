@@ -15,7 +15,13 @@ import { ConfigService } from './config.service';
 import { StorageService } from './storage.service';
 
 const PLAY_STORAGE_KEY = 'play';
-export const INTERFACE_ID = 'game2'; // TODO: temp
+export const INTERFACE_ID = 'game1'; // TODO: temp
+
+export type MessageWrapper = {
+  paragraphs: Paragraph[];
+  choices?: Choice[];
+  read: boolean;
+};
 
 @Injectable({
   providedIn: 'root',
@@ -23,10 +29,12 @@ export const INTERFACE_ID = 'game2'; // TODO: temp
 export class GameService {
   private selection: Entity;
   private play: Play;
+  private messages: MessageWrapper[] = [];
 
   playSubject = new Subject<Play>();
   playerSubject = new Subject<Character>();
   selectionSubject = new Subject<Entity>();
+  messagesSubject = new Subject<MessageWrapper[]>();
 
   constructor(
     private storageService: StorageService,
@@ -35,6 +43,7 @@ export class GameService {
     private configService: ConfigService,
     private audioService: AudioService
   ) {
+    this.checkPlay();
     this.configService.load(); // TODO: move?
   }
 
@@ -43,15 +52,22 @@ export class GameService {
     return SCENARIOS.theFortress;
   }
 
-  async inform(paragraphs: Paragraph[], actions?: Choice[]) {
+  async openPopup(paragraphs: Paragraph[], choices?: Choice[]) {
     const modal = await this.modalController.create({
       component: InformComponent,
       componentProps: {
         paragraphs,
-        actions,
+        choices,
       },
+      backdropDismiss: false,
     });
     return await modal.present();
+  }
+
+  checkPlay(): void {
+    if (!this.play) {
+      this.loadLastPlay().then(() => {});
+    }
   }
 
   emitPlay(): void {
@@ -67,8 +83,25 @@ export class GameService {
   }
 
   setSelection(selection: Entity): void {
-    this.selection = selection;
-    this.emitSelection();
+    // this.selection = selection;
+    // this.emitSelection();
+    if (selection) {
+      this.router.navigate(['game1/selection/' + selection.getId()]);
+    }
+  }
+
+  addMessage(paragraphs: Paragraph[], choices?: Choice[]) {
+    this.messages.push({
+      paragraphs,
+      choices,
+      read: false,
+    });
+
+    this.emitMessages();
+  }
+
+  emitMessages() {
+    this.messagesSubject.next(this.messages);
   }
 
   getSelection(): Entity {
@@ -92,14 +125,24 @@ export class GameService {
     this.savePlay();
   }
 
-  loadLastPlay(): void {
-    this.storageService.get(PLAY_STORAGE_KEY).then((storedPlay: StoredPlay) => {
-      if (storedPlay) {
-        this.setPlay(this.createPlay(this.getScenario(storedPlay.scenarioId)));
-        this.play.load(storedPlay);
-      } else {
-        console.error('no play found');
-      }
+  loadLastPlay(): Promise<Play> {
+    return new Promise<Play>((resolve, reject) => {
+      this.storageService
+        .get(PLAY_STORAGE_KEY)
+        .then((storedPlay: StoredPlay) => {
+          if (storedPlay) {
+            const play = this.createPlay(
+              this.getScenario(storedPlay.scenarioId)
+            );
+            play.load(storedPlay);
+            console.log(this.play);
+            this.setPlay(play);
+            resolve(this.play);
+          } else {
+            console.error('no play found');
+            reject();
+          }
+        });
     });
   }
 
@@ -113,7 +156,7 @@ export class GameService {
     }
 
     if (!found) {
-      console.error('unfound scenario (' + id + ')');
+      console.error('Unfound scenario (' + id + ')');
     }
 
     return found;
@@ -125,9 +168,14 @@ export class GameService {
         this.savePlay();
       },
       onInform: (paragraphs: Paragraph[], actions?: Choice[]) => {
-        this.inform(paragraphs, actions);
+        this.addMessage(paragraphs, actions);
+        this.router.navigate(['game1/messages']);
+        // this.inform(paragraphs, actions);
       },
       onStartConversation: (interlocutor: Entity) => {},
+      onUpdateDisplay: () => {
+        this.emitPlay();
+      },
     });
   }
 }

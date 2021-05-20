@@ -1,0 +1,85 @@
+.player-preview {
+  $backgroundColor: rgba(255, 255, 255, 0.4);
+
+  box-shadow: 0px 0px 20px rgb(0 0 0 / 50%);
+  background: linear-gradient(0deg, $backgroundColor, $backgroundColor), url($imagePath + "/texture-2.png");
+  background-size: 100% 100%;
+  position: relative;
+  text-align: right;
+
+  .decoration-image {
+    max-height: 80px;
+    margin: 5px 20px 0 10px;
+    vertical-align: bottom;
+  }
+
+  .player-preview-inner {
+    vertical-align: top;
+    display: inline-block;
+    margin: 0 0;
+
+    .player-button-container {
+      display: inline-block;
+      margin: 20px 0 0;
+
+      .player-button {
+        font-family: $specialFont;
+        margin: 0 0 10px;
+        color: lighten ($interactiveTextFontColor, 50%);
+        padding: 5px;
+        font-size: 1.5em;
+        box-shadow: inset 3px 3px 1px rgba(0, 0, 0, 0.4), inset -2px -2px 2px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.5);
+        color: rgb(0, 0, 0);
+        text-shadow: -1px -1px 1px transparentize($interactiveTextFontColor, 0.5), 3px 3px 5px rgba(0, 0, 0, 1);
+
+
+        &:before,
+        &:after {
+          $size: 10px;
+
+          content: "";
+          background: url($imagePath + "/chip-1.png") no-repeat;
+          display: inline-block;
+          margin: 0 5px;
+          width: $size;
+          height: $size;
+        }
+
+        &:before {
+          margin-right: 10px;
+        }
+
+        &:after {
+          margin-left: 10px;
+        }
+      }
+    }
+
+    .actions {
+      display: inline-block;
+
+      .action-button {
+        @include button();
+      }
+    }
+  }
+
+  &:before {
+    content: "";
+    width: 100%;
+    background-size: 100% 100%;
+    display: block;
+    height: 20px;
+    background-image: url($imagePath + "/border-1.png");
+  }
+
+  &:after {
+    content: "";
+    width: 100%;
+    background-size: 100% 100%;
+    display: block;
+    height: 10px;
+    background-image: url($imagePath + "/border-2.png");
+  }
+}

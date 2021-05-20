@@ -1,54 +1,38 @@
 <ion-content [fullscreen]="true">
-  <div>
-    <button (click)="onClickHome()">Home</button>
-    <button (click)="onClickConfig()">Config</button>
-  </div>
+  <div class="page-container">
+    <ng-container *ngIf="play">
+      <div class="page-header">
+        <app-main-menu></app-main-menu>
+      </div>
 
-  <div *ngIf="play">
-    <div *ngIf="play.getPlayer()">
-      <div>Time: {{play.getTime()}}</div>
-      <ion-grid>
-        <!--ion-row>
-          <ion-col>
-            <h2>Prompter</h2>
-            <app-prompter></app-prompter>
-          </ion-col>
-          <ion-col>
-            <h2>Narration</h2>
-            <app-narration [narration]="play.getNarration()"></app-narration>
-            <div *ngIf="play.getPlayer()">
-              <app-choices [entity]="getLocation()"></app-choices>
-            </div>
-          </ion-col>
-        </ion-row-->
-        <ion-row>
-          <ion-col>
-            <div>
-              <h2>Position</h2>
-              <app-location *ngIf="play.getPlayer()" [entity]="play.getPlayer().getParent()"></app-location>
-            </div>
-          </ion-col>
-          <ion-col>
-            <h2>Selection</h2>
-            <app-selection [entity]="selection"></app-selection>
-          </ion-col>
-          <ion-col>
-            <h2>Player</h2>
-            <component-player [entity]="play.getPlayer()"></component-player>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </div>
-    <div *ngIf="!play.getPlayer()">
-      <p>No player found</p>
-    </div>
-    <!--div>
-      <h2>Debug</h2>
-      <app-debug></app-debug>
-    </div-->
-  </div>
-  <div *ngIf="!play">
-    <p>loading...</p>
-  </div>
+      <div class="page-core">
+        <div class="time">
+          <span class="label">Temps</span>
+          <span class="value">{{play.getTime()}}</span>
+        </div>
+        <ng-container *ngIf="play.getPlayer()">
+          <app-location [entity]="play.getPlayer().getParent()"></app-location>
+        </ng-container>
+      </div>
 
+      <div class="page-footer">
+        <div class="player-preview">
+          <div class="player-preview-inner">
+            <div class="player-button-container">
+              <button class="player-button" (click)="onClickPlayer()">Personnage</button>
+            </div>
+            <div class="actions">
+              <app-action-button [text]="'Lancer un sortilège'" (clickEvent)="''"></app-action-button>
+            </div>
+          </div>
+          <img class="decoration-image" src="assets/interface/images/decoration-2.png" alt="" />
+        </div>
+
+      </div>
+
+      <div *ngIf="!play">
+        <p>loading...</p>
+      </div>
+    </ng-container>
+  </div>
 </ion-content>

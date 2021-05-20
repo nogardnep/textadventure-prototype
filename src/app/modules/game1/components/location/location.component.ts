@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
+import { Paragraph } from 'src/game/core/models/Paragraph';
 import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 
 @Component({
@@ -10,5 +11,5 @@ import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEn
 export class LocationComponent {
   @Input() entity: MaterialEntity;
 
-  constructor(private gameService: GameService) {}
+  constructor() {}
 }

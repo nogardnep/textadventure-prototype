@@ -1,7 +1,25 @@
 <ion-content>
-  <div>
-    <button (click)="onClickNew()">New</button>
-    <button (click)="onClickLoad()">Load</button>
-    <button (click)="onClickConfig()">Config</button>
+  <div class="home-page">
+    <div class="home-page-inner">
+      <nav class="home-menu">
+        <ul>
+          <li>
+            <button class="menu-link" (click)="onClickNew()">
+              <span class="button-inner">Nouveau jeu</span>
+            </button>
+          </li>
+          <li>
+            <button class="menu-link" (click)="onClickLoad()">
+              <span class="button-inner">Charger</span>
+            </button>
+          </li>
+          <li>
+            <button class="menu-link" (click)="onClickConfig()">
+              <span class="button-inner">Configurations</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </ion-content>

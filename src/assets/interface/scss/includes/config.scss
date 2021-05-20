@@ -1,0 +1,94 @@
+.config-page {
+  text-align: center;
+  box-shadow: inset 1px 5px 5px 0 rgba(0, 0, 0, 0.5), 0px 5px 5px 0 rgba(0, 0, 0, 0.5);
+  position: relative;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.7));
+  margin: 0 0 20px;
+
+  .page-title-container {
+    $backgroundColor: rgba(255, 255, 255, 0.8);
+
+    background: linear-gradient(0deg, $backgroundColor, $backgroundColor), url($imagePath + "/texture-2.png");
+
+    .page-title {
+      padding: 0 5px;
+      margin: 0;
+      font-size: 2em;
+      text-align: center;
+      font-family: $specialFont;
+      // font-style: italic;
+      // color: rgba(219, 219, 219, 0.993);
+      // text-shadow: -1px -1px 2px rgb(148, 148, 148), 3px 3px 5px rgba(0, 0, 0, 1);
+    }
+
+    &:before {
+      content: "";
+      height: 20px;
+      background-image: url($imagePath + "/border-1.png");
+      width: 100%;
+      background-size: 100% 100%;
+      display: block;
+    }
+
+    &:after {
+      content: "";
+      width: 100%;
+      background-size: 100% 100%;
+      display: block;
+      height: 10px;
+      background-image: url($imagePath + "/border-2.png");
+    }
+  }
+
+  .config-data {
+    padding: 20px 0;
+
+    .section {
+      margin: 0;
+      padding: 0 5px;
+
+      &:after,
+      &:before {
+        content: "";
+        width: 110%;
+        background-size: 100% 100%;
+        display: block;
+        height: 5px;
+        background-image: url($imagePath + "/border-3.png");
+        margin: 0 -5px;
+      }
+
+      .section-title {
+        margin: 0 0 5px;
+        font-family: $specialFont;
+        font-weight: bold;
+        font-size: 1.5em;
+      }
+
+      .subsection {
+        margin: 10px 0;
+
+        .subsection-title {
+          margin: 0;
+          font-family: $specialFont;
+          font-weight: bold;
+          font-size: 1em;
+        }
+      }
+    }
+  }
+
+  &:after {
+    content: "";
+    width: 100%;
+    background-size: 100% 100%;
+    display: block;
+    height: 10px;
+    background-image: url($imagePath + "/border-2.png");
+  }
+
+  .back-button {
+    @include button();
+    margin: 0 auto 20px;
+  }
+}

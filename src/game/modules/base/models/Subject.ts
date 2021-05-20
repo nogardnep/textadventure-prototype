@@ -1,7 +1,6 @@
-import { TextWrapper } from 'src/game/core/models/Text';
 
 export type Subject = {
-  title: TextWrapper;
+  title: string;
   onAsked: () => void;
   check?: () => boolean;
 };

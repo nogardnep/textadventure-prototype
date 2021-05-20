@@ -8,7 +8,7 @@ export class Sword extends HoldableObject {
   }
 
   getName() {
-    return { fr: new Name('épee') };
+    return  new Name('épee') ;
   }
 
   // getFullImages() {

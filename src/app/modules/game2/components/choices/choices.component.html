@@ -2,7 +2,7 @@
   <ul>
     <ng-container *ngFor="let choice of choices">
       <li *ngIf="isVisible(choice)">
-        <button (click)="onClickChoice(choice)">{{choice.text|text}}</button>
+        <button (click)="onClickChoice(choice)">{{choice.text}}</button>
       </li>
     </ng-container>
   </ul>
