@@ -19,7 +19,7 @@ export enum BaseActionKeys {
   Closing = 'closing',
   Putting = 'putting',
   Pulling = 'pulling',
-  CastingOn = 'castingOn',
+   CastingOn = 'castingOn',
   Holding = 'holding',
   Releasing = 'releasing',
   GoingTo = 'goingTo',

@@ -1,6 +1,6 @@
 import { Entity } from 'src/game/core/models/Entity';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
-import { Subject } from 'src/game/modules/base/models/Subject';
+import { ConversationResponse } from 'src/game/modules/base/models/Conversation';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 
 @Component({
@@ -17,24 +17,25 @@ export class ConversationComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   ngOnChanges() {
-    this.update();
+    // this.update();
   }
 
-  private update() {
-    this.subjects = [];
+  // private update() {
+  //   this.subjects = [];
+  //   const player = this.entity.getPlay().getPlayer() as Character;
 
-    if (this.entity instanceof Character) {
-      this.entity.getConversationSubjects().forEach((item) => {
-        if (!item.check || item.check()) {
-          this.subjects.push(item);
-        }
-      });
-    }
-  }
+  //   if (this.entity instanceof Character) {
+  //     this.entity.getConversationResponses().forEach((item) => {
+  //       if (!item.check || item.check(player)) {
+  //         this.subjects.push(item);
+  //       }
+  //     });
+  //   }
+  // }
 
-  onClickSubject(subject: Subject) {
-    console.log(subject);
-    subject.onAsked();
-    this.update();
-  }
+  // onClickSubject(subject: ConversationResponse) {
+  //   const player = this.entity.getPlay().getPlayer() as Character;
+  //   subject.onAsked(player);
+  //   this.update();
+  // }
 }

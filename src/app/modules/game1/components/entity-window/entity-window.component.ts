@@ -1,20 +1,18 @@
-import { AudioService, AudioLayerKey } from 'src/app/services/audio.service';
-import { Entity } from 'src/game/core/models/Entity';
 import {
-  Component,
-  OnInit,
-  Input,
-  OnDestroy,
-  OnChanges,
   AfterViewInit,
-  ViewChild,
+  Component,
   ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  ViewChild,
 } from '@angular/core';
 import * as createjs from 'createjs-module';
-import { Image } from 'src/game/core/models/Image';
+import { Image, WINDOW_REFERENCE } from 'src/game/core/models/Image';
 import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 
-const TICK_EVENT_ID = 'tick';
+const TICK_EVENT = 'tick';
 
 @Component({
   selector: 'app-entity-window',
@@ -27,61 +25,51 @@ export class EntityWindowComponent
   @Input() entity: BaseEntity;
   @ViewChild('container') container: ElementRef;
   @ViewChild('canvas') canvas: ElementRef;
-  empty: boolean;
+  empty: boolean = false;
   canvasWidth: number;
   canvasHeight: number;
 
   private stage: createjs.Stage;
-  // private audioLayer: Layer;
 
-  constructor(private audioService: AudioService) {
-    this.entity = null;
-    this.stage = null;
-    this.empty = false;
-    // this.audioLayer = audioService.createLayer(this.id.toString());
-  }
+  constructor() {}
 
   ngOnInit(): void {}
 
   ngOnChanges(): void {
-    if (this.entity.getFullImages().length > 0) {
-      this.empty = false;
-    } else {
-      this.empty = true;
-    }
-
-    // this.updateCanvas();
-    // this.updateAudioAmbiance();
+    this.updateCanvas();
   }
 
   ngAfterViewInit(): void {
-    if (!this.empty) {
-      // this.initCanvas();
-      // this.updateCanvas();
-    }
+    this.updateCanvas();
   }
 
   ngOnDestroy(): void {
-    // this.audioService.removeLayer(this.audioLayer);
-    this.removeCanvas();
-  }
-
-  private updateAudioAmbiance(): void {
-    this.audioService.clearLayer(AudioLayerKey.Ambiance);
-
-    const ambiances = this.entity.getAudioAmbiance();
-
-    if (ambiances) {
-      ambiances.forEach((item) => {
-        this.audioService.playInLayer(item.audio, AudioLayerKey.Ambiance, true);
-      });
+    if (this.stage) {
+      this.clearCanvas();
     }
   }
 
   private updateCanvas(): void {
-    if (this.stage !== null) {
+    this.checkIfEmpty();
+
+    if (this.stage) {
       this.clearCanvas();
+    }
+
+    if (this.canvas && !this.empty) {
+      if (!this.stage) {
+        this.initCanvas();
+      }
       this.fillCanvas();
+    }
+  }
+
+  private checkIfEmpty(): void {
+    console.log(this.entity);
+    if (this.entity.getFullImages().length > 0) {
+      this.empty = false;
+    } else {
+      this.empty = true;
     }
   }
 
@@ -90,7 +78,7 @@ export class EntityWindowComponent
   }
 
   private clearCanvas(): void {
-    createjs.Ticker.removeEventListener(TICK_EVENT_ID, this.tickCanvas);
+    createjs.Ticker.removeEventListener(TICK_EVENT, this.tickCanvas);
     this.stage.removeAllChildren();
     this.stage.update();
   }
@@ -102,8 +90,16 @@ export class EntityWindowComponent
       }
     });
 
-    createjs.Ticker.addEventListener(TICK_EVENT_ID, this.tickCanvas);
+    createjs.Ticker.addEventListener(TICK_EVENT, this.tickCanvas);
   }
+
+  private tickCanvas = (event: any) => {
+    if (this.canvas) {
+      this.updateStageSize();
+    }
+
+    this.stage.update(event);
+  };
 
   private createSprite(image: Image): createjs.Sprite {
     const STAND_KEY = 'stand';
@@ -126,18 +122,25 @@ export class EntityWindowComponent
     return sprite;
   }
 
-  private removeCanvas(): void {
-    if (this.stage) {
-      this.clearCanvas();
-    }
-  }
+  private updateStageSize(): void {
+    const margin = 20;
 
-  private tickCanvas = (event: any) => {
-    this.canvas.nativeElement.width = this.container.nativeElement.offsetWidth;
-    this.canvas.nativeElement.heigth =
-      this.container.nativeElement.offsetHeight;
-    this.stage.regX = -this.canvas.nativeElement.offsetWidth / 2;
-    this.stage.regY = -this.canvas.nativeElement.offsetHeight;
-    this.stage.update(event);
-  };
+    let width = this.container.nativeElement.offsetWidth - margin * 2;
+
+    if (width > WINDOW_REFERENCE.width) {
+      width = WINDOW_REFERENCE.width;
+    }
+
+    let height = width * (WINDOW_REFERENCE.height / WINDOW_REFERENCE.width);
+
+    this.canvas.nativeElement.width = width;
+    this.canvas.nativeElement.height = height;
+
+    var scale = 500 / this.canvas.nativeElement.width;
+    scale = width / WINDOW_REFERENCE.width;
+    this.stage.scaleX = this.stage.scaleY = scale;
+
+    this.stage.regX = -WINDOW_REFERENCE.width/2;
+    this.stage.regY = -WINDOW_REFERENCE.height;
+  }
 }

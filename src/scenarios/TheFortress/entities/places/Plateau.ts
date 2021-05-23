@@ -1,4 +1,5 @@
 import { Name } from 'src/game/core/models/Name';
+import { ParagraphTag } from 'src/game/core/models/Paragraph';
 import { DirectionKeys } from 'src/game/modules/base/dictionnaries/direction';
 import { Spell } from 'src/game/modules/base/models/entities/immaterial/Spell';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
@@ -17,9 +18,11 @@ export class Plateau extends Place {
   getInteriorDescription() {
     return [
       {
+        tag: ParagraphTag.Description,
         text: 'Un espace dégagé surplombant un ravin.',
       },
       {
+        tag: ParagraphTag.Description,
         items: [
           {
             text: 'La forteresse',
@@ -31,6 +34,7 @@ export class Plateau extends Place {
         ],
       },
       {
+        tag: ParagraphTag.Description,
         text: 'Un long et étroit pont de pierre mène là-bas.',
       },
       // {
@@ -45,6 +49,13 @@ export class Plateau extends Place {
       //     return this.getGiant().dead;
       //   },
       // },
+    ];
+  }
+
+  getAudioAmbiance() {
+    return [
+      { audio: TheFortress.audios.toctoc },
+      { audio: TheFortress.audios.birds },
     ];
   }
 
@@ -76,8 +87,11 @@ export class Plateau extends Place {
       ) &&
       this.giantIsHere()
     ) {
-      this.getPlay().inform([
-        { text: 'Le géant succombe sous un déluge de flammes.' },
+      this.getPlay().sendMessage([
+        {
+          tag: ParagraphTag.Event,
+          text: 'Le géant succombe sous un déluge de flammes.',
+        },
       ]);
       this.getGiant().kill();
       report.success = true;
@@ -97,8 +111,11 @@ export class Plateau extends Place {
       ) &&
       this.giantIsHere()
     ) {
-      this.getPlay().inform([
-        { text: 'Vous ne pouvez passer, le géant garde le pont.' },
+      this.getPlay().sendMessage([
+        {
+          tag: ParagraphTag.Information,
+          text: 'Vous ne pouvez passer, le géant garde le pont.',
+        },
       ]);
       return { success: false };
     } else {
@@ -115,6 +132,7 @@ export class Plateau extends Place {
           .getId(),
         text: "Le pont mène devant l'entrée de la forteresse.",
         distance: 20,
+        // passageId: this.getPlay().getFirst
       },
       {
         directionKey: DirectionKeys.South,

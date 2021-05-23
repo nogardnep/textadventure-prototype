@@ -1,3 +1,4 @@
+import { ParagraphTag } from 'src/game/core/models/Paragraph';
 import { Name } from 'src/game/core/models/Name';
 import { Scenary } from 'src/game/modules/base/models/entities/material/thing/Scenary';
 
@@ -9,8 +10,8 @@ export class Fortress extends Scenary {
   getExteriorDescription() {
     return [
       {
-        text:
-          'Un château fait de grossières pierres noires, surmonté de trois hautes tours.',
+        tag: ParagraphTag.Description,
+        text: 'Un château fait de grossières pierres noires, surmonté de trois hautes tours.',
       },
     ];
   }

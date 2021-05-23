@@ -1,0 +1,11 @@
+<div class="player-preview">
+  <div class="player-preview-inner">
+    <div class="player-button-container">
+      <button class="player-button" (click)="onClickPlayer()">Personnage</button>
+    </div>
+    <div class="actions">
+      <app-action-button [text]="'Lancer un sortilège'" (clickEvent)="onClickCastSpell()"></app-action-button>
+    </div>
+  </div>
+  <img class="decoration-image" src="assets/interface/images/decoration-2.png" alt="" />
+</div>

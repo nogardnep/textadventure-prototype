@@ -3,7 +3,7 @@
     <ng-container *ngFor="let item of messages">
       <li class="message-list-item">
         <div class="message">
-          <entity-paragraphs [paragraphs]="item.paragraphs"></entity-paragraphs>
+          <app-paragraphs [paragraphs]="item.paragraphs"></app-paragraphs>
           <ng-container *ngIf="item.choices && item.choices.length > 0">
             <ul class="choice-list">
               <ng-container *ngFor="let choice of item.choices">

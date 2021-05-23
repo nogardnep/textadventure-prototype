@@ -1,4 +1,5 @@
 import { GameManager } from 'src/game/core/GameManager';
+import { Subject } from 'src/game/modules/base/models/Conversation';
 import { TextManager } from '../TextManager';
 import { Action } from './Action';
 import { Choice } from './Choice';
@@ -21,7 +22,7 @@ type PlayCallBacks = {
   onSave: () => void;
   onInform: (paragraphs: Paragraph[], actions?: Choice[]) => void;
   onStartConversation: (interlocutor: Entity) => void;
-  onUpdateDisplay: () => void;
+  onUpdate: () => void;
 };
 
 export class Play {
@@ -56,8 +57,6 @@ export class Play {
     GameManager.setPlay(this);
   }
 
-
-
   init(): void {
     this.scenario.init(this);
     this.narration.save();
@@ -75,6 +74,8 @@ export class Play {
     }
 
     this.scenario.update(this);
+
+    this.callbacks.onUpdate();
   }
 
   load(storedPlay: StoredPlay): void {
@@ -107,10 +108,6 @@ export class Play {
     if (storedPlay.narration) {
       this.narration.load(storedPlay.narration);
     }
-  }
-
-  updateDisplay(): void {
-    this.callbacks.onUpdateDisplay();
   }
 
   getStored(): StoredPlay {
@@ -205,12 +202,16 @@ export class Play {
     return entity;
   }
 
-  getEntity(id: EntityId) {
+  getEntity(id: EntityId): Entity {
     if (!this.entities[id]) {
       console.error('Unfound entity (' + id + ')');
     }
 
     return this.entities[id];
+  }
+
+  getEntities(): { [id: string]: Entity } {
+    return this.entities;
   }
 
   getFirstEntityOfType(type: EntityType, createIfNotExists = true): Entity {
@@ -283,7 +284,7 @@ export class Play {
     this.callbacks.onSave();
   }
 
-  inform(paragraphs: Paragraph[], choices?: Choice[]): void {
+  sendMessage(paragraphs: Paragraph[], choices?: Choice[]): void {
     this.callbacks.onInform(paragraphs, choices);
   }
 
@@ -295,6 +296,16 @@ export class Play {
     }
 
     return action;
+  }
+
+  getSubject(key: string): Subject {
+    const subject = this.getScenario().subjects[key];
+
+    if (!subject) {
+      console.error('Subject "' + key + '" not found');
+    }
+
+    return subject;
   }
 
   useChoice(choice: Choice): void {

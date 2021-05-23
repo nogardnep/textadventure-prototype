@@ -49,8 +49,8 @@ export class ConnectionsComponent implements OnInit {
     ];
   }
 
-  getPassage(connection: Connection): Entity {
-    return this.entity.getPlay().getEntity(connection.passageId);
+  getPassage(connection: Connection): Passage {
+    return this.entity.getPlay().getEntity(connection.passageId) as Passage;
   }
 
   isUsable(connection: Connection): boolean {

@@ -1,16 +1,21 @@
 import { Gender } from 'src/game/core/dictionnaries/Gender';
 import { ConjugationTime } from 'src/game/core/models/Glossary';
+import { ParagraphTag } from 'src/game/core/models/Paragraph';
 import { Play } from 'src/game/core/models/Play';
 import { BaseScenario } from 'src/game/modules/base/models/BaseScenario';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { Place } from 'src/game/modules/base/models/entities/material/Place';
 import { Person } from '../../game/core/models/Glossary';
+import { AUDIO } from './audios';
 import { ENTITY_CONSTRUCTORS } from './entities/entities';
 import { IMAGES } from './images';
+import { SUBJECTS } from './subjects';
 
 export class TheFortress extends BaseScenario {
   static entityConstructors = ENTITY_CONSTRUCTORS;
   static images = IMAGES;
+  static audios = AUDIO;
+  static subjects = SUBJECTS;
 
   starting = {
     maxSpells: 2,
@@ -32,6 +37,8 @@ export class TheFortress extends BaseScenario {
     super('the_fortress', {
       entityConstructors: TheFortress.entityConstructors,
       images: TheFortress.images,
+      audios: TheFortress.audios,
+      subjects: TheFortress.subjects
     });
 
     // TODO: move
@@ -71,6 +78,12 @@ export class TheFortress extends BaseScenario {
     ) as Place;
 
     (play.getPlayer() as Character).moveTo(firstRoom);
-    console.log("started")
+
+    play.sendMessage([
+      {
+        tag: ParagraphTag.Event,
+        text: "Ici commence l'aventure",
+      },
+    ]);
   }
 }

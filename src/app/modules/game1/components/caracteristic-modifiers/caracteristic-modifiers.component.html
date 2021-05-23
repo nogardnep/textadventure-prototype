@@ -1,0 +1,10 @@
+<ul class="caracteristic-modifier-list">
+  <li class="caracteristic-modifier-list-item" *ngFor="let caracteristic of entity.getModifiers() | keyvalue"
+    [ngClass]="{effective: isEffective(caracteristic.value), bonus: caracteristic.value.value > 0, malus: caracteristic.value.value < 0}">
+    <span
+      class="caracteristic-modifier-name">{{caracteristicNames[caracteristic.key].printSimple()|capitalizeFirst}}</span>
+    <span class="caracteristic-modifier-value">{{
+      (caracteristic.value.value > 0 ? '+' : '') +
+      caracteristic.value.value}}</span>
+  </li>
+</ul>

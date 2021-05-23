@@ -2,6 +2,7 @@ import { TheFortress } from './../../TheFortress';
 import { Name } from 'src/game/core/models/Name';
 import { Place } from 'src/game/modules/base/models/entities/material/Place';
 import { DirectionKeys } from 'src/game/modules/base/dictionnaries/direction';
+import { ParagraphTag } from 'src/game/core/models/Paragraph';
 
 export class MountainousPath extends Place {
   getName() {
@@ -16,7 +17,12 @@ export class MountainousPath extends Place {
   }
 
   getInteriorDescription() {
-    return [{ text: 'Un chemin dans la montagne.' }];
+    return [
+      {
+        tag: ParagraphTag.Description,
+        text: 'Un chemin dans la montagne.',
+      },
+    ];
   }
 
   getConnections() {

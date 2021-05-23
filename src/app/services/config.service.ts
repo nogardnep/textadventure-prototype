@@ -1,4 +1,4 @@
-import { AudioLayerKey, AudioService } from './audio.service';
+import { AudioChannelKey, AudioService } from './audio.service';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { LanguageKey } from 'src/game/core/dictionnaries/Language';
@@ -9,7 +9,7 @@ import { StorageService } from './storage.service';
 export type ConfigData = {
   audio: {
     muted: boolean;
-    volumes: { [key in AudioLayerKey]: number };
+    volumes: { [key in AudioChannelKey]: number };
   };
   language: string;
 };
@@ -44,8 +44,8 @@ export class ConfigService {
     TextManager.setLanguage(this.data.language);
 
     for (let key in this.data.audio.volumes) {
-      this.audioService.changeLayerVolume(
-        key as AudioLayerKey,
+      this.audioService.changeChannelVolume(
+        key as AudioChannelKey,
         this.data.audio.volumes[key]
       );
     }
@@ -75,7 +75,6 @@ export class ConfigService {
       audio: {
         muted: false,
         volumes: {
-          ambiance: 1,
           effects: 1,
           music: 1,
           interface: 1,

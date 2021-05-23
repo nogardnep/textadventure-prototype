@@ -1,10 +1,9 @@
+import { ActionReport } from 'src/game/core/models/Action';
 import { Entity, EntityId, EntityType } from 'src/game/core/models/Entity';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { Caracteristic } from '../Caracteristic';
-import { ActionReport } from 'src/game/core/models/Action';
 import { BaseGlossaryKey } from './../BaseGlossary';
 import { BaseEntity } from './BaseEntity';
-import { WithModifiers } from './constraints/WithModifiers';
 import { Effect } from './immaterial/Effect';
 import { Spell } from './immaterial/Spell';
 
@@ -31,7 +30,7 @@ export class MaterialEntity extends BaseEntity {
   }
 
   onVisitedBy(entity: MaterialEntity): void {
-    this.getPlay().updateDisplay();
+    // this.getPlay().updateDisplay();
     // To be override in other classes
   }
 
@@ -161,12 +160,12 @@ export class MaterialEntity extends BaseEntity {
     let value = 0;
 
     from.forEach((item: EntityId) => {
-      const entity = this.getPlay().getEntity(item) as unknown as WithModifiers;
+      const entity = this.getPlay().getEntity(item) as BaseEntity;
 
       if (entity.getModifiers) {
         const modifier = entity.getModifiers()[id];
         if (modifier) {
-          if (!modifier.condition || modifier.condition()) {
+          if (!modifier.check || modifier.check()) {
             value += modifier.value;
           }
         }

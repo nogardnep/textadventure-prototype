@@ -1,3 +1,4 @@
+import { Subject } from 'src/game/modules/base/models/Conversation';
 import { Gender } from './../dictionnaries/Gender';
 import { Action } from './Action';
 import { Audio } from './Audio';
@@ -15,6 +16,7 @@ export abstract class Scenario {
   glossaries: { [languageKey: string]: Glossary } = {};
   images: { [key: string]: Image } = {};
   audios: { [key: string]: Audio } = {};
+  subjects: { [key: string]: Subject } = {};
 
   constructor(
     id: ScenarioId,
@@ -24,6 +26,7 @@ export abstract class Scenario {
       images?: { [key: string]: Image };
       audios?: { [key: string]: Audio };
       actions?: { [key: string]: Action };
+      subjects?: { [key: string]: Subject };
     }
   ) {
     this.id = id;
@@ -46,6 +49,10 @@ export abstract class Scenario {
 
     if (params.images) {
       this.setImages(params.images);
+    }
+
+    if (params.subjects) {
+      this.setSubjects(params.subjects);
     }
   }
 
@@ -76,6 +83,10 @@ export abstract class Scenario {
 
   setAudios(audios: { [key: string]: Audio }): void {
     this.audios = Object.assign({}, this.audios, audios);
+  }
+
+  setSubjects(subjects: { [key: string]: Subject }): void {
+    this.subjects = Object.assign({}, this.subjects, subjects);
   }
 
   setEntityConstructors(entityConstructors: {

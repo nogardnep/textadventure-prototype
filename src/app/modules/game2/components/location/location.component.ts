@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
-import { Entity } from 'src/game/core/models/Entity';
+import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 
 @Component({
   selector: 'app-location',
@@ -8,7 +8,7 @@ import { Entity } from 'src/game/core/models/Entity';
   styleUrls: ['./location.component.scss'],
 })
 export class LocationComponent {
-  @Input() entity: Entity;
+  @Input() entity: BaseEntity;
 
   constructor(private gameService: GameService) {}
 }

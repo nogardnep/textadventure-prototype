@@ -9,7 +9,7 @@
             </button>
           </li>
           <li>
-            <button class="menu-link" (click)="onClickLoad()">
+            <button [disabled]="!lastPlayExists" class="menu-link" (click)="onClickLoad()">
               <span class="button-inner">Charger</span>
             </button>
           </li>

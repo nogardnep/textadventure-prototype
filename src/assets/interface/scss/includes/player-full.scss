@@ -1,5 +1,6 @@
-.player {
+.player-full {
   background-image: url($imagePath + "/texture-1.png");
+  padding: 0 0 20px;
 
   .player-name-container {
     $backgroundColor: rgba(255, 255, 255, 0.8);
@@ -82,6 +83,7 @@
         padding: 0;
 
         .list-item {
+          margin: 0 0 10px;
           list-style: none;
         }
       }
@@ -111,29 +113,6 @@
           height: 5px;
           box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
           opacity: 0.8;
-        }
-      }
-    }
-
-    &.caracteristics-section {
-      .list-item {
-        display: flex;
-
-        .caracteristic-name {
-          width: 50%;
-        }
-
-        .caracteristic-value {
-        }
-
-        .caracteristic-modifier {
-          &:before {
-            content: "(";
-          }
-
-          &:after {
-            content: ")";
-          }
         }
       }
     }

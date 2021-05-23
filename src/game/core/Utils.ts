@@ -18,4 +18,8 @@ export abstract class Utils {
   static removeDuplications(array: any[]): any[] {
     return Array.from(new Set(array));
   }
+
+  static generateId(): string {
+    return Math.floor(Math.random() * 10000000).toString();
+  }
 }

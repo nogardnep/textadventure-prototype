@@ -1,11 +1,11 @@
 ion-content {
-  --background: url("#{$imagePath}/texture-1.png");
-  color: $pageFontColor;
 }
 
 .page-container {
+  color: $pageFontColor;
   $headerHeight: 50px;
   $footerHeight: 130px;
+  background: white;
 
   display: flex;
   flex-direction: column;

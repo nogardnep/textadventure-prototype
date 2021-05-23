@@ -3,6 +3,7 @@ import { Name } from 'src/game/core/models/Name';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { WearableObject } from 'src/game/modules/base/models/entities/material/thing/object/WearableObject';
 import { HoldableObject } from 'src/game/modules/base/models/entities/material/thing/object/HoldableObject';
+import { ParagraphTag } from 'src/game/core/models/Paragraph';
 
 export class Elkchten extends Character {
   getName() {
@@ -31,6 +32,7 @@ export class Elkchten extends Character {
   getInteriorDescription() {
     return [
       {
+        tag: ParagraphTag.Description,
         text: 'Fusce tincidunt a lectus sit amet ullamcorper. Ut gravida enim risus, quis lacinia eros venenatis id. Fusce condimentum neque vitae tristique commodo.',
       },
     ];

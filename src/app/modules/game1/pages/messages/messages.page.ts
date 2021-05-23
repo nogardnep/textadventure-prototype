@@ -1,7 +1,7 @@
-import { GameService, MessageWrapper } from 'src/app/services/game.service';
+import { InterfaceService } from 'src/app/services/interface.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Play } from 'src/game/core/models/Play';
+import { GameService, MessageWrapper } from 'src/app/services/game.service';
 
 @Component({
   selector: 'app-messages-page',
@@ -9,29 +9,14 @@ import { Play } from 'src/game/core/models/Play';
   styleUrls: ['./messages.page.scss'],
 })
 export class MessagesPage implements OnInit, OnDestroy {
-  play: Play;
   messages: MessageWrapper[];
-  private playSubscription: Subscription;
   private messagesSubscription: Subscription;
 
-  constructor(private gameService: GameService) {
-    // TODO: remove?
-    // gameService.checkPlay();
+  constructor(private gameService: GameService, private interfaceService:InterfaceService) {
+    gameService.checkPlay();
   }
 
   ngOnInit() {
-    this.playSubscription = this.gameService.playSubject.subscribe(
-      (play: Play) => {
-        if (play) {
-          this.play = play;
-        } else {
-          this.play = null;
-        }
-      }
-    );
-
-    this.gameService.emitPlay();
-
     this.messagesSubscription = this.gameService.messagesSubject.subscribe(
       (message: MessageWrapper[]) => {
         this.messages = message;
@@ -42,7 +27,6 @@ export class MessagesPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.playSubscription.unsubscribe();
     this.messagesSubscription.unsubscribe();
   }
 
@@ -62,5 +46,13 @@ export class MessagesPage implements OnInit, OnDestroy {
     this.messages.forEach((item) => {
       item.read = true;
     });
+  }
+
+  onClickOk(): void {
+    this.messages.forEach((item) => {
+      item.read = true;
+    });
+
+    this.interfaceService.goToGame();
   }
 }

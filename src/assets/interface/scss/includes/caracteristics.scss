@@ -1,0 +1,59 @@
+.caracteristic-list {
+  margin: 0;
+  padding: 0;
+
+  .caracteristic-list-item {
+    margin: 0 0 10px;
+    list-style: none;
+    display: flex;
+
+    .caracteristic-name {
+      width: 50%;
+    }
+
+    .caracteristic-modifier {
+      &:before {
+        content: "(";
+      }
+
+      &:after {
+        content: ")";
+      }
+
+      &.bonus {
+        color: green;
+      }
+
+      &.malus {
+        color: red;
+      }
+    }
+  }
+}
+
+.caracteristic-modifier-list {
+  padding: 0;
+  margin: 0;
+
+  .caracteristic-modifier-list-item {
+    font-size: 0.9em;
+    list-style: none;
+    opacity: 0.4;
+
+    &.effective {
+      opacity: 1;
+    }
+
+    .caracteristic-modifier-value {
+      margin: 0 0 0 5px;
+    }
+
+    &.bonus {
+      color: rgb(8, 168, 8);
+    }
+
+    &.malus {
+      color: rgb(202, 5, 5);
+    }
+  }
+}

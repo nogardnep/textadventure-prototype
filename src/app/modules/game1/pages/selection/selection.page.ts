@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GameService } from 'src/app/services/game.service';
-import { Entity } from 'src/game/core/models/Entity';
 import { Play } from 'src/game/core/models/Play';
+import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 
 @Component({
   selector: 'app-selection-page',
@@ -11,17 +11,13 @@ import { Play } from 'src/game/core/models/Play';
   styleUrls: ['./selection.page.scss'],
 })
 export class SelectionPage implements OnInit, OnDestroy {
-  selection: Entity;
+  selection: BaseEntity;
   play: Play;
   private selectionSubscription: Subscription;
   private playSubscription: Subscription;
 
-  constructor(
-    private gameService: GameService,
-    private route: ActivatedRoute
-  ) {
-    // TODO: remove?
-    // gameService.checkPlay();
+  constructor(private gameService: GameService, private route: ActivatedRoute) {
+    gameService.checkPlay();
   }
 
   ngOnInit() {
@@ -43,7 +39,7 @@ export class SelectionPage implements OnInit, OnDestroy {
           this.play = play;
           const entity = this.play.getEntity(
             this.route.snapshot.paramMap.get('id')
-          );
+          ) as BaseEntity;
           // this.gameService.setSelection(entity);
           this.selection = entity;
         } else {

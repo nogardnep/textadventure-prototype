@@ -2,6 +2,7 @@ import { TheFortress } from './../../TheFortress';
 import { Name } from 'src/game/core/models/Name';
 import { DirectionKeys } from 'src/game/modules/base/dictionnaries/direction';
 import { Place } from 'src/game/modules/base/models/entities/material/Place';
+import { ParagraphTag } from 'src/game/core/models/Paragraph';
 
 export class SecreteEntry extends Place {
   getName() {
@@ -10,8 +11,14 @@ export class SecreteEntry extends Place {
 
   getExteriorDescription() {
     return [
-      { text: "Un chemin s'enfonce sous la caverne." },
-      { text: "(à suivre...)" },
+      {
+        tag: ParagraphTag.Description,
+        text: "Un chemin s'enfonce sous la caverne.",
+      },
+      {
+        tag: ParagraphTag.Information,
+        text: '(à suivre...)',
+      },
     ];
   }
 

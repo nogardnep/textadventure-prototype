@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { InterfaceService } from 'src/app/services/interface.service';
 import { Choice } from 'src/game/core/models/Choice';
 import { Entity } from 'src/game/core/models/Entity';
 
@@ -10,11 +11,12 @@ import { Entity } from 'src/game/core/models/Entity';
 export class ChoicesComponent implements OnInit {
   @Input() entity: Entity;
 
-  constructor() {}
+  constructor(private interfaceService:InterfaceService) {}
 
   ngOnInit() {}
 
   onClickChoice(choice: Choice): void {
+    this.interfaceService.onClickButton();
     this.entity.getPlay().useChoice(choice);
   }
 

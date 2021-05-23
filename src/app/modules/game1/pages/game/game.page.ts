@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import {
-  GameService,
-  INTERFACE_ID
-} from 'src/app/services/game.service';
+import { GameService } from 'src/app/services/game.service';
+import { InterfaceService } from 'src/app/services/interface.service';
 import { Narration } from 'src/game/core/models/Narration';
 import { Play } from 'src/game/core/models/Play';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
+import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 
 @Component({
   selector: 'app-game-page',
@@ -19,8 +17,8 @@ export class GamePage implements OnInit {
   playerSelected: boolean = false;
   private playSubscription: Subscription;
 
-  constructor(private gameService: GameService, private router: Router) {
-    // gameService.checkPlay();
+  constructor(private gameService: GameService) {
+    gameService.checkPlay();
     // GameController.startNewPlay(this.gameService.getCurrentScenario())
     // GameController.getPlay().getScenario().start()
   }
@@ -28,12 +26,7 @@ export class GamePage implements OnInit {
   ngOnInit(): void {
     this.playSubscription = this.gameService.playSubject.subscribe(
       (play: Play) => {
-        if (play) {
-          this.play = play;
-          console.log((play.getPlayer() as Character).getParent())
-        } else {
-          this.play = null;
-        }
+        this.play = play;
       }
     );
 
@@ -45,7 +38,6 @@ export class GamePage implements OnInit {
   }
 
   getPlayer(): Character {
-    console.log(this.play.getPlayer())
     return this.play.getPlayer() as Character;
   }
 
@@ -53,13 +45,13 @@ export class GamePage implements OnInit {
     return this.play.getNarration();
   }
 
-  onClickPlayer(): void {
-    this.router.navigate(['/' + INTERFACE_ID + '/player']);
-  }
-
   onClickUnselectPlayer(): void {
     this.playerSelected = false;
   }
 
   onClickGame(): void {}
+
+  getLocation(): MaterialEntity {
+    return this.getPlayer().getParent();
+  }
 }

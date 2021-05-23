@@ -1,22 +1,29 @@
 <div class="entity-preview" *ngIf="entity" [ngClass]="{'selected': isSelected()}">
   <div class="entity-preview-header">
-    <div class="entity-preview-name">
-      <button (click)="onClickEntity()" [innerHTML]="entity.getName().printWithIndefiniteArticle()"></button>
-    </div>
-    <div class="entity-preview-situation">
-      <span *ngIf="isWorn()">sur {{getEmplacementName().printWithDefiniteArticle()}}</span>
-      <span *ngIf="isOpen()">ouvert{{entity.getName().isFeminin()? 'e':''}}</span>
-      <span *ngIf="isClosed()">fermé{{entity.getName().isFeminin()? 'e':''}}</span>
-      <span *ngIf="isDead()">mort{{entity.getName().isFeminin()? 'e':''}}</span>
-    </div>
   </div>
   <div class="entity-preview-core">
     <div class="entity-preview-description-container">
+      <div class="entity-preview-name-container">
+        <div class="entity-preview-name">
+          <button (click)="onClickEntity()">
+            <span *ngIf="entity.getName()" [innerHTML]="entity.getName().printWithIndefiniteArticle()"></span>
+          </button>
+        </div>
+        <div class="entity-preview-situation">
+          <span *ngIf="isWorn()">sur {{getEmplacementName().printWithDefiniteArticle()}}</span>
+          <span *ngIf="isOpen()">ouvert{{entity.getName().isFeminin()? 'e':''}}</span>
+          <span *ngIf="isClosed()">fermé{{entity.getName().isFeminin()? 'e':''}}</span>
+          <span *ngIf="isDead()">mort{{entity.getName().isFeminin()? 'e':''}}</span>
+        </div>
+      </div>
       <ng-container *ngIf="entity.getPreviewImage() && entity.getPreviewImage()">
         <img class="entity-preview-image" src="assets/{{entity.getPreviewImage().source}}" alt="" width="50" />
       </ng-container>
-      <div class="entity-preview-description">
-        <entity-paragraphs [paragraphs]="entity.getPreviewDescription()"></entity-paragraphs>
+      <div *ngIf="entity.getPreviewDescription().length > 0" class="entity-preview-description">
+        <app-paragraphs [paragraphs]="entity.getPreviewDescription()"></app-paragraphs>
+      </div>
+      <div class="entity-preview-caractertic-modifiers">
+        <app-caracteristic-modifiers [entity]="entity"></app-caracteristic-modifiers>
       </div>
     </div>
     <div class="entity-preview-interactions">

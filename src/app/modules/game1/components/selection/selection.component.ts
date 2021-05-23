@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
+import { InterfaceService } from 'src/app/services/interface.service';
 import { Paragraph } from 'src/game/core/models/Paragraph';
 import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
@@ -13,12 +14,12 @@ import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEn
 export class SelectionComponent implements OnInit {
   @Input() entity: BaseEntity;
 
-  constructor(private gameService: GameService) {}
+  constructor(private interfaceService: InterfaceService) {}
 
   ngOnInit() {}
 
   onClickUnselect(): void {
-    this.gameService.setSelection(null);
+    this.interfaceService.setSelection(null);
   }
 
   isVisible(): boolean {

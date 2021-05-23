@@ -1,3 +1,6 @@
+import { CaracteristicsComponent } from './components/caracteristics/caracteristics.component';
+import { CaracteristicModifiersComponent } from './components/caracteristic-modifiers/caracteristic-modifiers.component';
+import { PlayerPreviewComponent } from './components/player/player-preview/player-preview.component';
 import { BackButtonComponent } from './components/back-button/back-button.component';
 import { MessagesPage } from './pages/messages/messages.page';
 import { SelectionPage } from './pages/selection/selection.page';
@@ -14,13 +17,12 @@ import { ChoicesComponent } from './components/entity/choices/choices.component'
 import { ConnectionsComponent } from './components/entity/connections/connections.component';
 import { EntityListComponent } from './components/entity/entity-list/entity-list.component';
 import { EntityPreviewComponent } from './components/entity/entity-preview/entity-preview.component';
-import { EntityFullComponent } from './components/entity/entity-full.component';
-import { ParagraphsComponent } from './components/entity/paragraphs/paragraphs.component';
+import { EntityFullComponent } from './components/entity/entity-full/entity-full.component';
+import { ParagraphsComponent } from './components/paragraphs/paragraphs.component';
 import { InfoComponent } from './components/info/info.component';
 import { LocationComponent } from './components/location/location.component';
 import { NarrationComponent } from './components/narration/narration.component';
-import { PlayerComponent } from './components/player/player.component';
-import { PositionComponent } from './components/position/position.component';
+import { PlayerFullComponent } from './components/player/player-full/player-full.component';
 import { PrompterComponent } from './components/prompter/prompter.component';
 import { SelectionComponent } from './components/selection/selection.component';
 import { Game1RoutingModule } from './game1-routing.module';
@@ -28,13 +30,7 @@ import { GamePage } from './pages/game/game.page';
 import { ActionButtonComponent } from './components/action-button/action-button.component';
 
 @NgModule({
-  imports: [
-    SharedModule,
-    Game1RoutingModule,
-    CommonModule,
-    // FormsModule,
-    // IonicModule,
-  ],
+  imports: [SharedModule, Game1RoutingModule, CommonModule],
   declarations: [
     GamePage,
     SelectionPage,
@@ -46,9 +42,8 @@ import { ActionButtonComponent } from './components/action-button/action-button.
     ActionsComponent,
     ChoicesComponent,
     NarrationComponent,
-    PlayerComponent,
+    PlayerFullComponent,
     LocationComponent,
-    PositionComponent,
     SelectionComponent,
     PrompterComponent,
     InfoComponent,
@@ -60,6 +55,9 @@ import { ActionButtonComponent } from './components/action-button/action-button.
     PlayerPage,
     ActionButtonComponent,
     BackButtonComponent,
+    PlayerPreviewComponent,
+    CaracteristicModifiersComponent,
+    CaracteristicsComponent,
   ],
 })
 export class Game1Module {}

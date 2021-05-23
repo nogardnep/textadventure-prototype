@@ -1,11 +1,11 @@
+import { ParagraphTag } from 'src/game/core/models/Paragraph';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { GameService, INTERFACE_ID } from 'src/app/services/game.service';
+import { GameService } from 'src/app/services/game.service';
+import { InterfaceService } from 'src/app/services/interface.service';
 import { EntityType } from 'src/game/core/models/Entity';
 import { Play } from 'src/game/core/models/Play';
-import { Scenario } from 'src/game/core/models/Scenario';
 import { TextWrapper } from 'src/game/core/TextManager';
-import { CARACTERISTIC_NAMES } from 'src/game/modules/base/dictionnaries/caracteristics';
+import { BASE_CARACTERISTIC_NAMES } from 'src/game/modules/base/dictionnaries/caracteristics';
 import { BaseScenario } from 'src/game/modules/base/models/BaseScenario';
 import { Spell } from 'src/game/modules/base/models/entities/immaterial/Spell';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
@@ -16,9 +16,6 @@ import { Character } from 'src/game/modules/base/models/entities/material/Charac
   styleUrls: ['./new-play.page.scss'],
 })
 export class NewPlayPage implements OnInit {
-  selectedSpells: Spell[] = [];
-  usedPoints: number = 0;
-  scenario: BaseScenario;
   readonly text: { [key: string]: TextWrapper } = {
     validate: { fr: 'Valider', en: 'Validate' },
     cancel: { fr: 'Annuler', en: 'Cancel' },
@@ -26,19 +23,30 @@ export class NewPlayPage implements OnInit {
     title: { fr: 'Nouvelle partie', en: 'New play' },
     caracteristics: { fr: 'Caracteristics', en: 'Caracteristics' },
   };
+
+  play: Play;
+  selectedSpells: Spell[] = [];
+  usedPoints: number = 0;
+  scenario: BaseScenario;
   name: string;
-  caracteristicNames = CARACTERISTIC_NAMES;
+  caracteristicNames = BASE_CARACTERISTIC_NAMES;
   caracteristicModifiers: {} = {};
   availableSpells: Spell[] = [];
   player: Character;
 
-  constructor(private gameService: GameService, private router: Router) {}
+  constructor(
+    private gameService: GameService,
+    private interfaceService: InterfaceService
+  ) {}
 
   ngOnInit(): void {
-    this.gameService.startNewPlay(this.gameService.getCurrentScenario());
+    this.play = this.gameService.createPlay(
+      this.gameService.getCurrentScenario()
+    );
+    this.play.init();
 
-    this.player = this.gameService.getPlay().getPlayer() as Character;
-    this.scenario = this.gameService.getPlay().getScenario() as BaseScenario;
+    this.player = this.play.getPlayer() as Character;
+    this.scenario = this.play.getScenario() as BaseScenario;
 
     if (this.player) {
       for (let key in this.player.caracteristics) {
@@ -46,11 +54,8 @@ export class NewPlayPage implements OnInit {
       }
 
       this.scenario.starting.availableSpells.forEach((type: EntityType) => {
-        this.availableSpells.push(
-          new this.scenario.entityConstructors[type](
-            this.gameService.getPlay()
-          ) as Spell
-        );
+        const spell = this.play.addEntity(type) as Spell;
+        this.availableSpells.push(spell);
       });
     } else {
       console.error('No player found in this scenario');
@@ -58,11 +63,15 @@ export class NewPlayPage implements OnInit {
   }
 
   onClickValidate(): void {
+    this.interfaceService.onClickButton();
+
     let valid = true;
 
     if (this.scenario.starting.askForName && !this.name) {
       valid = false;
-      this.gameService.openPopup([{ text: 'Vous devez entrer un nom' }]);
+      this.interfaceService.openPopup([
+        { tag: ParagraphTag.Warning, text: 'Vous devez entrer un nom' },
+      ]);
     }
 
     if (valid) {
@@ -76,9 +85,10 @@ export class NewPlayPage implements OnInit {
         caracteristic.current = caracteristic.max;
       }
 
-      console.log(this.player);
-      this.gameService.getPlay().start();
-      this.router.navigate(['/' + INTERFACE_ID]);
+      this.gameService.setPlay(this.play);
+      this.play.save();
+      this.interfaceService.goToGame();
+      this.play.start();
     }
   }
 
@@ -95,7 +105,7 @@ export class NewPlayPage implements OnInit {
   }
 
   onClickCancel(): void {
-    this.router.navigate(['']);
+    this.interfaceService.goToHome();
   }
 
   onClickSpell(spell: Spell): void {

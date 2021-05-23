@@ -1,0 +1,34 @@
+.paragraph {
+  &.description {
+  }
+
+  &.information {
+    color: rgb(218, 149, 23);
+  }
+
+  &.warning {
+    color: red;
+  }
+
+  &.event {
+    font-style: italic;
+  }
+
+  &.action-success {
+    font-style: italic;
+  }
+
+  &.actions-warning {
+    color: red;
+  }
+
+  &.speech {
+    font-size: 1.2em;
+  }
+
+  .paragraph-item {
+    &.speacher {
+      font-weight: bold;
+    }
+  }
+}

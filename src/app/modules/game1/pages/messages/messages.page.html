@@ -1,12 +1,18 @@
 <ion-content>
-  <div class="page-container">
-    <div class="page-header">
-      <app-main-menu></app-main-menu>
-    </div>
-    <div class="page-core">
-      <app-back-button (click)="onClickBack()"></app-back-button>
-      <app-messages *ngIf="getUnreadedMessages().length > 0" [messages]="getUnreadedMessages()"></app-messages>
-      <div class="no-message" *ngIf="getUnreadedMessages().length === 0">Aucun message</div>
+  <div class="page messages-page">
+    <div class="page-container">
+      <div class="page-header">
+        <app-main-menu></app-main-menu>
+      </div>
+      <div class="page-core">
+        <div class="page-core-inner">
+          <app-messages *ngIf="getUnreadedMessages().length > 0" [messages]="getUnreadedMessages()"></app-messages>
+          <div class="no-message" *ngIf="getUnreadedMessages().length === 0">(aucun message)</div>
+          <button class="close-button" (click)="onClickOk()">
+            <span class="button-inner">Fermer</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </ion-content>

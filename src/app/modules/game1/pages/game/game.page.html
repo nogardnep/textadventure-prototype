@@ -11,28 +11,19 @@
           <span class="value">{{play.getTime()}}</span>
         </div>
         <ng-container *ngIf="play.getPlayer()">
-          <app-location [entity]="play.getPlayer().getParent()"></app-location>
+          <app-location [entity]="getLocation()"></app-location>
         </ng-container>
       </div>
 
       <div class="page-footer">
-        <div class="player-preview">
-          <div class="player-preview-inner">
-            <div class="player-button-container">
-              <button class="player-button" (click)="onClickPlayer()">Personnage</button>
-            </div>
-            <div class="actions">
-              <app-action-button [text]="'Lancer un sortilège'" (clickEvent)="''"></app-action-button>
-            </div>
-          </div>
-          <img class="decoration-image" src="assets/interface/images/decoration-2.png" alt="" />
-        </div>
-
-      </div>
-
-      <div *ngIf="!play">
-        <p>loading...</p>
+        <ng-container *ngIf="play.getPlayer()">
+          <app-player-preview [player]="getPlayer()"></app-player-preview>
+        </ng-container>
       </div>
     </ng-container>
+
+    <div class="loading" *ngIf="!play">
+      <p>chargement...</p>
+    </div>
   </div>
 </ion-content>

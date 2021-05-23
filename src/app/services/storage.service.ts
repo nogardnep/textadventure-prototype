@@ -6,14 +6,12 @@ import { Storage } from '@ionic/storage-angular';
   providedIn: 'root',
 })
 export class StorageService {
-  private _storage: Storage | null = null;
-
   constructor(private storage: Storage) {
-    this.storage.create().then(() => {});
+    this.storage.create();
   }
 
-  public set(key: string, value: any): Promise<any> {
-    return this.storage.set(key, value);
+  public async set(key: string, value: any): Promise<any> {
+    return await this.storage.set(key, value);
   }
 
   public async get(key: string): Promise<any> {
@@ -25,6 +23,6 @@ export class StorageService {
   }
 
   public clear() {
-    this.storage.clear()
+    this.storage.clear();
   }
 }

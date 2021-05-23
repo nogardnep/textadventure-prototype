@@ -1,0 +1,18 @@
+<div class="paragraphs">
+  <ng-container *ngFor="let paragraph of paragraphs">
+    <ng-container *ngIf="!paragraph.check || paragraph.check()">
+      <p class="paragraph" [ngClass]="paragraph.tag ? (paragraph.tag|kebabCase) : ''">
+        <img class="paragraph-image" *ngIf="paragraph.image" src="assets/{{paragraph.image.source}}" alt=""
+          height="200" />
+        <span class="paragraph-text" *ngIf="paragraph.text" [innerHTML]="paragraph.text"></span>
+        <ng-container *ngFor="let item of paragraph.items">
+          <span class="paragraph-item" [ngClass]="item.tag ? (item.tag|kebabCase) : ''">
+            <span class="paragraph-item-text" *ngIf="!item.entity" [innerHTML]="item.text"></span>
+            <button class="paragraph-interactive-text" *ngIf="item.entity" (click)="onClickItem(item.entity)"
+              [innerHTML]="item.text"></button>
+          </span>
+        </ng-container>
+      </p>
+    </ng-container>
+  </ng-container>
+</div>

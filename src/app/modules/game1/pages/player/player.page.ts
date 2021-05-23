@@ -2,8 +2,8 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GameService } from 'src/app/services/game.service';
-import { Entity } from 'src/game/core/models/Entity';
 import { Play } from 'src/game/core/models/Play';
+import { Character } from 'src/game/modules/base/models/entities/material/Character';
 
 @Component({
   selector: 'app-player-page',
@@ -13,11 +13,9 @@ import { Play } from 'src/game/core/models/Play';
 export class PlayerPage implements OnInit, OnDestroy {
   play: Play;
   private playSubscription: Subscription;
-  selection: Entity;
-  private selectionSubscription: Subscription;
 
   constructor(private gameService: GameService, private location: Location) {
-    gameService.loadLastPlay(); // TODO: temp
+    this.gameService.checkPlay();
   }
 
   ngOnInit(): void {
@@ -32,23 +30,14 @@ export class PlayerPage implements OnInit, OnDestroy {
     );
 
     this.gameService.emitPlay();
+  }
 
-    this.selectionSubscription = this.gameService.selectionSubject.subscribe(
-      (selection: Entity) => {
-        if (selection) {
-          this.selection = selection;
-        } else {
-          this.selection = null;
-        }
-      }
-    );
-
-    this.gameService.emitSelection();
+  getPlayer(): Character {
+    return this.play.getPlayer() as Character;
   }
 
   ngOnDestroy(): void {
     this.playSubscription.unsubscribe();
-    this.selectionSubscription.unsubscribe();
   }
 
   onClickBack(): void {

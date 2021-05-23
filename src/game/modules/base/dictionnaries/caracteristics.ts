@@ -1,6 +1,6 @@
 import { Name } from 'src/game/core/models/Name';
 
-export enum CaracteristicKey {
+export enum BaseCaracteristicKey {
   Life = 'life',
   Resistance = 'resistance',
   Force = 'force',
@@ -8,8 +8,8 @@ export enum CaracteristicKey {
   Magic = 'magic',
 }
 
-export const CARACTERISTIC_NAMES: {
-  [key in CaracteristicKey]: Name;
+export const BASE_CARACTERISTIC_NAMES: {
+  [key in BaseCaracteristicKey]: Name;
 } = {
   life: new Name('vitalité', {
     properNoun: true,

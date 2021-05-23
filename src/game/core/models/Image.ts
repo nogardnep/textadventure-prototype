@@ -1,3 +1,8 @@
+export const WINDOW_REFERENCE = {
+  width: 500,
+  height: 350
+}
+
 type Frames = {
   width: number;
   height: number;

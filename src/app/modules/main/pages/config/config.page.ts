@@ -1,4 +1,4 @@
-import { AudioLayerKey } from 'src/app/services/audio.service';
+import { AudioChannelKey,AUDIO_CHANNEL_NAMES } from 'src/app/services/audio.service';
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -7,6 +7,7 @@ import {
   LanguageKey,
   LANGUAGE_NAMES,
 } from 'src/game/core/dictionnaries/Language';
+import { InterfaceService } from 'src/app/services/interface.service';
 
 @Component({
   selector: 'app-config',
@@ -16,14 +17,16 @@ import {
 export class ConfigPage implements OnInit, OnDestroy {
   data: ConfigData;
   languageKeys = LanguageKey;
-  audioLayerKey = AudioLayerKey;
+  audioChannelKey = AudioChannelKey;
   languageNames = LANGUAGE_NAMES;
+  channelNames = AUDIO_CHANNEL_NAMES;
 
   private dataSubscription: Subscription;
 
   constructor(
     private configService: ConfigService,
-    private location: Location
+    private location: Location,
+    private interfaceService: InterfaceService
   ) {}
 
   ngOnInit() {
@@ -40,14 +43,11 @@ export class ConfigPage implements OnInit, OnDestroy {
   }
 
   onClickBack(): void {
+    this.interfaceService.onClickButton();
     this.location.back();
   }
 
   onValueChange(): void {
     this.configService.save();
   }
-
-  // onLanguageChange(): void {
-
-  // }
 }

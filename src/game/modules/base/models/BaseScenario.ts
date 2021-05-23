@@ -1,3 +1,4 @@
+import { BASE_SUBJECTS } from './../dictionnaries/subjects';
 import { ScenarioId } from 'src/game/core/models/Scenario';
 import { Action } from 'src/game/core/models/Action';
 import { Audio } from 'src/game/core/models/Audio';
@@ -16,6 +17,7 @@ import {
 import { BASE_DIRECTIONS } from './../dictionnaries/direction';
 import { Place } from './entities/material/Place';
 import { EnglishBaseGlossary } from './glossaries/EnglishBaseGlossary';
+import { Subject } from './Conversation';
 
 export abstract class BaseScenario extends Scenario {
   directions: { [key: string]: Direction } = {};
@@ -34,6 +36,8 @@ export abstract class BaseScenario extends Scenario {
       images?: { [key: string]: Image };
       audios?: { [key: string]: Audio };
       actions?: { [key: string]: Action };
+      subjects?: { [key: string]: Subject };
+      directions?: { [key: string]: Direction };
     }
   ) {
     super(id, params);
@@ -44,6 +48,7 @@ export abstract class BaseScenario extends Scenario {
       fr: new FrenchBaseGlossary(),
       en: new EnglishBaseGlossary(),
     });
+    this.setSubjects(BASE_SUBJECTS);
 
     if (params.actions) {
       this.setActions(params.actions);
@@ -51,6 +56,14 @@ export abstract class BaseScenario extends Scenario {
 
     if (params.glossaries) {
       this.setGlossaries(params.glossaries);
+    }
+
+    if (params.directions) {
+      this.setDirection(params.directions);
+    }
+
+    if (params.subjects) {
+      this.setSubjects(params.subjects);
     }
   }
 

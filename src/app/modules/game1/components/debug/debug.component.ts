@@ -8,14 +8,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   templateUrl: './debug.component.html',
   styleUrls: ['./debug.component.scss'],
 })
-export class DebugComponent implements OnInit , OnDestroy {
+export class DebugComponent implements OnInit, OnDestroy {
   play: Play;
 
   private playSubscription: Subscription;
 
-  constructor(private gameService: GameService) {
-    this.gameService.loadLastPlay();
-  }
+  constructor(private gameService: GameService) {}
 
   ngOnInit() {
     this.playSubscription = this.gameService.playSubject.subscribe(

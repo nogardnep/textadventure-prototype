@@ -1,102 +1,161 @@
 import { Injectable } from '@angular/core';
-import { Howl, Howler } from 'howler';
 import { Audio } from 'src/game/core/models/Audio';
-// import { NativeAudio } from '@ionic-native/native-audio/ngx';
-// import { Media } from '@ionic-native/media/ngx';
+import { Utils } from 'src/game/core/Utils';
+import * as Tone from 'tone';
 
 const FADE_DURATION = 1000;
 
-type SoundWrapper = {
-  id: number;
-  howl: Howl;
-  audio: Audio;
-  fadingOut: boolean;
-};
+export enum AudioChannelKey {
+  Music = 'music',
+  Interface = 'interface',
+  Effects = 'effects',
+}
 
 export enum AudioLayerKey {
   Music = 'music',
-  Ambiance = 'ambiance',
-  Effects = 'effects',
   Interface = 'interface',
+  BriefEffects = 'briefEffects',
+  LocationAmbiance = 'locationAmbiance',
 }
+
+export const AUDIO_CHANNEL_NAMES: {
+  [key in AudioChannelKey]: string;
+} = {
+  music: 'musique',
+  effects: 'effets',
+  interface: 'interface',
+};
+
+type SoundWrapper = {
+  id: string;
+  player: Tone.Player;
+};
+
+type AudioChannel = {
+  toneChannel: Tone.Channel;
+  toneGain: Tone.Gain;
+  volume: number;
+};
+
+type AudioLayer = {
+  channel: AudioChannel;
+  sounds: SoundWrapper[];
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class AudioService {
-  private layers: {
-    [key in AudioLayerKey]: { volume: number; sounds: SoundWrapper[] };
-  } = {
-    ambiance: {
-      volume: 1,
-      sounds: [],
-    },
-    effects: {
-      volume: 1,
-      sounds: [],
-    },
-    music: {
-      volume: 1,
-      sounds: [],
-    },
-    interface: {
-      volume: 1,
-      sounds: [],
-    },
-  };
+  private layers: { [key: string]: AudioLayer };
+  private channels: { [key: string]: AudioChannel };
 
-  constructor() {}
+  constructor() {
+    this.channels = {};
+    this.layers = {};
 
-  stopAllSounds() {
+    for (let key in AudioChannelKey) {
+      this.addChannel(AudioChannelKey[key]);
+    }
+
+    this.addLayer(AudioLayerKey.Music, AudioChannelKey.Music);
+    this.addLayer(AudioLayerKey.Interface, AudioChannelKey.Interface);
+    this.addLayer(AudioLayerKey.BriefEffects, AudioChannelKey.Effects);
+    this.addLayer(AudioLayerKey.LocationAmbiance, AudioChannelKey.Effects);
+
+    document.addEventListener('click', this.initAudio);
+  }
+
+  stopAllSounds(): void {
     for (let key in this.layers) {
       this.clearLayer(key as AudioLayerKey);
     }
   }
 
-  setMuted(muted: boolean) {
-    for (let key in this.layers) {
-      this.layers[key].sounds.forEach((item) => {
-        item.howl.mute(muted);
-      });
+  setMuted(muted: boolean): void {
+    for (let key in this.channels) {
+      this.channels[key].toneChannel.mute = muted;
     }
   }
 
-  changeLayerVolume(layerKey: AudioLayerKey, volume: number): void {
-    const layer = this.layers[layerKey];
-    layer.volume = volume;
-    layer.sounds.forEach((item) => {
-      item.howl.volume(item.audio.volume * volume);
-    });
+  changeChannelVolume(channelKey: AudioChannelKey, volume: number): void {
+    const channel = this.channels[channelKey];
+    channel.volume = volume;
+    channel.toneGain.gain.rampTo(volume, 0.01);
   }
 
   clearLayer(layerKey: AudioLayerKey): void {
-    this.layers[layerKey].sounds.forEach((item) => {
-      if (!item.fadingOut) {
-        item.howl.fade(item.audio.volume, 0, FADE_DURATION);
-        item.fadingOut = true;
+    const channel = this.layers[layerKey];
 
-        setTimeout(() => {
-          item.howl.stop();
-        }, FADE_DURATION);
+    this.layers[layerKey].sounds.forEach((item) => {
+      item.player.stop();
+    });
+  }
+
+  play(
+    audio: Audio,
+    layerKey: AudioLayerKey,
+    loop: boolean,
+    fade = false
+  ): void {
+    const layer = this.layers[layerKey];
+    const id = Utils.generateId();
+
+    const player = new Tone.Player({
+      url: 'assets/' + audio.source,
+      volume: this.convertToDecibels(audio.volume),
+      loop,
+      autostart: true,
+      onload: () => {},
+      onstop: () => {
+        this.remove(id, layerKey);
+      },
+    }).connect(layer.channel.toneChannel);
+
+    if (fade) {
+      player.fadeIn = FADE_DURATION / 1000;
+      player.fadeOut = FADE_DURATION / 1000;
+    }
+
+    this.layers[layerKey].sounds.push({ id, player });
+  }
+
+  private remove(id: string, layerKey: AudioLayerKey): void {
+    this.layers[layerKey].sounds.forEach((item, index) => {
+      if (item.id === id) {
+        this.layers[layerKey].sounds.splice(index, 1);
       }
     });
   }
 
-  playInLayer(audio: Audio, layerKey: AudioLayerKey, looping: boolean) {
-    const howl = new Howl({
-      src: ['assets/' + audio.source],
-      volume: audio.volume * this.layers[layerKey].volume,
-      loop: looping,
-    });
+  private addLayer(layerKey: AudioLayerKey, channelKey: AudioChannelKey): void {
+    this.layers[layerKey] = {
+      channel: this.channels[channelKey],
+      sounds: [],
+    };
+  }
 
-    const id = howl.play();
-    howl.fade(0, audio.volume, FADE_DURATION);
+  private addChannel(channelKey: AudioChannelKey): void {
+    const toneChannel = new Tone.Channel();
+    const toneGain = new Tone.Gain(1).toDestination();
+    toneChannel.connect(toneGain);
 
-    this.layers.ambiance.sounds.push({
-      id,
-      howl,
-      audio,
-      fadingOut: false,
-    });
+    this.channels[channelKey] = {
+      toneChannel,
+      volume: 1,
+      toneGain,
+    };
+  }
+
+  private initAudio = () => {
+    Tone.start();
+    document.removeEventListener('click', this.initAudio);
+  };
+
+  private convertToDecibels(rate: number): number {
+    return 20 * Math.log(rate);
+  }
+
+  private convertToRate(decibels: number): number {
+    return Math.exp(decibels / 20);
   }
 }

@@ -1,4 +1,5 @@
 import { Name } from 'src/game/core/models/Name';
+import { ParagraphTag } from 'src/game/core/models/Paragraph';
 import { DirectionKeys } from 'src/game/modules/base/dictionnaries/direction';
 import { Place } from 'src/game/modules/base/models/entities/material/Place';
 import { TheFortress } from '../../TheFortress';
@@ -11,9 +12,11 @@ export class GreatEntry extends Place {
   getInteriorDescription() {
     return [
       {
+        tag: ParagraphTag.Description,
         text: 'Une place surélevée.',
       },
       {
+        tag: ParagraphTag.Description,
         items: [
           { text: "Là est l'entrée de " },
           {
@@ -26,9 +29,13 @@ export class GreatEntry extends Place {
         ],
       },
       {
-        text: 'Une très haute porte conduit à l\'intérieur.',
+        tag: ParagraphTag.Description,
+        text: "Une très haute porte conduit à l'intérieur.",
       },
-      { text: "(à suivre...)" },
+      {
+        tag: ParagraphTag.Information,
+        text: '(à suivre...)',
+      },
     ];
   }
 

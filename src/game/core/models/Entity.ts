@@ -1,4 +1,5 @@
 import { GameManager } from 'src/game/core/GameManager';
+import { Utils } from '../Utils';
 import { Choice } from './Choice';
 import { Name } from './Name';
 import { Paragraph } from './Paragraph';
@@ -22,7 +23,7 @@ export class Entity implements StoredEntity {
     // this.onGetPlay = () => {
     //   return play;
     // };
-    this.id = Math.floor(Math.random() * 1000).toString();
+    this.id = Utils.generateId();
     this.type = this.constructor.name;
   }
 
@@ -56,7 +57,11 @@ export class Entity implements StoredEntity {
   }
 
   getName(): Name {
-    return new Name(this.name);
+    if (this.name) {
+      return new Name(this.name);
+    } else {
+      return null;
+    }
   }
 
   getDisplayedActionKeys(): string[] {
@@ -93,7 +98,7 @@ export class Entity implements StoredEntity {
 
   inform(paragraphs: Paragraph[], choices?: Choice[]): void {
     if (this.equals(this.getPlay().getPlayer())) {
-      this.getPlay().inform(paragraphs, choices);
+      this.getPlay().sendMessage(paragraphs, choices);
     }
   }
 }

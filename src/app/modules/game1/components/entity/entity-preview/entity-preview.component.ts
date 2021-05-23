@@ -7,6 +7,7 @@ import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { Thing } from 'src/game/modules/base/models/entities/material/Thing';
 import { WearableObject } from 'src/game/modules/base/models/entities/material/thing/object/WearableObject';
+import { InterfaceService } from 'src/app/services/interface.service';
 
 @Component({
   selector: 'app-entity-preview',
@@ -16,18 +17,19 @@ import { WearableObject } from 'src/game/modules/base/models/entities/material/t
 export class EntityPreviewComponent implements OnInit {
   @Input() entity: BaseEntity;
 
-  constructor(private gameService: GameService) {}
+  constructor(private gameService: GameService,private interfaceService:InterfaceService) {}
 
   ngOnInit() {}
 
   onClickEntity(): void {
-    this.gameService.setSelection(this.entity);
+    this.interfaceService.onClickButton();
+    this.interfaceService.setSelection(this.entity);
   }
 
   isSelected(): boolean {
     return (
-      this.gameService.getSelection() &&
-      this.gameService.getSelection().equals(this.entity)
+      this.interfaceService.getSelection() &&
+      this.interfaceService.getSelection().equals(this.entity)
     );
   }
 

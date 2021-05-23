@@ -2,7 +2,7 @@ import { GameManager } from 'src/game/core/GameManager';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { TextManager } from '../TextManager';
 import { Entity } from './Entity';
-import { MessageTag } from './Paragraph';
+import { ParagraphTag } from './Paragraph';
 import { Play } from './Play';
 
 // TODO: good?
@@ -85,12 +85,12 @@ export abstract class Action {
 
   protected report(report: ActionReport, author: Entity, args: any[]) {
     if ((author as Character).isThePlayer() && report.message) {
-      this.getPlay().inform([
+      this.getPlay().sendMessage([
         {
           text: report.message,
           tag: report.success
-            ? MessageTag.ActionSuccess
-            : MessageTag.ActionFailure,
+            ? ParagraphTag.ActionSuccess
+            : ParagraphTag.ActionFailure,
         },
       ]);
     }

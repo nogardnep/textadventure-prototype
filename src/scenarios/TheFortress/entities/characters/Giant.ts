@@ -1,8 +1,9 @@
-import { Image } from 'src/game/core/models/Image';
-import { TheFortress } from './../../TheFortress';
 import { Name } from 'src/game/core/models/Name';
+import { ParagraphTag } from 'src/game/core/models/Paragraph';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
-import { MessageTag } from 'src/game/core/models/Paragraph';
+import { BASE_SUBJECTS } from './../../../../game/modules/base/dictionnaries/subjects';
+import { SUBJECTS } from './../../subjects';
+import { TheFortress } from './../../TheFortress';
 
 export class Giant extends Character {
   init() {
@@ -24,18 +25,21 @@ export class Giant extends Character {
   getPreviewDescription() {
     return [
       {
+        tag: ParagraphTag.Description,
         text: 'assis sur le pont',
         check: () => {
           return this.isOnTheBridge() && !this.dead;
         },
       },
       {
+        tag: ParagraphTag.Description,
         text: 'ne vous quitte pas des yeux',
         check: () => {
           return this.isOnTheBridge() && !this.dead;
         },
       },
       {
+        tag: ParagraphTag.Description,
         text: 'gît sur le pont',
         check: () => {
           return this.isOnTheBridge() && this.dead;
@@ -44,31 +48,49 @@ export class Giant extends Character {
     ];
   }
 
-  talkedBy(author: Character) {
-    this.getPlay().inform([
+  getExteriorDescription() {
+    return [
       {
-        text: "L'homme gigantesque parle d'une voix rude&nbsp;:",
-        tag: MessageTag.Event,
+        tag: ParagraphTag.Description,
+        text: "Un grand homme hirsute, vêtu de peaux. Des chaînes à ses mains l'attachent au pont.",
       },
       {
-        text:
-          "- J'ai été enchaîné ici par le sorcier " +
-          this.getSorcerersName() +
-          ". Je dois garder ce pont. La liberté m'a été promise si je m'acquitte pour trente ans de cette charge.",
-        tag: MessageTag.Speech,
+        tag: ParagraphTag.Description,
+        text: 'Son corps meutri gît sur le sol.',
+        check: () => {
+          return this.dead;
+        },
       },
-    ]);
+    ];
+  }
 
+  getConversationResponses() {
     return {
-      success: true,
+      [BASE_SUBJECTS.himself.id]: {
+        onAsked: (author: Character) => {
+          console.log(author.knownSubjects);
+
+          this.say(
+            "J'ai été enchaîné ici par le sorcier " +
+              this.getSorcerersName() +
+              ". Je dois garder ce pont. La liberté m'a été promise si je m'acquitte pour trente ans de cette charge."
+          );
+          author.addKnownSubject(TheFortress.subjects.azkarar);
+        },
+      },
+      [SUBJECTS.azkarar.id]: {
+        onAsked: (author: Character) => {
+          this.say(this.getSorcerersName() + 'est mon maître.');
+        },
+      },
     };
   }
 
   attackedBy(author: Character) {
-    this.getPlay().inform([
+    this.getPlay().sendMessage([
       {
-        text: "Le combat s'engage. Le géant succombe sous vos coups.",
-        tag: MessageTag.Event,
+        text: "Le combat s'engage. Le géant succombe.",
+        tag: ParagraphTag.Event,
       },
     ]);
 
@@ -77,20 +99,6 @@ export class Giant extends Character {
     return {
       success: true,
     };
-  }
-
-  getExteriorDescription() {
-    return [
-      {
-        text: "Un grand homme hirsute, vêtu de peaux. Des chaînes à ses mains l'attachent au pont.",
-      },
-      {
-        text: 'Son corps meutri gît sur le sol.',
-        check: () => {
-          return this.dead;
-        },
-      },
-    ];
   }
 
   private getSorcerersName(): string {

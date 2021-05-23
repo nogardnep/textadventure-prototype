@@ -5,7 +5,9 @@ import { GameService, MessageWrapper } from 'src/app/services/game.service';
 import { Entity } from 'src/game/core/models/Entity';
 import { Narration } from 'src/game/core/models/Narration';
 import { Play } from 'src/game/core/models/Play';
+import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
+import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 
 @Component({
   selector: 'app-game',
@@ -17,9 +19,9 @@ export class GamePage implements OnInit, OnDestroy {
   messages: MessageWrapper[];
   private playSubscription: Subscription;
   private messagesSubscription: Subscription;
+  stream: BaseEntity[] = [];
 
   constructor(private gameService: GameService, private router: Router) {
-    this.gameService.loadLastPlay();
     // GameController.startNewPlay(this.gameService.getCurrentScenario())
     // GameController.getPlay().getScenario().start()
   }
@@ -29,6 +31,7 @@ export class GamePage implements OnInit, OnDestroy {
       (play: Play) => {
         if (play) {
           this.play = play;
+          this.stream.push((play.getPlayer() as Character).getParent());
         } else {
           this.play = null;
         }

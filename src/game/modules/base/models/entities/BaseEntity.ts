@@ -1,13 +1,19 @@
 import { Audio } from 'src/game/core/models/Audio';
 import { Entity } from 'src/game/core/models/Entity';
 import { Image } from 'src/game/core/models/Image';
-import { Paragraph } from 'src/game/core/models/Paragraph';
+import { Paragraph, ParagraphTag } from 'src/game/core/models/Paragraph';
 import { BaseGlossaryKey } from '../BaseGlossary';
+
+export type CaracterticModifier = {
+  value: number;
+  check?: () => boolean;
+};
 
 export class BaseEntity extends Entity {
   getExteriorDescription(): Paragraph[] {
     return [
       {
+        tag: ParagraphTag.Description,
         text: this.getPlay().getPhrase(
           BaseGlossaryKey.NothingToSayAboutEntity,
           [this]
@@ -19,6 +25,7 @@ export class BaseEntity extends Entity {
   getInteriorDescription(): Paragraph[] {
     return [
       {
+        tag: ParagraphTag.Description,
         text: this.getPlay().getPhrase(
           BaseGlossaryKey.NothingToSayAboutEntity,
           [this]
@@ -41,5 +48,9 @@ export class BaseEntity extends Entity {
 
   getFullImages(): { image: Image; check?: () => boolean }[] {
     return [];
+  }
+
+  getModifiers(): { [key: string]: CaracterticModifier } {
+    return {};
   }
 }

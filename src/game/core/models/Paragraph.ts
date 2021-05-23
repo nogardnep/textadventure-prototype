@@ -1,18 +1,28 @@
 import { Entity } from 'src/game/core/models/Entity';
 import { Image } from './Image';
 
-export enum MessageTag {
+export enum ParagraphTag {
   Warning = 'warning',
+  Information = 'information',
+  Description = 'description',
   Event = 'event',
   Speech = 'speech',
   ActionSuccess = 'actionSuccess',
   ActionFailure = 'actionFailure',
 }
 
+export enum ParagraphItemTag {
+  Speacher = 'speacher',
+}
+
 export type Paragraph = {
   image?: Image;
   text?: string;
-  items?: { text: string; entity?: Entity }[];
-  tag?: MessageTag;
+  items?: {
+    text: string;
+    entity?: Entity;
+    tag?: ParagraphItemTag;
+  }[];
+  tag: ParagraphTag;
   check?: () => boolean;
 };

@@ -8,6 +8,25 @@
 }
 
 .entity-full {
+  .entity-window-container {
+    background-image: url($imagePath + "/texture-1.png");
+    background-size: 100% auto;
+    text-align: center;
+
+    .entity-window-canvas {
+      $shadowWith: 3px;
+      margin: 40px 0 -5px;
+      background-color: rgba(0, 0, 0, 0.8);
+      // width: 100%;
+      // height: 300px;
+      box-shadow: 0 0 0 $shadowWith rgba(0, 0, 0, 0.6);
+    }
+
+    &.empty {
+      display: none;
+    }
+  }
+
   .entity-full-name-container {
     $backgroundColor: rgba(255, 255, 255, 0.8);
 
@@ -43,13 +62,14 @@
   }
 
   .entity-full-description {
-    box-shadow: inset 1px 5px 5px 0 rgba(0, 0, 0, 0.5);
-    position: relative;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.7));
-    padding: 10px 0 10px;
+    background-image: url($imagePath + "/texture-1.png");
+    background-size: 100% auto;
 
     .paragraphs {
-      padding: 5px;
+      box-shadow: inset 1px 5px 5px 0 rgba(0, 0, 0, 0.5);
+      position: relative;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.7));
+      padding: 10px 5px 10px;
 
       .paragraph {
         margin: 0 0 5px;
@@ -72,6 +92,28 @@
       @include fill();
       z-index: -10;
       background-image: url($imagePath + "/texture-2.png");
+    }
+  }
+
+  .caracteristic-modifier-list {
+    padding: 0 0 0 10px;
+    margin: 0 0 10px;
+
+    .caracteristic-modifier-list-item {
+      font-size: 0.9em;
+      list-style: none;
+
+      .caracteristic-modifier-value {
+        margin: 0 0 0 5px;
+      }
+
+      &.bonus {
+        color: rgb(8, 168, 8);
+      }
+
+      &.malus {
+        color: rgb(202, 5, 5);
+      }
     }
   }
 
@@ -157,5 +199,6 @@
     background-size: 100% 100%;
     padding: 0 5px;
     font-size: 2em;
+    line-height: 1em;
   }
 }

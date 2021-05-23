@@ -2,8 +2,13 @@
   <app-main-menu></app-main-menu>
   <div *ngIf="play">
     <div>Time: {{play.getTime()}}</div>
-    <app-location *ngIf="!getFirstUnreadedMessage()" [entity]="getLocation()"></app-location>
-    <app-messages *ngIf="getFirstUnreadedMessage()" [messages]="[getFirstUnreadedMessage()]"></app-messages>
+    <div>
+      <ng-container *ngFor="let item of stream">
+        <app-location [entity]="item"></app-location>
+      </ng-container>
+    </div>
+    <!-- <app-location *ngIf="!getFirstUnreadedMessage()" [entity]="getLocation()"></app-location> -->
+    <!-- <app-messages *ngIf="getFirstUnreadedMessage()" [messages]="[getFirstUnreadedMessage()]"></app-messages> -->
   </div>
 
 </ion-content>

@@ -1,12 +1,15 @@
 import { Gender } from 'src/game/core/dictionnaries/Gender';
 import { ActionReport } from 'src/game/core/models/Action';
+import { Choice } from 'src/game/core/models/Choice';
 import { Entity, EntityId, EntityType } from 'src/game/core/models/Entity';
+import { ParagraphItemTag, ParagraphTag } from 'src/game/core/models/Paragraph';
 import { Play } from 'src/game/core/models/Play';
 import { BaseActionKeys } from '../../../dictionnaries/actions';
-import { Subject } from '../../Subject';
+import { BASE_SUBJECTS } from '../../../dictionnaries/subjects';
+import { ConversationResponse, Subject, SubjectId } from '../../Conversation';
 import { Spell } from '../immaterial/Spell';
 import { MaterialEntity } from '../MaterialEntity';
-import { CaracteristicKey } from './../../../dictionnaries/caracteristics';
+import { BaseCaracteristicKey } from './../../../dictionnaries/caracteristics';
 import { Thing } from './Thing';
 import { HoldableObject } from './thing/object/HoldableObject';
 import { WearableObject } from './thing/object/WearableObject';
@@ -17,12 +20,17 @@ export class Character extends MaterialEntity {
   dead = false;
   hands = 2;
   spellsId: EntityId[] = [];
+  knownSubjects: SubjectId[] = [];
 
   constructor(play: Play) {
     super(play);
 
-    for (let key in CaracteristicKey) {
-      this.caracteristics[CaracteristicKey[key]] = {
+    for (let key in BASE_SUBJECTS) {
+      this.knownSubjects.push(key);
+    }
+
+    for (let key in BaseCaracteristicKey) {
+      this.caracteristics[BaseCaracteristicKey[key]] = {
         current: 10,
         max: 10,
         min: 0,
@@ -35,16 +43,104 @@ export class Character extends MaterialEntity {
     this.save();
   }
 
+  addKnownSubject(subject: Subject) {
+    if (!this.knowsSubject(subject)) {
+      this.knownSubjects.push(subject.id);
+      this.save();
+    }
+  }
+
+  knowsSubject(subject: Subject): boolean {
+    let known = false;
+
+    this.knownSubjects.forEach((item) => {
+      if (item === subject.id) {
+        known = true;
+      }
+    });
+
+    return known;
+  }
+
+  say(text: string) {
+    this.getPlay().sendMessage([
+      {
+        items: [
+          {
+            text: this.getName().printWithDefiniteArticle(true) + '&nbsp;- ',
+            tag: ParagraphItemTag.Speacher,
+          },
+          { text: text },
+        ],
+        tag: ParagraphTag.Speech,
+      },
+    ]);
+  }
+
+  talkedBy(author: Character) {
+    this.openConversation(author);
+
+    return {
+      success: true,
+    };
+  }
+
+  openConversation(author: Character): void {
+    const choices: Choice[] = [];
+
+    author.knownSubjects.forEach((item) => {
+      const response = this.getConversationResponses()[item];
+
+      if (response) {
+        choices.push({
+          text: this.getPlay().getSubject(item).getTitle(),
+          proceed: () => {
+            response.onAsked(author);
+            this.openConversation(author);
+          },
+          check: () => {
+            return !response.check || response.check(author);
+          },
+        });
+      }
+    });
+
+    this.getPlay().sendMessage(
+      [
+        {
+          tag: ParagraphTag.Information,
+          text:
+            'Interroger ' +
+            this.getName().printWithDefiniteArticle() +
+            ' sur&nbsp;:',
+          check: () => {
+            return choices.length > 0;
+          },
+        },
+        {
+          tag: ParagraphTag.Information,
+          text:
+            this.getName().printWithDefiniteArticle(true) +
+            " n'a rien à vous dire.",
+          check: () => {
+            return choices.length === 0;
+          },
+        },
+      ],
+      choices
+    );
+  }
+
   getDisplayedActionKeys() {
     return super
       .getDisplayedActionKeys()
       .concat([BaseActionKeys.Attacking, BaseActionKeys.Talking]);
   }
 
-  getDialogFor(subject: Subject) {}
+  getDialogFor(subject: ConversationResponse) {}
 
-  getConversationSubjects(): Subject[] {
-    return [];
+  getConversationResponses(): { [key: string]: ConversationResponse } {
+    return {};
   }
 
   getGender(): Gender {
@@ -188,36 +284,6 @@ export class Character extends MaterialEntity {
     }
 
     return response;
-  }
-
-  talkedBy(target: Character): ActionReport {
-    // this.getPlay().inform(
-    //   [{ text: { fr: 'Que voulez vous demander ?' } }],
-    //   [
-    //     {
-    //       text: { fr: 'a' },
-    //       proceed: () => {
-    //         this.getPlay().inform(
-    //           [{ text: { fr: 'humhum' } }],
-    //           [
-    //             {
-    //               text: { fr: 'continuer' },
-    //               proceed: () => {
-    //                 this.talkedBy(target);
-    //               },
-    //             },
-    //           ]
-    //         );
-    //       },
-    //     },
-    //     {
-    //       text: { fr: 'arrêter' },
-    //       proceed: () => {},
-    //     },
-    //   ]
-    // );
-
-    return { success: true };
   }
 
   attackedBy(target: Character): ActionReport {

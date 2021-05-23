@@ -4,6 +4,7 @@ import { Name } from 'src/game/core/models/Name';
 import { DirectionKeys } from 'src/game/modules/base/dictionnaries/direction';
 import { Place } from 'src/game/modules/base/models/entities/material/Place';
 import { TheFortress } from '../../TheFortress';
+import { ParagraphTag } from 'src/game/core/models/Paragraph';
 
 export class Crevasse extends Place {
   getName() {
@@ -13,8 +14,11 @@ export class Crevasse extends Place {
   getInteriorDescription() {
     return [
       {
+        tag: ParagraphTag.Description,
         items: [
-          { text: 'Bas sous le pont de pierre qui relie le plateau à ' },
+          {
+            text: 'Bas sous le pont de pierre qui relie le plateau à ',
+          },
           {
             text: 'la forteresse',
             entity: this.getPlay().getFirstEntityOfType(
@@ -25,6 +29,7 @@ export class Crevasse extends Place {
         ],
       },
       {
+        tag: ParagraphTag.Description,
         items: [
           {
             text: 'Un torrent',
@@ -35,7 +40,10 @@ export class Crevasse extends Place {
           { text: 'longe la falaise où elle est perchée.' },
         ],
       },
-      { text: "De l'autre côté semle se trouver l'entrée d'une caverne." },
+      {
+        tag: ParagraphTag.Description,
+        text: "De l'autre côté semle se trouver l'entrée d'une caverne.",
+      },
     ];
   }
 
@@ -43,14 +51,15 @@ export class Crevasse extends Place {
     let success = false;
 
     if (spell.inheritsFrom(TheFortress.entityConstructors.ControlSpell.name)) {
-      this.getPlay().inform([
+      this.getPlay().sendMessage([
         {
-          text:
-            'Vous formez un milieu du torrent un passage où les eaux ne peuvent plus se déverser.',
+          tag: ParagraphTag.Event,
+          text: 'Vous formez un milieu du torrent un passage où les eaux ne peuvent plus se déverser.',
         },
       ]);
-      this.getPlay().inform([
+      this.getPlay().sendMessage([
         {
+          tag: ParagraphTag.Event,
           text: "Vous rejoignez ainsi l'autre rive.",
         },
       ]);
