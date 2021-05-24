@@ -32,12 +32,12 @@ export class PlayerPage implements OnInit, OnDestroy {
     this.gameService.emitPlay();
   }
 
-  getPlayer(): Character {
-    return this.play.getPlayer() as Character;
-  }
-
   ngOnDestroy(): void {
     this.playSubscription.unsubscribe();
+  }
+
+  getPlayer(): Character {
+    return this.play.getPlayer() as Character;
   }
 
   onClickBack(): void {

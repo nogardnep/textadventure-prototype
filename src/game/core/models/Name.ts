@@ -150,7 +150,7 @@ export class Name {
         preposition = 'à la ';
       } else {
         preposition = 'au ';
-    }
+      }
     }
 
     return preposition;
@@ -200,6 +200,42 @@ export class Name {
     }
 
     return article;
+  }
+
+  getObjectComplement(forPlural?: boolean): string {
+    let complement: string;
+
+    if (this.props.plural || (forPlural && !this.props.invariable)) {
+      if (this.props.feminin) {
+        complement = 'elles';
+      } else {
+        complement = 'eux';
+      }
+    } else if (this.props.feminin) {
+      complement = 'elle';
+    } else {
+      complement = 'lui';
+    }
+
+    return complement;
+  }
+
+  getPronoun(forPlural?: boolean): string {
+    let pronoun: string;
+
+    if (this.props.plural || (forPlural && !this.props.invariable)) {
+      if (this.props.feminin) {
+        pronoun = 'elles';
+      } else {
+        pronoun = 'ils';
+      }
+    } else if (this.props.feminin) {
+      pronoun = 'elle';
+    } else {
+      pronoun = 'il';
+    }
+
+    return pronoun;
   }
 
   private printWithCaptial(

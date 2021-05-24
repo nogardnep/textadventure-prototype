@@ -7,7 +7,7 @@ export class Torrent extends Scenary {
     return new Name('torrent');
   }
 
-  getExteriorDescription() {
+  getFullDescription() {
     return [
       {
         tag: ParagraphTag.Description,

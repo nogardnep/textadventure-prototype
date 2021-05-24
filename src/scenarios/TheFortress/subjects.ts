@@ -1,10 +1,12 @@
-import { Subject } from 'src/game/modules/base/models/Conversation';
+import { Name } from 'src/game/core/models/Name';
 
 export const SUBJECTS = {
   azkarar: {
     id: 'azkarar',
-    getTitle: () => {
-      return 'Azkarar';
+    getName: () => {
+      return new Name('Azkarar', {
+        properNoun: true,
+      });
     },
   },
 };

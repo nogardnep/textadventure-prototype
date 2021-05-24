@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { InterfaceService } from 'src/app/services/interface.service';
+import {
+  ButtonType,
+  InterfaceService,
+} from 'src/app/services/interface.service';
 
 @Component({
   selector: 'app-action-button',
@@ -9,13 +12,14 @@ import { InterfaceService } from 'src/app/services/interface.service';
 export class ActionButtonComponent implements OnInit {
   @Output() clickEvent = new EventEmitter();
   @Input() text: string;
+  @Input() disabled: boolean;
 
   constructor(private interfaceService: InterfaceService) {}
 
   ngOnInit() {}
 
   onClick() {
-    this.interfaceService.onClickButton();
-    this.clickEvent.emit(null);
+    this.interfaceService.onClickButton(ButtonType.Simple);
+    this.clickEvent.emit();
   }
 }

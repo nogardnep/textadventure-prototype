@@ -1,11 +1,12 @@
-import { MessagesComponent } from './components/messages/messages.component';
-import { ParagraphsComponent } from './components/paragraphs/paragraphs.component';
-import { LocationComponent } from './components/location/location.component';
-import { ConnectionsComponent } from './components/connections/connections.component';
-import { ChoicesComponent } from './components/choices/choices.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
+import { ChoicesComponent } from './components/choices/choices.component';
+import { ConnectionsComponent } from './components/connections/connections.component';
+import { LocationComponent } from './components/location/location.component';
+import { MessagesComponent } from './components/messages/messages.component';
+import { ParagraphsComponent } from './components/paragraphs/paragraphs.component';
 import { Game2RoutingModule } from './game2-routing.module';
 import { GamePage } from './pages/game/game.page';
 
@@ -16,7 +17,7 @@ import { GamePage } from './pages/game/game.page';
     CommonModule,
     // CommonModule,
     // FormsModule,
-    // IonicModule,
+    IonicModule.forRoot(),
   ],
   declarations: [
     GamePage,

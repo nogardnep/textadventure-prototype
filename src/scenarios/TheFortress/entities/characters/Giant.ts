@@ -1,8 +1,6 @@
 import { Name } from 'src/game/core/models/Name';
 import { ParagraphTag } from 'src/game/core/models/Paragraph';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
-import { BASE_SUBJECTS } from './../../../../game/modules/base/dictionnaries/subjects';
-import { SUBJECTS } from './../../subjects';
 import { TheFortress } from './../../TheFortress';
 
 export class Giant extends Character {
@@ -14,33 +12,25 @@ export class Giant extends Character {
     return new Name('géant');
   }
 
-  getPreviewImage() {
-    return TheFortress.images.giant;
-  }
-
-  getFullImages() {
-    return [{ image: TheFortress.images.giant }];
-  }
-
   getPreviewDescription() {
     return [
       {
         tag: ParagraphTag.Description,
-        text: 'assis sur le pont',
+        text: 'assis',
         check: () => {
           return this.isOnTheBridge() && !this.dead;
         },
       },
       {
         tag: ParagraphTag.Description,
-        text: 'ne vous quitte pas des yeux',
+        text: 'ne vous quittant pas des yeux',
         check: () => {
           return this.isOnTheBridge() && !this.dead;
         },
       },
       {
         tag: ParagraphTag.Description,
-        text: 'gît sur le pont',
+        text: 'gîsant là',
         check: () => {
           return this.isOnTheBridge() && this.dead;
         },
@@ -48,7 +38,7 @@ export class Giant extends Character {
     ];
   }
 
-  getExteriorDescription() {
+  getFullDescription() {
     return [
       {
         tag: ParagraphTag.Description,
@@ -64,35 +54,43 @@ export class Giant extends Character {
     ];
   }
 
-  getConversationResponses() {
+  getConversationResponses(author: Character) {
     return {
-      [BASE_SUBJECTS.himself.id]: {
+      [this.getType()]: {
+        text:
+          "J'ai été enchaîné ici par le sorcier " +
+          this.getSorcerersName() +
+          ". Je dois garder ce pont. La liberté m'a été promise si je m'acquitte pour trente ans de cette charge.",
         onAsked: (author: Character) => {
-          console.log(author.knownSubjects);
-
-          this.say(
-            "J'ai été enchaîné ici par le sorcier " +
-              this.getSorcerersName() +
-              ". Je dois garder ce pont. La liberté m'a été promise si je m'acquitte pour trente ans de cette charge."
-          );
-          author.addKnownSubject(TheFortress.subjects.azkarar);
+          author.addKnownEntity(TheFortress.entityConstructors.Azkarar.name);
         },
       },
-      [SUBJECTS.azkarar.id]: {
-        onAsked: (author: Character) => {
-          this.say(this.getSorcerersName() + 'est mon maître.');
-        },
+      [TheFortress.entityConstructors.Azkarar.name]: {
+        text:
+          this.getSorcerersName() +
+          " est le seigneur de ce domaine. Personne n'est autorisé à y pénéter sans sa permission.",
       },
     };
   }
 
   attackedBy(author: Character) {
-    this.getPlay().sendMessage([
-      {
-        text: "Le combat s'engage. Le géant succombe.",
-        tag: ParagraphTag.Event,
-      },
-    ]);
+    this.getPlay().sendMessage(
+      [
+        {
+          text: "Un furieux combat s'engage.",
+          tag: ParagraphTag.Event,
+        },
+      ],
+      [],
+      () => {
+        this.getPlay().sendMessage([
+          {
+            text: 'Le géant succombe.',
+            tag: ParagraphTag.Event,
+          },
+        ]);
+      }
+    );
 
     this.kill();
 
@@ -111,7 +109,7 @@ export class Giant extends Character {
   private isOnTheBridge(): boolean {
     return this.getParent().equals(
       this.getPlay().getFirstEntityOfType(
-        TheFortress.entityConstructors.Plateau.name
+        TheFortress.entityConstructors.Bridge.name
       )
     );
   }

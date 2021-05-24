@@ -11,6 +11,7 @@ import { Taking } from '../models/actions/Taking';
 import { Attacking } from '../models/actions/Attacking';
 import { Talking } from '../models/actions/Talking';
 import { Action } from 'src/game/core/models/Action';
+import { Cross } from '../models/actions/Cross';
 
 export enum BaseActionKeys {
   Taking = 'taking',
@@ -19,12 +20,13 @@ export enum BaseActionKeys {
   Closing = 'closing',
   Putting = 'putting',
   Pulling = 'pulling',
-   CastingOn = 'castingOn',
+  CastingOn = 'castingOn',
   Holding = 'holding',
   Releasing = 'releasing',
   GoingTo = 'goingTo',
   Attacking = 'attacking',
   Talking = 'talking',
+  Cross = 'cross',
 }
 
 export const BASE_ACTIONS: { [key in BaseActionKeys]: Action } = {
@@ -40,4 +42,5 @@ export const BASE_ACTIONS: { [key in BaseActionKeys]: Action } = {
   goingTo: new GoingTo(),
   attacking: new Attacking(),
   talking: new Talking(),
+  cross: new Cross(),
 };

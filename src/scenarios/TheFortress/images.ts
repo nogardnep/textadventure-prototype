@@ -34,4 +34,24 @@ export const IMAGES = {
       y: WINDOW_REFERENCE.height / 500,
     },
   }),
+  helmetPreview: new Image({
+    source: imagePath + '/objects/helmet.png',
+    frames: {
+      width: 200,
+      height: 200,
+      count: 1,
+    },
+  }),
+  helmetFull: new Image({
+    source: imagePath + '/objects/helmet.png',
+    frames: {
+      width: 200,
+      height: 200,
+      count: 1,
+    },
+    scale: {
+      x: 1.5,
+      y: 1.5,
+    },
+  }),
 };

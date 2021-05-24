@@ -9,13 +9,14 @@ import {
 } from 'src/game/modules/base/models/entities/material/Place';
 import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 import { TheFortress } from '../../TheFortress';
+import { Bridge } from './../passages/Bridge';
 
 export class Plateau extends Place {
   getName() {
     return new Name('plateau');
   }
 
-  getInteriorDescription() {
+  getFullDescription() {
     return [
       {
         tag: ParagraphTag.Description,
@@ -30,53 +31,19 @@ export class Plateau extends Place {
               TheFortress.entityConstructors.Fortress.name
             ),
           },
-          { text: " est de l'autre côté sur un aute plateau." },
+          { text: " est de l'autre côté, sur un autre plateau." },
         ],
       },
-      {
-        tag: ParagraphTag.Description,
-        text: 'Un long et étroit pont de pierre mène là-bas.',
-      },
-      // {
-      //   text: 'Un géant garde le pont.',
-      //   check: () => {
-      //     return !this.getGiant().dead;
-      //   },
-      // },
-      // {
-      //   text: 'Un géant gît sur le pont.',
-      //   check: () => {
-      //     return this.getGiant().dead;
-      //   },
-      // },
     ];
   }
 
   getAudioAmbiance() {
+    super.getAudioAmbiance;
     return [
-      { audio: TheFortress.audios.toctoc },
-      { audio: TheFortress.audios.birds },
+      { audio: TheFortress.audios.mountain },
+      { audio: TheFortress.audios.rapid, volume: 0.5 },
     ];
   }
-
-  init() {
-    this.getGiant().moveTo(this);
-  }
-
-  // getChoices() {
-  //   return [
-  //     {
-  //       text: 'attaquer le géant',
-  //       check: () => {
-  //         return this.giantIsHere();
-  //       },
-  //       proceed: () => {
-  //         this.getPlay().inform([{ text: 'Vous tuez le géant.' }]);
-  //         this.killTheGiant();
-  //       },
-  //     },
-  //   ];
-  // }
 
   affectedBySpell(author: Character, spell: Spell) {
     let report = { success: false };
@@ -85,7 +52,7 @@ export class Plateau extends Place {
       spell.inheritsFrom(
         TheFortress.entityConstructors.DestructionSpell.name
       ) &&
-      this.giantIsHere()
+      this.getBridge().isKept()
     ) {
       this.getPlay().sendMessage([
         {
@@ -93,7 +60,7 @@ export class Plateau extends Place {
           text: 'Le géant succombe sous un déluge de flammes.',
         },
       ]);
-      this.getGiant().kill();
+      this.getBridge().getGiant().kill();
       report.success = true;
     } else {
       report = super.affectedBySpell(author, spell);
@@ -103,13 +70,12 @@ export class Plateau extends Place {
   }
 
   connectionUsed(author: MaterialEntity, connection: Connection) {
+    const passage = this.getPassageFor(connection);
+
     if (
-      author.isThePlayer() &&
-      this.connectionLeadsTo(
-        connection,
-        TheFortress.entityConstructors.GreatEntry.name
-      ) &&
-      this.giantIsHere()
+      passage &&
+      passage.equals(this.getBridge()) &&
+      this.getBridge().isKept()
     ) {
       this.getPlay().sendMessage([
         {
@@ -130,9 +96,10 @@ export class Plateau extends Place {
         destinationId: this.getPlay()
           .getFirstEntityOfType(TheFortress.entityConstructors.GreatEntry.name)
           .getId(),
-        text: "Le pont mène devant l'entrée de la forteresse.",
         distance: 20,
-        // passageId: this.getPlay().getFirst
+        passageId: this.getPlay()
+          .getFirstEntityOfType(TheFortress.entityConstructors.Bridge.name)
+          .getId(),
       },
       {
         directionKey: DirectionKeys.South,
@@ -155,14 +122,10 @@ export class Plateau extends Place {
     ];
   }
 
-  private giantIsHere(): boolean {
-    return this.isOwning(this.getGiant(), true) && !this.getGiant().dead;
-  }
-
-  private getGiant(): Character {
+  private getBridge(): Bridge {
     return this.getPlay().getFirstEntityOfType(
-      TheFortress.entityConstructors.Giant.name,
+      TheFortress.entityConstructors.Bridge.name,
       true
-    ) as Character;
+    ) as Bridge;
   }
 }

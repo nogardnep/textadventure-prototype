@@ -10,19 +10,7 @@ export type CaracterticModifier = {
 };
 
 export class BaseEntity extends Entity {
-  getExteriorDescription(): Paragraph[] {
-    return [
-      {
-        tag: ParagraphTag.Description,
-        text: this.getPlay().getPhrase(
-          BaseGlossaryKey.NothingToSayAboutEntity,
-          [this]
-        ),
-      },
-    ];
-  }
-
-  getInteriorDescription(): Paragraph[] {
+  getFullDescription(): Paragraph[] {
     return [
       {
         tag: ParagraphTag.Description,
@@ -42,7 +30,7 @@ export class BaseEntity extends Entity {
     return null;
   }
 
-  getAudioAmbiance(): { audio: Audio; check?: () => boolean }[] {
+  getAudioAmbiance(): { audio: Audio; check?: () => boolean, volume?: number }[] {
     return [];
   }
 

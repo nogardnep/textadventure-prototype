@@ -5,14 +5,15 @@ import { Entity, EntityId, EntityType } from 'src/game/core/models/Entity';
 import { ParagraphItemTag, ParagraphTag } from 'src/game/core/models/Paragraph';
 import { Play } from 'src/game/core/models/Play';
 import { BaseActionKeys } from '../../../dictionnaries/actions';
-import { BASE_SUBJECTS } from '../../../dictionnaries/subjects';
-import { ConversationResponse, Subject, SubjectId } from '../../Conversation';
+import { ConversationResponse } from '../../Conversation';
 import { Spell } from '../immaterial/Spell';
 import { MaterialEntity } from '../MaterialEntity';
 import { BaseCaracteristicKey } from './../../../dictionnaries/caracteristics';
+import { Place } from './Place';
 import { Thing } from './Thing';
 import { HoldableObject } from './thing/object/HoldableObject';
 import { WearableObject } from './thing/object/WearableObject';
+import { Passage } from './thing/Passage';
 import { Scenary } from './thing/Scenary';
 import { UsuableObject } from './thing/UsuableObject';
 
@@ -20,14 +21,11 @@ export class Character extends MaterialEntity {
   dead = false;
   hands = 2;
   spellsId: EntityId[] = [];
-  knownSubjects: SubjectId[] = [];
+  knownEntities: EntityType[] = [];
+  gender: Gender = Gender.Male;
 
   constructor(play: Play) {
     super(play);
-
-    for (let key in BASE_SUBJECTS) {
-      this.knownSubjects.push(key);
-    }
 
     for (let key in BaseCaracteristicKey) {
       this.caracteristics[BaseCaracteristicKey[key]] = {
@@ -43,18 +41,18 @@ export class Character extends MaterialEntity {
     this.save();
   }
 
-  addKnownSubject(subject: Subject) {
-    if (!this.knowsSubject(subject)) {
-      this.knownSubjects.push(subject.id);
+  addKnownEntity(type: EntityType) {
+    if (!this.knowsEntity(type)) {
+      this.knownEntities.push(type);
       this.save();
     }
   }
 
-  knowsSubject(subject: Subject): boolean {
+  knowsEntity(type: EntityType): boolean {
     let known = false;
 
-    this.knownSubjects.forEach((item) => {
-      if (item === subject.id) {
+    this.knownEntities.forEach((item) => {
+      if (item === type) {
         known = true;
       }
     });
@@ -86,24 +84,44 @@ export class Character extends MaterialEntity {
   }
 
   openConversation(author: Character): void {
+    author.addKnownEntity(this.getType());
+
     const choices: Choice[] = [];
 
-    author.knownSubjects.forEach((item) => {
-      const response = this.getConversationResponses()[item];
+    for (let key in this.getConversationResponses(author)) {
+      if (author.knowsEntity(key)) {
+        const response = this.getConversationResponses(author)[key];
 
-      if (response) {
-        choices.push({
-          text: this.getPlay().getSubject(item).getTitle(),
-          proceed: () => {
-            response.onAsked(author);
-            this.openConversation(author);
-          },
-          check: () => {
-            return !response.check || response.check(author);
-          },
-        });
+        if (response) {
+          let text: string;
+
+          if (response.getSubjectTitle) {
+            text = response.getSubjectTitle();
+          }else if (this.isOfType(key)) {
+            text = this.getName().getObjectComplement();
+          } else {
+            text = this.getPlay()
+              .getFirstEntityOfType(key)
+              .getName()
+              .printWithDefiniteArticle();
+          }
+
+          choices.push({
+            text,
+            proceed: () => {
+              this.say(response.text);
+              if (response.onAsked) {
+                response.onAsked(author);
+              }
+              this.openConversation(author);
+            },
+            check: () => {
+              return !response.check || response.check(author);
+            },
+          });
+        }
       }
-    });
+    }
 
     this.getPlay().sendMessage(
       [
@@ -137,14 +155,14 @@ export class Character extends MaterialEntity {
       .concat([BaseActionKeys.Attacking, BaseActionKeys.Talking]);
   }
 
-  getDialogFor(subject: ConversationResponse) {}
-
-  getConversationResponses(): { [key: string]: ConversationResponse } {
+  getConversationResponses(author: Character): {
+    [key: string]: ConversationResponse;
+  } {
     return {};
   }
 
   getGender(): Gender {
-    return Gender.Male;
+    return this.gender;
   }
 
   getHeldObjects(): HoldableObject[] {
@@ -264,12 +282,23 @@ export class Character extends MaterialEntity {
     return spell;
   }
 
+  attackedBy(target: Character): ActionReport {
+    // TODO
+    return { success: false };
+  }
+
   canSee(entity: MaterialEntity): boolean {
     let response = false;
 
     if (!entity.invisible) {
       if (entity instanceof Scenary) {
         response = true;
+      } else if (entity instanceof Passage) {
+        (this.getParent() as Place).getConnections().forEach((item) => {
+          if (item.passageId === entity.getId()) {
+            response = true;
+          }
+        });
       } else {
         const parent = entity.getParent();
 
@@ -286,21 +315,21 @@ export class Character extends MaterialEntity {
     return response;
   }
 
-  attackedBy(target: Character): ActionReport {
-    // TODO
-    return { success: false };
-  }
-
   private checkVisible(entity: MaterialEntity): boolean {
     let response = false;
 
-    if (!(entity as Thing).closed || (entity as Thing).transparent) {
-      const parent = entity.getParent();
-
-      if (parent && parent.equals(this.getParent())) {
+    if (!(entity instanceof Thing) || !entity.closed || entity.transparent) {
+      if (entity instanceof Passage) {
         response = true;
       } else {
-        response = this.checkVisible(parent);
+        // const parent = entity.getParent();
+        // if (parent) {
+        //   if (parent && parent.equals(this.getParent())) {
+        //     response = true;
+        //   } else {
+        //     response = this.checkVisible(parent);
+        //   }
+        // }
       }
     }
 
@@ -329,17 +358,19 @@ export class Character extends MaterialEntity {
     let response = false;
 
     if (
-      !(entity as Thing).closed &&
-      (entity.getParent().equals(this) ||
-        !(entity instanceof Character) ||
-        (entity as Character).dead)
+      (entity instanceof Thing && !entity.closed) ||
+      (entity.getParent() && entity.getParent().equals(this)) ||
+      !(entity instanceof Character) ||
+      entity.dead
     ) {
       const parent = entity.getParent();
 
-      if (parent && parent.equals(this.getParent())) {
-        response = true;
-      } else {
-        response = this.checkReachable(parent);
+      if (parent) {
+        if (parent.equals(this.getParent())) {
+          response = true;
+        } else {
+          response = this.checkReachable(parent);
+        }
       }
     }
 

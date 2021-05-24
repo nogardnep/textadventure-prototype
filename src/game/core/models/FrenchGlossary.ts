@@ -25,7 +25,7 @@ export abstract class FrenchGlossary extends Glossary {
           case Gender.Male:
             found = 'il';
             break;
-          case Gender.Femal:
+          case Gender.Female:
             found = 'elle';
             break;
           case Gender.Thing:
@@ -51,7 +51,7 @@ export abstract class FrenchGlossary extends Glossary {
           case Gender.Male:
             found = 'ils';
             break;
-          case Gender.Femal:
+          case Gender.Female:
             found = 'elles';
             break;
           case Gender.Thing:

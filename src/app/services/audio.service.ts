@@ -94,16 +94,21 @@ export class AudioService {
   play(
     audio: Audio,
     layerKey: AudioLayerKey,
-    loop: boolean,
-    fade = false
+    params?: {
+      loop?: boolean;
+      fade?: boolean;
+      volume?: number;
+    }
   ): void {
     const layer = this.layers[layerKey];
     const id = Utils.generateId();
 
     const player = new Tone.Player({
       url: 'assets/' + audio.source,
-      volume: this.convertToDecibels(audio.volume),
-      loop,
+      volume: this.convertToDecibels(
+        audio.volume * (params && params.volume ? params.volume : 1)
+      ),
+      loop: params && params.loop ? params.loop : false,
       autostart: true,
       onload: () => {},
       onstop: () => {
@@ -111,7 +116,7 @@ export class AudioService {
       },
     }).connect(layer.channel.toneChannel);
 
-    if (fade) {
+    if (params && params.fade) {
       player.fadeIn = FADE_DURATION / 1000;
       player.fadeOut = FADE_DURATION / 1000;
     }

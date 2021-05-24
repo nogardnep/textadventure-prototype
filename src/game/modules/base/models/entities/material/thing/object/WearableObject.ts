@@ -1,11 +1,9 @@
-import { BaseGlossaryKey } from 'src/game/modules/base/models/BaseGlossary';
 import { ActionReport } from 'src/game/core/models/Action';
-import { BaseActionKeys } from '../../../../../dictionnaries/actions';
-import { EMPLACEMENT_NAMES } from '../../../../../dictionnaries/emplacement';
-import { Character } from '../../Character';
-import { TextManager } from 'src/game/core/TextManager';
 import { Utils } from 'src/game/core/Utils';
+import { BaseGlossaryKey } from 'src/game/modules/base/models/BaseGlossary';
+import { BaseActionKeys } from '../../../../../dictionnaries/actions';
 import { MaterialEntity } from '../../../MaterialEntity';
+import { Character } from '../../Character';
 import { UsuableObject } from '../UsuableObject';
 
 export class WearableObject extends UsuableObject {

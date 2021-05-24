@@ -9,7 +9,15 @@ export class SecreteEntry extends Place {
     return new Name('entrée secrète', { feminin: true, elision: true });
   }
 
-  getExteriorDescription() {
+  getAudioAmbiance() {
+    super.getAudioAmbiance;
+    return [
+      { audio: TheFortress.audios.mountain },
+      { audio: TheFortress.audios.rapid },
+    ];
+  }
+
+  getFullDescription() {
     return [
       {
         tag: ParagraphTag.Description,

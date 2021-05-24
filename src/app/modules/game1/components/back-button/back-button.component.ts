@@ -1,4 +1,7 @@
-import { InterfaceService } from 'src/app/services/interface.service';
+import {
+  ButtonType,
+  InterfaceService,
+} from 'src/app/services/interface.service';
 import { Location } from '@angular/common';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
@@ -16,7 +19,7 @@ export class BackButtonComponent implements OnInit {
   ngOnInit() {}
 
   onClick(): void {
-    this.interfaceService.onClickButton();
+    this.interfaceService.onClickButton(ButtonType.Back);
     this.location.back();
   }
 }

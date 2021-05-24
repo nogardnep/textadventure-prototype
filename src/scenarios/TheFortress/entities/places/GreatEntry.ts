@@ -9,7 +9,14 @@ export class GreatEntry extends Place {
     return new Name('entrée principale', { feminin: true, elision: true });
   }
 
-  getInteriorDescription() {
+  getAudioAmbiance() {
+    return [
+      { audio: TheFortress.audios.mountain },
+      { audio: TheFortress.audios.rapid, volume: 0.5 },
+    ];
+  }
+
+  getFullDescription() {
     return [
       {
         tag: ParagraphTag.Description,

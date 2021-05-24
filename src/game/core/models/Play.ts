@@ -2,6 +2,7 @@ import { GameManager } from 'src/game/core/GameManager';
 import { Subject } from 'src/game/modules/base/models/Conversation';
 import { TextManager } from '../TextManager';
 import { Action } from './Action';
+import { Audio } from './Audio';
 import { Choice } from './Choice';
 import { Entity, EntityId, EntityType, StoredEntity } from './Entity';
 import { ConjugationTime, Glossary, Person } from './Glossary';
@@ -20,9 +21,15 @@ export interface StoredPlay {
 
 type PlayCallBacks = {
   onSave: () => void;
-  onInform: (paragraphs: Paragraph[], actions?: Choice[]) => void;
+  onMessageSend: (
+    paragraphs: Paragraph[],
+    choices?: Choice[],
+    onReaded?: () => void
+  ) => void;
   onStartConversation: (interlocutor: Entity) => void;
   onUpdate: () => void;
+  onPlayMusic: (audio: Audio) => void;
+  onPlaySoundEffect: (audio: Audio) => void;
 };
 
 export class Play {
@@ -243,6 +250,12 @@ export class Play {
     return this.time;
   }
 
+  getDate(): Date {
+    const date = new Date(this.scenario.getStartDate().getTime());
+    date.setSeconds(date.getSeconds() + this.time);
+    return date;
+  }
+
   setTime(time: number): void {
     this.time = time;
     this.storeTime();
@@ -284,8 +297,12 @@ export class Play {
     this.callbacks.onSave();
   }
 
-  sendMessage(paragraphs: Paragraph[], choices?: Choice[]): void {
-    this.callbacks.onInform(paragraphs, choices);
+  sendMessage(
+    paragraphs: Paragraph[],
+    choices?: Choice[],
+    onReaded?: () => void
+  ): void {
+    this.callbacks.onMessageSend(paragraphs, choices, onReaded);
   }
 
   getAction(key: string): Action {
@@ -319,5 +336,13 @@ export class Play {
 
   startConversation(interlocutor: Entity): void {
     this.callbacks.onStartConversation(interlocutor);
+  }
+
+  playMusic(audio: Audio): void {
+    this.callbacks.onPlayMusic(audio);
+  }
+
+  playSoundEffect(audio: Audio): void {
+    this.callbacks.onPlaySoundEffect(audio);
   }
 }

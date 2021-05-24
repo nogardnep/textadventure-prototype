@@ -29,7 +29,7 @@ export class Elkchten extends Character {
     sword.heldBy(this);
   }
 
-  getInteriorDescription() {
+  getFullDescription() {
     return [
       {
         tag: ParagraphTag.Description,

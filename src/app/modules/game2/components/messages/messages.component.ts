@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MessageWrapper } from './../../../../services/game.service';
+import { MessageWrapper } from 'src/app/services/game.service';
 
 @Component({
   selector: 'app-messages',

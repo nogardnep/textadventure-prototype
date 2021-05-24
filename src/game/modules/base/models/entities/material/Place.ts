@@ -4,10 +4,11 @@ import { DirectionKey } from '../../../dictionnaries/direction';
 import { MaterialEntity } from '../MaterialEntity';
 import { ActionReport } from 'src/game/core/models/Action';
 import { Character } from './Character';
+import { Passage } from './thing/Passage';
 
 export type Connection = {
   destinationId: EntityId;
-  text: string;
+  text?: string;
   passageId?: EntityId;
   directionKey?: DirectionKey;
   check?: () => boolean;
@@ -26,6 +27,25 @@ export class Place extends MaterialEntity {
     );
 
     return { success };
+  }
+
+  connectionPassageIs(
+    connection: Connection,
+    passageType: EntityType
+  ): boolean {
+    return (
+      connection.passageId &&
+      connection.passageId ===
+        this.getPlay().getFirstEntityOfType(passageType).getId()
+    );
+  }
+
+  getPassageFor(connection: Connection): Passage {
+    return (
+      connection.passageId
+        ? this.getPlay().getEntity(connection.passageId)
+        : null
+    ) as Passage;
   }
 
   onVisitedBy(entity: MaterialEntity): void {

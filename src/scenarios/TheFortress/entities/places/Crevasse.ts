@@ -11,7 +11,14 @@ export class Crevasse extends Place {
     return new Name('crevasse', { feminin: true });
   }
 
-  getInteriorDescription() {
+  getAudioAmbiance() {
+    return [
+      { audio: TheFortress.audios.mountain },
+      { audio: TheFortress.audios.rapid },
+    ];
+  }
+
+  getFullDescription() {
     return [
       {
         tag: ParagraphTag.Description,
@@ -37,12 +44,12 @@ export class Crevasse extends Place {
               TheFortress.entityConstructors.Torrent.name
             ),
           },
-          { text: 'longe la falaise où elle est perchée.' },
+          { text: ' longe la falaise où elle est perchée.' },
         ],
       },
       {
         tag: ParagraphTag.Description,
-        text: "De l'autre côté semle se trouver l'entrée d'une caverne.",
+        text: "De l'autre côté semble se trouver l'entrée d'une caverne.",
       },
     ];
   }

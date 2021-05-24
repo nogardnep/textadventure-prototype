@@ -73,17 +73,6 @@
 
       .paragraph {
         margin: 0 0 5px;
-
-        .paragraph-interactive-text {
-          background: none;
-          border: none;
-          text-decoration: underline;
-          font-weight: bold;
-          color: $interactiveTextFontColor;
-          padding: 0;
-          line-height: inherit;
-          font-size: inherit;
-        }
       }
     }
 

@@ -13,11 +13,19 @@ import { AudioLayerKey } from './audio.service';
 
 const INTERFACE_ID = 'game1'; // TODO: temp
 
+export enum ButtonType {
+  Validation,
+  Cancel,
+  Simple,
+  Back,
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class InterfaceService {
   private selection: Entity;
+  audioPath ='interface/audios';
   selectionSubject = new Subject<Entity>();
 
   constructor(
@@ -40,8 +48,6 @@ export class InterfaceService {
   }
 
   setSelection(selection: Entity): void {
-    // this.selection = selection;
-    // this.emitSelection();
     if (selection) {
       this.goToSelection(selection.getId());
     }
@@ -55,12 +61,25 @@ export class InterfaceService {
     return this.selection;
   }
 
-  onClickButton() {
-    this.audioService.play(
-      new Audio('interface/audios/click.wav', 1),
-      AudioLayerKey.Interface,
-      false
-    );
+  onClickButton(type: ButtonType) {
+    let audio: Audio;
+
+    switch (type) {
+      case ButtonType.Back:
+        audio = new Audio(this.audioPath +'/back.wav', 0.5);
+        break;
+      case ButtonType.Validation:
+        audio = new Audio(this.audioPath +'/validation.wav', 0.5);
+        break;
+      case ButtonType.Cancel:
+        audio = new Audio(this.audioPath +'/back.wav', 0.5);
+        break;
+      default:
+        audio = new Audio(this.audioPath +'/click.wav', 0.2);
+        break;
+    }
+
+    this.audioService.play(audio, AudioLayerKey.Interface);
   }
 
   goToHome(): void {

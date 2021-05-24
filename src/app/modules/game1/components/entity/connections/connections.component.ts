@@ -1,15 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Entity } from 'src/game/core/models/Entity';
 import { BaseActionKeys } from 'src/game/modules/base/dictionnaries/actions';
 import {
   Direction,
-  DirectionKey,
+  DirectionKey
 } from 'src/game/modules/base/dictionnaries/direction';
 import { BaseScenario } from 'src/game/modules/base/models/BaseScenario';
 import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 import {
   Connection,
-  Place,
+  Place
 } from 'src/game/modules/base/models/entities/material/Place';
 import { Passage } from 'src/game/modules/base/models/entities/material/thing/Passage';
 
@@ -54,8 +53,9 @@ export class ConnectionsComponent implements OnInit {
   }
 
   isUsable(connection: Connection): boolean {
-    const passage = connection.passageId ? this.getPassage(connection) : null;
+    const player = this.entity.getPlay().getPlayer();
+    const action = this.entity.getPlay().getAction(BaseActionKeys.GoingTo);
 
-    return !passage || !(passage as Passage).closed;
+    return action.check(player, [connection], true).usable;
   }
 }

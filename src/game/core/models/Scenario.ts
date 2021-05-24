@@ -17,6 +17,7 @@ export abstract class Scenario {
   images: { [key: string]: Image } = {};
   audios: { [key: string]: Audio } = {};
   subjects: { [key: string]: Subject } = {};
+  startDate: Date;
 
   constructor(
     id: ScenarioId,
@@ -71,6 +72,10 @@ export abstract class Scenario {
 
   getTitle(): string {
     return null;
+  }
+
+  getStartDate(): Date {
+    return this.startDate;
   }
 
   setActions(actions: { [key: string]: Action }): void {

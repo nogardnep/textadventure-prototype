@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { AudioChannelKey, AudioService } from 'src/app/services/audio.service';
-import { Paragraph } from 'src/game/core/models/Paragraph';
 import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
+import { Place } from 'src/game/modules/base/models/entities/material/Place';
 
 @Component({
   selector: 'app-entity-full',
@@ -10,13 +9,18 @@ import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 })
 export class EntityFullComponent implements OnInit, OnDestroy {
   @Input() entity: BaseEntity;
-  @Input() description: Paragraph[];
+  hasConnections: boolean;
+  entityAsPlace: Place;
 
-  constructor(private audioService: AudioService) {}
+  constructor() {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ngOnChanges() {
+    this.hasConnections =
+      this.entity instanceof Place && this.entity.getConnections().length > 0;
+    this.entityAsPlace = this.entity as Place;
   }
 
-  ngOnDestroy() {
-  }
+  ngOnDestroy() {}
 }

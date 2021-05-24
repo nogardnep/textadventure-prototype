@@ -20,7 +20,6 @@ export class ChoicesComponent implements OnInit, OnChanges {
   }
 
   onClickChoice(choice: Choice): void {
-    console.log(this.entity.getPlay());
     this.entity.getPlay().useChoice(choice);
   }
 

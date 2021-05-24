@@ -7,8 +7,7 @@
   .connection-list-item {
     list-style: none;
 
-    .entity-preview,
-    .connection {
+    .entity-preview{
       $edgeWidth: 15px;
 
       padding: 0 0 0 $edgeWidth;
@@ -32,6 +31,7 @@
       }
     }
 
+
     &:before,
     &:last-child:after {
       content: "";
@@ -53,11 +53,12 @@
     opacity: 0.8;
     display: inline-block;
     vertical-align: top;
+    margin: 0 0 0 5px;
   }
 
   .connection-text {
     font-size: 0.8em;
-    margin: 0;
+    margin: 0 0 0 5px;
   }
 }
 
@@ -108,6 +109,8 @@
 
       .entity-preview-image {
         margin: 0 5px 0 0;
+        background: url($imagePath + '/decoration-1.png');
+        background-size: 100% 100%;
       }
 
       .entity-preview-situation {

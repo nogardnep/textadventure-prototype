@@ -6,19 +6,31 @@ import {
   DEFAULT_SPEED,
 } from 'src/game/modules/base/models/entities/material/Place';
 import { Character } from '../entities/material/Character';
+import { Passage } from '../entities/material/thing/Passage';
 
 export class GoingTo extends Action {
   getText() {
-    return 'going';
+    return 'aller';
   }
 
   check(author: Character, args: any[]) {
     let usable = false;
     let failureMessage: string = null;
-    let target = args[0] as Connection;
+    let connection = args[0] as Connection;
 
-    // TODO
-    usable = true;
+    const passage = (
+      connection.passageId
+        ? author.getPlay().getEntity(connection.passageId)
+        : null
+    ) as Passage;
+
+    if (!passage) {
+      usable = true;
+    } else if (passage.closed) {
+      // TODO: failureMessage
+    } else {
+      usable = true;
+    }
 
     return {
       usable,

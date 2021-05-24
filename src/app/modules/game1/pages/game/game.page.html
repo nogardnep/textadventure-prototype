@@ -6,10 +6,7 @@
       </div>
 
       <div class="page-core">
-        <div class="time">
-          <span class="label">Temps</span>
-          <span class="value">{{play.getTime()}}</span>
-        </div>
+        <app-time [play]="play"></app-time>
         <ng-container *ngIf="play.getPlayer()">
           <app-location [entity]="getLocation()"></app-location>
         </ng-container>

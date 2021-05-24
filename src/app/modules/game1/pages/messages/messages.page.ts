@@ -2,6 +2,7 @@ import { InterfaceService } from 'src/app/services/interface.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GameService, MessageWrapper } from 'src/app/services/game.service';
+import { Play } from 'src/game/core/models/Play';
 
 @Component({
   selector: 'app-messages-page',
@@ -10,16 +11,37 @@ import { GameService, MessageWrapper } from 'src/app/services/game.service';
 })
 export class MessagesPage implements OnInit, OnDestroy {
   messages: MessageWrapper[];
+  play: Play;
   private messagesSubscription: Subscription;
+  private playSubscription: Subscription;
 
-  constructor(private gameService: GameService, private interfaceService:InterfaceService) {
+  constructor(
+    private gameService: GameService,
+    private interfaceService: InterfaceService
+  ) {
     gameService.checkPlay();
   }
 
   ngOnInit() {
+    this.playSubscription = this.gameService.playSubject.subscribe(
+      (play: Play) => {
+        if (play) {
+          this.play = play;
+        } else {
+          this.play = null;
+        }
+      }
+    );
+
+    this.gameService.emitPlay();
+
     this.messagesSubscription = this.gameService.messagesSubject.subscribe(
       (message: MessageWrapper[]) => {
         this.messages = message;
+
+        if (this.getUnreadedMessages().length === 0) {
+          this.onEmpty();
+        }
       }
     );
 
@@ -28,6 +50,7 @@ export class MessagesPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.messagesSubscription.unsubscribe();
+    this.playSubscription.unsubscribe();
   }
 
   getUnreadedMessages(): MessageWrapper[] {
@@ -53,6 +76,10 @@ export class MessagesPage implements OnInit, OnDestroy {
       item.read = true;
     });
 
+    this.interfaceService.goToGame();
+  }
+
+  onEmpty(): void {
     this.interfaceService.goToGame();
   }
 }

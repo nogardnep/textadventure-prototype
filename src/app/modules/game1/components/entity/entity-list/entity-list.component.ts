@@ -1,8 +1,9 @@
-import { Place } from './../../../../../../game/modules/base/models/entities/material/Place';
+import { Place } from 'src/game/modules/base/models/entities/material/Place';
 import { Component, Input, OnInit } from '@angular/core';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 import { Entity } from 'src/game/core/models/Entity';
+import { Thing } from 'src/game/modules/base/models/entities/material/Thing';
 
 @Component({
   selector: 'app-entity-list',
@@ -24,9 +25,11 @@ export class EntityListComponent implements OnInit {
     let label: string;
 
     if (this.entity instanceof Character) {
-      label = 'porte';
+      label = 'portant';
     } else if (this.entity instanceof Place) {
       label = 'il y a là';
+    } else if (this.entity instanceof Thing) {
+      label = 'surportant';
     }
 
     return label;
@@ -36,8 +39,9 @@ export class EntityListComponent implements OnInit {
     let found: MaterialEntity[] = [];
 
     if (this.entity instanceof MaterialEntity) {
-      (this.entity as MaterialEntity).getChildren().forEach((item) => {
-        if (!item.isThePlayer()) {
+      this.entity.getChildren().forEach((item) => {
+        const player = this.entity.getPlay().getPlayer() as Character;
+        if (!item.isThePlayer() && player.canSee(item)) {
           found.push(item);
         }
       });

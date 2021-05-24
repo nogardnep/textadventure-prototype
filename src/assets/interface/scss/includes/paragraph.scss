@@ -31,4 +31,15 @@
       font-weight: bold;
     }
   }
+
+  .paragraph-interactive-text {
+    background: none;
+    border: none;
+    text-decoration: underline;
+    font-weight: bold;
+    color: $interactiveTextFontColor;
+    padding: 0;
+    line-height: inherit;
+    font-size: inherit;
+  }
 }

@@ -6,6 +6,7 @@
     <div class="page-core">
       <app-back-button></app-back-button>
       <div *ngIf="play">
+        <app-time [play]="play"></app-time>
         <app-player-full [player]="getPlayer()"></app-player-full>
       </div>
     </div>

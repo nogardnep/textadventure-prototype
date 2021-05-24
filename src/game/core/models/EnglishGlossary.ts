@@ -17,7 +17,7 @@ export abstract class EnglishGlossary extends Glossary {
           case Gender.Male:
             found = 'he';
             break;
-          case Gender.Femal:
+          case Gender.Female:
             found = 'she';
             break;
           case Gender.Thing:

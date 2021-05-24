@@ -5,6 +5,7 @@ import { GameService } from 'src/app/services/game.service';
 import { InterfaceService } from 'src/app/services/interface.service';
 import { Audio } from 'src/game/core/models/Audio';
 import { ParagraphTag } from 'src/game/core/models/Paragraph';
+import { ButtonType } from './../../../../services/interface.service';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,6 @@ export class HomePage implements OnInit {
 
   constructor(
     private gameService: GameService,
-    private router: Router,
     private interfaceService: InterfaceService,
     private audioService: AudioService
   ) {}
@@ -28,10 +28,12 @@ export class HomePage implements OnInit {
 
     this.audioService.clearLayer(AudioLayerKey.LocationAmbiance);
     this.audioService.play(
-      new Audio('scenarios/audios/ghost.wav'),
+      new Audio('interface/audios/home.wav', 0.2),
       AudioLayerKey.LocationAmbiance,
-      true,
-      true
+      {
+        loop: true,
+        fade: true,
+      }
     );
   }
 
@@ -40,7 +42,7 @@ export class HomePage implements OnInit {
   }
 
   onClickNew(): void {
-    this.interfaceService.onClickButton();
+    this.interfaceService.onClickButton(ButtonType.Validation);
 
     if (this.lastPlayExists) {
       this.interfaceService.openPopup(
@@ -68,12 +70,12 @@ export class HomePage implements OnInit {
   }
 
   onClickLoad(): void {
-    this.interfaceService.onClickButton();
+    this.interfaceService.onClickButton(ButtonType.Validation);
     this.interfaceService.goToGame();
   }
 
   onClickConfig(): void {
-    this.interfaceService.onClickButton();
+    this.interfaceService.onClickButton(ButtonType.Simple);
     this.interfaceService.goToConfig();
   }
 }

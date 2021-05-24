@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Audio } from 'src/game/core/models/Audio';
 import { Choice } from 'src/game/core/models/Choice';
 import { Entity } from 'src/game/core/models/Entity';
 import { Paragraph } from 'src/game/core/models/Paragraph';
@@ -18,6 +19,7 @@ const PLAY_STORAGE_KEY = 'play';
 export type MessageWrapper = {
   paragraphs: Paragraph[];
   choices?: Choice[];
+  onReaded?: () => void;
   read: boolean;
 };
 
@@ -65,11 +67,16 @@ export class GameService {
     return this.play;
   }
 
-  addMessage(paragraphs: Paragraph[], choices?: Choice[]) {
+  addMessage(
+    paragraphs: Paragraph[],
+    choices?: Choice[],
+    onReaded?: () => void
+  ) {
     this.messages.push({
       paragraphs,
       choices,
       read: false,
+      onReaded,
     });
 
     this.emitMessages();
@@ -107,14 +114,24 @@ export class GameService {
           this.savePlay();
         }
       },
-      onInform: (paragraphs: Paragraph[], actions?: Choice[]) => {
-        this.addMessage(paragraphs, actions);
+      onMessageSend: (
+        paragraphs: Paragraph[],
+        choices?: Choice[],
+        onReaded?: () => void
+      ) => {
+        this.addMessage(paragraphs, choices, onReaded);
         this.interfaceService.goToMessages();
       },
       onStartConversation: (interlocutor: Entity) => {},
       onUpdate: () => {
         this.emitPlay();
         this.updateLocation();
+      },
+      onPlayMusic: (audio: Audio) => {
+        this.audioService.play(audio, AudioLayerKey.Music);
+      },
+      onPlaySoundEffect: (audio: Audio) => {
+        this.audioService.play(audio, AudioLayerKey.BriefEffects);
       },
     });
   }
@@ -133,8 +150,11 @@ export class GameService {
             this.audioService.play(
               ambiance.audio,
               AudioLayerKey.LocationAmbiance,
-              true,
-              true
+              {
+                loop: true,
+                fade: true,
+                volume: ambiance.volume ? ambiance.volume : 1,
+              }
             );
           }
         });

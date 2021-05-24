@@ -1,6 +1,6 @@
 <div class="messages">
   <ul class="message-list">
-    <ng-container *ngFor="let item of messages">
+    <ng-container *ngFor="let item of messages ; let isLast = last">
       <li class="message-list-item">
         <div class="message">
           <app-paragraphs [paragraphs]="item.paragraphs"></app-paragraphs>
@@ -8,7 +8,8 @@
             <ul class="choice-list">
               <ng-container *ngFor="let choice of item.choices">
                 <li *ngIf="isVisible(choice)" class="choice-list-item">
-                  <app-action-button [text]="choice.text" (clickEvent)="onClickChoice(choice)"></app-action-button>
+                  <app-action-button [text]="choice.text" [disabled]="!isLast" (clickEvent)="onClickChoice(choice)">
+                  </app-action-button>
                 </li>
               </ng-container>
             </ul>
@@ -17,4 +18,8 @@
       </li>
     </ng-container>
   </ul>
+  <div class="no-message" *ngIf="messages.length === 0">(aucun message)</div>
+  <button class="read-button" (click)="onClickReaded()">
+    <span class="button-inner">Continuer</span>
+  </button>
 </div>

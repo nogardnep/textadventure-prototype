@@ -31,10 +31,10 @@ $LIGHTING_FLAT: 3;
     @if ($lighting == $LIGHTING_FLOOR) {
       $hueadjust: ($i * 2 - $depth - 5) * 1%;
     }
-    @elseif ($lighting == $LIGHTING_CEIL) {
+    @else if ($lighting == $LIGHTING_CEIL) {
       $hueadjust: -($i * 2 + $depth - 10) * 1%;
     }
-    @elseif ($lighting == $LIGHTING_FLAT) {
+    @else if ($lighting == $LIGHTING_FLAT) {
       $hueadjust: -$depth * 1%;
     }
     $colour: adjust-color($primary, $lightness: $hueadjust);

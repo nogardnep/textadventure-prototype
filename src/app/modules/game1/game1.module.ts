@@ -1,3 +1,5 @@
+import { TimeComponent } from './components/time/time.component';
+import { IonicModule } from '@ionic/angular';
 import { CaracteristicsComponent } from './components/caracteristics/caracteristics.component';
 import { CaracteristicModifiersComponent } from './components/caracteristic-modifiers/caracteristic-modifiers.component';
 import { PlayerPreviewComponent } from './components/player/player-preview/player-preview.component';
@@ -30,7 +32,12 @@ import { GamePage } from './pages/game/game.page';
 import { ActionButtonComponent } from './components/action-button/action-button.component';
 
 @NgModule({
-  imports: [SharedModule, Game1RoutingModule, CommonModule],
+  imports: [
+    SharedModule,
+    Game1RoutingModule,
+    CommonModule,
+    IonicModule.forRoot(),
+  ],
   declarations: [
     GamePage,
     SelectionPage,
@@ -58,6 +65,7 @@ import { ActionButtonComponent } from './components/action-button/action-button.
     PlayerPreviewComponent,
     CaracteristicModifiersComponent,
     CaracteristicsComponent,
+    TimeComponent,
   ],
 })
 export class Game1Module {}

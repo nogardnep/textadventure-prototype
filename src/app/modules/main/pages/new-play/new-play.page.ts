@@ -1,3 +1,4 @@
+import { ButtonType } from './../../../../services/interface.service';
 import { ParagraphTag } from 'src/game/core/models/Paragraph';
 import { Component, OnInit } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
@@ -63,7 +64,7 @@ export class NewPlayPage implements OnInit {
   }
 
   onClickValidate(): void {
-    this.interfaceService.onClickButton();
+    this.interfaceService.onClickButton(ButtonType.Validation);
 
     let valid = true;
 

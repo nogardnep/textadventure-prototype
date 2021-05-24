@@ -1,6 +1,6 @@
 <ng-container *ngIf="entity">
   <ng-container *ngIf="isVisible()">
-    <app-entity-full [entity]="entity" [description]="entity.getExteriorDescription()"></app-entity-full>
+    <app-entity-full [entity]="entity"></app-entity-full>
   </ng-container>
   <ng-container *ngIf="!isVisible()">
     <div class="invisible-entity">

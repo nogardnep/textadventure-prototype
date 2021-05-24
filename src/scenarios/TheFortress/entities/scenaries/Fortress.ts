@@ -7,7 +7,7 @@ export class Fortress extends Scenary {
     return new Name('la forteresse', { feminin: true, properNoun: true });
   }
 
-  getExteriorDescription() {
+  getFullDescription() {
     return [
       {
         tag: ParagraphTag.Description,

@@ -7,17 +7,18 @@
   </div>
   <app-entity-window [entity]="entity"></app-entity-window>
   <div class="entity-full-description">
-    <app-paragraphs [paragraphs]="description"></app-paragraphs>
+    <app-paragraphs [paragraphs]="entity.getFullDescription()"></app-paragraphs>
   </div>
   <div class="entity-full-content">
     <div class="entity-full-content-inner">
       <div class="entity-full-caractertic-modifiers">
         <app-caracteristic-modifiers [entity]="entity"></app-caracteristic-modifiers>
       </div>
+
       <app-choices [entity]="entity"></app-choices>
       <app-actions [entity]="entity"></app-actions>
       <app-entity-list [entity]="entity"></app-entity-list>
-      <app-connections [entity]="entity"></app-connections>
+      <app-connections *ngIf="hasConnections" [entity]="entityAsPlace"></app-connections>
     </div>
   </div>
 </div>

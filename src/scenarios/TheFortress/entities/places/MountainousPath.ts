@@ -9,6 +9,10 @@ export class MountainousPath extends Place {
     return new Name('sentier');
   }
 
+  getAudioAmbiance() {
+    return [{ audio: TheFortress.audios.mountain }];
+  }
+
   getFullImages() {
     return [
       { image: TheFortress.images.sky2 },
@@ -16,7 +20,7 @@ export class MountainousPath extends Place {
     ];
   }
 
-  getInteriorDescription() {
+  getFullDescription() {
     return [
       {
         tag: ParagraphTag.Description,

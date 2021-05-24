@@ -4,11 +4,12 @@
       <div class="page-header">
         <app-main-menu></app-main-menu>
       </div>
+      <app-time *ngIf="play" [play]="play"></app-time>
       <div class="page-core">
         <div class="page-core-inner">
-          <app-messages *ngIf="getUnreadedMessages().length > 0" [messages]="getUnreadedMessages()"></app-messages>
+          <app-messages *ngIf="getUnreadedMessages().length > 0" [messages]="getUnreadedMessages()" (emptyEvent)="onEmpty()"></app-messages>
           <div class="no-message" *ngIf="getUnreadedMessages().length === 0">(aucun message)</div>
-          <button class="close-button" (click)="onClickOk()">
+          <button *ngIf="getUnreadedMessages().length === 0" class="close-button" (click)="onClickOk()">
             <span class="button-inner">Fermer</span>
           </button>
         </div>

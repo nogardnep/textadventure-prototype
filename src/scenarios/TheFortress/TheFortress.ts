@@ -38,7 +38,7 @@ export class TheFortress extends BaseScenario {
       entityConstructors: TheFortress.entityConstructors,
       images: TheFortress.images,
       audios: TheFortress.audios,
-      subjects: TheFortress.subjects
+      subjects: TheFortress.subjects,
     });
 
     // TODO: move
@@ -47,6 +47,8 @@ export class TheFortress extends BaseScenario {
       receiverGender: Gender.Male,
       receiverPerson: Person.SecondPersonPlural,
     };
+
+    this.startDate = new Date(800, 5, 5, 6, 23);
   }
 
   getTitle() {
@@ -57,18 +59,18 @@ export class TheFortress extends BaseScenario {
     const player = play.addEntity(
       TheFortress.entityConstructors.Elkchten.name
     ) as Character;
-    // [
-    //   TheFortress.entityConstructors.DestructionSpell.name,
-    //   TheFortress.entityConstructors.IllusionSpell.name,
-    //   TheFortress.entityConstructors.InvocationSpell.name,
-    //   TheFortress.entityConstructors.PrescienceSpell.name,
-    //   TheFortress.entityConstructors.ProtectionSpell.name,
-    //   TheFortress.entityConstructors.HealingSpell.name,
-    //   TheFortress.entityConstructors.LevitationSpell.name,
-    //   TheFortress.entityConstructors.ControlSpell.name,
-    // ].forEach((item) => {
-    //   player.giveSpellOfType(item, false);
-    // });
+    [
+      TheFortress.entityConstructors.DestructionSpell.name,
+      TheFortress.entityConstructors.IllusionSpell.name,
+      TheFortress.entityConstructors.InvocationSpell.name,
+      TheFortress.entityConstructors.PrescienceSpell.name,
+      TheFortress.entityConstructors.ProtectionSpell.name,
+      TheFortress.entityConstructors.HealingSpell.name,
+      TheFortress.entityConstructors.LevitationSpell.name,
+      TheFortress.entityConstructors.ControlSpell.name,
+    ].forEach((item) => {
+      player.giveSpellOfType(item, false);
+    }); // TODO: temp
     play.setPlayer(player);
   }
 
@@ -79,11 +81,17 @@ export class TheFortress extends BaseScenario {
 
     (play.getPlayer() as Character).moveTo(firstRoom);
 
-    play.sendMessage([
-      {
-        tag: ParagraphTag.Event,
-        text: "Ici commence l'aventure",
-      },
-    ]);
+    play.sendMessage(
+      [
+        {
+          tag: ParagraphTag.Event,
+          text: "Ici commence l'aventure",
+        },
+      ],
+      [],
+      () => {
+        play.playMusic(TheFortress.audios.music);
+      }
+    );
   }
 }

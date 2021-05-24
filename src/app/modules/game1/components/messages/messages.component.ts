@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { MessageWrapper } from 'src/app/services/game.service';
-import { InterfaceService } from 'src/app/services/interface.service';
+import { ButtonType, InterfaceService } from 'src/app/services/interface.service';
 import { Choice } from 'src/game/core/models/Choice';
 
 @Component({
@@ -10,16 +10,26 @@ import { Choice } from 'src/game/core/models/Choice';
 })
 export class MessagesComponent {
   @Input() messages: MessageWrapper[];
+  @Output() emptyEvent = new EventEmitter();
 
   constructor(private interfaceService: InterfaceService) {}
 
-  onClickReaded(message: MessageWrapper) {
-    this.interfaceService.onClickButton();
-    message.read = true;
+  onClickReaded() {
+    this.interfaceService.onClickButton(ButtonType.Simple);
+
+    this.emptyEvent.emit();
+
+    this.messages.forEach((item) => {
+      item.read = true;
+
+      if (item.onReaded) {
+        item.onReaded();
+      }
+    });
   }
 
   onClickChoice(choice: Choice) {
-    this.interfaceService.onClickButton();
+    this.interfaceService.onClickButton(ButtonType.Simple);
     choice.proceed();
   }
 

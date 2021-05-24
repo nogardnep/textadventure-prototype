@@ -65,7 +65,6 @@ export class EntityWindowComponent
   }
 
   private checkIfEmpty(): void {
-    console.log(this.entity);
     if (this.entity.getFullImages().length > 0) {
       this.empty = false;
     } else {
@@ -140,7 +139,7 @@ export class EntityWindowComponent
     scale = width / WINDOW_REFERENCE.width;
     this.stage.scaleX = this.stage.scaleY = scale;
 
-    this.stage.regX = -WINDOW_REFERENCE.width/2;
+    this.stage.regX = -WINDOW_REFERENCE.width / 2;
     this.stage.regY = -WINDOW_REFERENCE.height;
   }
 }

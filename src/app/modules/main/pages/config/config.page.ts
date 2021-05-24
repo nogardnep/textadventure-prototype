@@ -7,7 +7,7 @@ import {
   LanguageKey,
   LANGUAGE_NAMES,
 } from 'src/game/core/dictionnaries/Language';
-import { InterfaceService } from 'src/app/services/interface.service';
+import { ButtonType, InterfaceService } from 'src/app/services/interface.service';
 
 @Component({
   selector: 'app-config',
@@ -43,7 +43,7 @@ export class ConfigPage implements OnInit, OnDestroy {
   }
 
   onClickBack(): void {
-    this.interfaceService.onClickButton();
+    this.interfaceService.onClickButton(ButtonType.Validation);
     this.location.back();
   }
 

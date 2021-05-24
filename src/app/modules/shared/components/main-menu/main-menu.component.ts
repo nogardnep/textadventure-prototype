@@ -1,6 +1,9 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { InterfaceService } from 'src/app/services/interface.service';
+import {
+  ButtonType,
+  InterfaceService,
+} from 'src/app/services/interface.service';
 
 @Component({
   selector: 'app-main-menu',
@@ -8,17 +11,20 @@ import { InterfaceService } from 'src/app/services/interface.service';
   styleUrls: ['./main-menu.component.scss'],
 })
 export class MainMenuComponent implements OnInit {
-  constructor(private router: Router,private interfaceService:InterfaceService) {}
+  constructor(
+    private router: Router,
+    private interfaceService: InterfaceService
+  ) {}
 
   ngOnInit() {}
 
   onClickHome(): void {
-    this.interfaceService.onClickButton();
+    this.interfaceService.onClickButton(ButtonType.Simple);
     this.router.navigate(['/']);
   }
 
   onClickConfig(): void {
-    this.interfaceService.onClickButton();
+    this.interfaceService.onClickButton(ButtonType.Simple);
     this.router.navigate(['/config']);
   }
 }
