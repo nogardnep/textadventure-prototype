@@ -2,8 +2,8 @@
   <ng-container *ngFor="let item of messages">
     <div>
       <entity-paragraphs [paragraphs]="item.paragraphs"></entity-paragraphs>
-      <div *ngIf="!item.readed">
-        <button (click)="onClickReaded(item)">Ok</button>
+      <div *ngIf="!item.read">
+        <button (click)="onClickRead(item)">Ok</button>
       </div>
     </div>
   </ng-container>

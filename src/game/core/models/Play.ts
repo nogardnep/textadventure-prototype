@@ -17,19 +17,27 @@ export interface StoredPlay {
   narration: StoredNarration;
   time: number;
   scenarioId: ScenarioId;
+  ended: boolean;
+  lastUpdateTime: number;
+}
+
+export enum EndMode {
+  Victory,
+  Defeat,
 }
 
 type PlayCallBacks = {
-  onSave: () => void;
+  onAutoSave: () => void;
   onMessageSend: (
     paragraphs: Paragraph[],
     choices?: Choice[],
-    onReaded?: () => void
+    onRead?: () => void
   ) => void;
   onStartConversation: (interlocutor: Entity) => void;
   onUpdate: () => void;
   onPlayMusic: (audio: Audio) => void;
   onPlaySoundEffect: (audio: Audio) => void;
+  onEnd: (mode: EndMode, paragaphs: Paragraph[]) => void;
 };
 
 export class Play {
@@ -40,14 +48,18 @@ export class Play {
   private scenario: Scenario;
   private stored: StoredPlay;
   private callbacks: PlayCallBacks;
+  private ended: boolean;
+  private lastUpdateTime: number;
 
   constructor(scenario: Scenario, callbacks: PlayCallBacks) {
     this.stored = {
+      ended: null,
       narration: null,
       playerId: null,
       storedEntities: {},
       time: null,
       scenarioId: null,
+      lastUpdateTime: null,
     };
 
     this.callbacks = callbacks;
@@ -57,6 +69,8 @@ export class Play {
     this.scenario = scenario;
     this.time = 0;
     this.stored.scenarioId = this.scenario.id;
+    this.ended = false;
+    this.lastUpdateTime = 0;
 
     Glossary.setReceiverPerson(Person.SecondPersonPlural);
     Glossary.setConjugationTime(ConjugationTime.Present);
@@ -69,6 +83,8 @@ export class Play {
     this.narration.save();
     this.storePlayer();
     this.storeTime();
+    this.storeEnded();
+    this.storeLastUpdateTime();
   }
 
   start(): void {
@@ -77,12 +93,22 @@ export class Play {
 
   update(): void {
     for (let key in this.entities) {
-      this.entities[key].update();
+      const entity = this.entities[key];
+      if (!entity.isDestroyed()) {
+        this.entities[key].update();
+      }
     }
 
     this.scenario.update(this);
 
     this.callbacks.onUpdate();
+
+    this.lastUpdateTime = this.time;
+    this.storeLastUpdateTime();
+  }
+
+  getPassedTime(): number {
+    return this.time - this.lastUpdateTime;
   }
 
   load(storedPlay: StoredPlay): void {
@@ -111,10 +137,21 @@ export class Play {
 
     this.player = this.entities[storedPlay.playerId];
     this.time = storedPlay.time;
+    this.ended = storedPlay.ended;
 
     if (storedPlay.narration) {
       this.narration.load(storedPlay.narration);
     }
+  }
+
+  end(mode: EndMode, paragaphs: Paragraph[]): void {
+    this.callbacks.onEnd(mode, paragaphs);
+    this.ended = true;
+    this.storeEnded();
+  }
+
+  isEnded(): boolean {
+    return this.ended;
   }
 
   getStored(): StoredPlay {
@@ -293,16 +330,26 @@ export class Play {
     this.save();
   }
 
+  storeEnded(): void {
+    this.stored.ended = this.ended;
+    this.save();
+  }
+
+  storeLastUpdateTime(): void {
+    this.stored.lastUpdateTime = this.lastUpdateTime;
+    this.save();
+  }
+
   save(): void {
-    this.callbacks.onSave();
+    this.callbacks.onAutoSave();
   }
 
   sendMessage(
     paragraphs: Paragraph[],
     choices?: Choice[],
-    onReaded?: () => void
-  ): void {
-    this.callbacks.onMessageSend(paragraphs, choices, onReaded);
+    onRead?: () => void
+  ) {
+    this.callbacks.onMessageSend(paragraphs, choices, onRead);
   }
 
   getAction(key: string): Action {

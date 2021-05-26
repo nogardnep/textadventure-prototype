@@ -1,10 +1,11 @@
-import { SelectionPage } from './pages/selection/selection.page';
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-
+import { RouterModule, Routes } from '@angular/router';
+import { ConversationPage } from './pages/conversation/conversation.page';
 import { GamePage } from './pages/game/game.page';
-import { PlayerPage } from './pages/player/player.page';
 import { MessagesPage } from './pages/messages/messages.page';
+import { PlayerPage } from './pages/player/player.page';
+import { SelectionPage } from './pages/selection/selection.page';
+
 
 const routes: Routes = [
   {
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'selection/:id',
     component: SelectionPage,
+  },
+  {
+    path: 'conversation/:id',
+    component: ConversationPage,
   },
   {
     path: 'messages',

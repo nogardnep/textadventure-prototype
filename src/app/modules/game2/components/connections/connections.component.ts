@@ -53,6 +53,6 @@ export class ConnectionsComponent implements OnInit {
   isUsable(connection: Connection): boolean {
     const passage = connection.passageId ? this.getPassage(connection) : null;
 
-    return !passage || !passage.closed;
+    return !passage || !passage.isClosed();
   }
 }

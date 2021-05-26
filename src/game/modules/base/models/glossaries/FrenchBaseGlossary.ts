@@ -7,6 +7,9 @@ export class FrenchBaseGlossary extends FrenchGlossary {
   constructor() {
     super(
       {
+        notOwned: (args: any[]) => {
+          return this.asSentence('vous ne possedez pas cela');
+        },
         allHandsUsed: (args: any[]) => {
           return this.asSentence('toutes vos mains sont prises');
         },

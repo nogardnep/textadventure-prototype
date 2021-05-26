@@ -1,3 +1,4 @@
+import { CanvasService } from 'src/app/services/canvas.service';
 import {
   AfterViewInit,
   Component,
@@ -31,7 +32,9 @@ export class EntityWindowComponent
 
   private stage: createjs.Stage;
 
-  constructor() {}
+  constructor(private canvasService: CanvasService) {
+    this.canvasService.load(null, null);
+  }
 
   ngOnInit(): void {}
 

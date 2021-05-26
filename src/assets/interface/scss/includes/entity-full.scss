@@ -140,24 +140,6 @@
       padding: 10px 0;
       box-shadow: inset 1px 5px 5px 0 rgba(0, 0, 0, 0.4), inset 1px -5px 5px 0 rgba(0, 0, 0, 0.4);
 
-      .content-label {
-        $backgroundColor: rgba(255, 255, 255, 0.7);
-
-        font-size: 0.8em;
-        opacity: 0.8;
-        font-style: italic;
-        background: linear-gradient(0deg, $backgroundColor, $backgroundColor), url($imagePath + "/decoration-5.png");
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-        display: inline-block;
-        padding: 0 2px;
-        min-width: 100px;
-
-        &:after {
-          display: inline-block;
-          content: $nbsp + ":";
-        }
-      }
 
       .choice-list,
       .action-list {

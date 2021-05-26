@@ -1,5 +1,7 @@
+import { EntityType } from 'src/game/core/models/Entity';
 import { Name } from 'src/game/core/models/Name';
 import { ParagraphTag } from 'src/game/core/models/Paragraph';
+import { EndMode, Play } from 'src/game/core/models/Play';
 import { DirectionKeys } from 'src/game/modules/base/dictionnaries/direction';
 import { Spell } from 'src/game/modules/base/models/entities/immaterial/Spell';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
@@ -9,11 +11,20 @@ import {
 } from 'src/game/modules/base/models/entities/material/Place';
 import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 import { TheFortress } from '../../TheFortress';
+import { Chest } from '../objects/Chest';
 import { Bridge } from './../passages/Bridge';
 
 export class Plateau extends Place {
   getName() {
     return new Name('plateau');
+  }
+
+  init() {
+    const chest = this.getPlay().addEntity(
+      TheFortress.entityConstructors.Chest.name
+    ) as Chest;
+    chest.giveChildOfType(TheFortress.entityConstructors.Sword.name, false);
+    chest.moveTo(this);
   }
 
   getFullDescription() {
@@ -60,7 +71,7 @@ export class Plateau extends Place {
           text: 'Le géant succombe sous un déluge de flammes.',
         },
       ]);
-      this.getBridge().getGiant().kill();
+      this.getBridge().getGiant().die();
       report.success = true;
     } else {
       report = super.affectedBySpell(author, spell);

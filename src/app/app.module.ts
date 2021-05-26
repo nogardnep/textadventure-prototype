@@ -5,20 +5,19 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NotFoundPage } from './modules/main/pages/not-found/not-found.page';
 import { SharedModule } from './modules/shared/shared.module';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, NotFoundPage],
   entryComponents: [],
   imports: [
-    // CommonModule,
-    // MainModule,
-    // FormsModule,
     BrowserModule,
     SharedModule,
     IonicModule.forRoot({animated: false}),
     AppRoutingModule,
     IonicStorageModule.forRoot(),
+    
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

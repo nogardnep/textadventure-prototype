@@ -18,9 +18,6 @@ export class CastingOn extends Action {
 
   proceed(author: Character, args: any[]) {
     const spell = args[0] as Spell;
-    const target = author.getParent();
-    // const target = args[1] as MaterialEntity; // TODO
-
-    return target.affectedBySpell(author, spell);
+    return spell.castedBy(author);
   }
 }

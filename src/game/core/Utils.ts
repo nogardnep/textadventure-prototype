@@ -22,4 +22,22 @@ export abstract class Utils {
   static generateId(): string {
     return Math.floor(Math.random() * 10000000).toString();
   }
+
+  static getObjectSize(object: {}): number {
+    let size = 0;
+
+    for (let key in object) {
+      if (object.hasOwnProperty(key)) size++;
+    }
+
+    return size;
+  }
+
+  static getFirstFromObject(object: {}): any {
+    return object[Object.keys(object)[0]];
+  }
+
+  static getRandom(min: number, max: number ): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 }

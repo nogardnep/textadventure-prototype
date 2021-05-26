@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { AudioLayerKey, AudioService } from 'src/app/services/audio.service';
 import { GameService } from 'src/app/services/game.service';
-import { InterfaceService } from 'src/app/services/interface.service';
+import {
+  ButtonType,
+  InterfaceService,
+} from 'src/app/services/interface.service';
 import { Audio } from 'src/game/core/models/Audio';
 import { ParagraphTag } from 'src/game/core/models/Paragraph';
-import { ButtonType } from './../../../../services/interface.service';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +16,8 @@ import { ButtonType } from './../../../../services/interface.service';
 })
 export class HomePage implements OnInit {
   lastPlayExists: boolean = false;
+  loading: boolean = true;
+  loadingSubscription: Subscription;
 
   constructor(
     private gameService: GameService,
@@ -26,19 +30,31 @@ export class HomePage implements OnInit {
       this.lastPlayExists = stored ? true : false;
     });
 
-    this.audioService.clearLayer(AudioLayerKey.LocationAmbiance);
-    this.audioService.play(
-      new Audio('interface/audios/home.wav', 0.2),
-      AudioLayerKey.LocationAmbiance,
-      {
-        loop: true,
-        fade: true,
+    this.loadingSubscription = this.interfaceService.loadingSubject.subscribe(
+      (loading) => {
+        this.loading = loading;
+
+        if (!this.loading) {
+          this.audioService.clearLayer(AudioLayerKey.LocationAmbiance);
+          this.audioService.play(
+            this.interfaceService.audios.home,
+            AudioLayerKey.LocationAmbiance,
+            {
+              loop: true,
+              fadeIn: 1000,
+              fadeOut: 1000,
+            }
+          );
+        }
       }
     );
+
+    this.interfaceService.emitLoading();
   }
 
   ngOnDestroy() {
     this.audioService.clearLayer(AudioLayerKey.LocationAmbiance);
+    this.loadingSubscription.unsubscribe();
   }
 
   onClickNew(): void {

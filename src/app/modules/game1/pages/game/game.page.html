@@ -1,24 +1,29 @@
 <ion-content [fullscreen]="true">
   <div class="page-container">
+    <div class="page-header">
+      <app-main-menu></app-main-menu>
+    </div>
     <ng-container *ngIf="play">
-      <div class="page-header">
-        <app-main-menu></app-main-menu>
-      </div>
-
-      <div class="page-core">
-        <app-time [play]="play"></app-time>
-        <ng-container *ngIf="play.getPlayer()">
-          <app-location [entity]="getLocation()"></app-location>
-        </ng-container>
-      </div>
-
-      <div class="page-footer">
-        <ng-container *ngIf="play.getPlayer()">
-          <app-player-preview [player]="getPlayer()"></app-player-preview>
-        </ng-container>
-      </div>
+      <ng-container *ngIf="!play.isEnded()">
+        <div class="page-core">
+          <app-time [play]="play"></app-time>
+          <ng-container *ngIf="play.getPlayer()">
+            <app-location [entity]="getLocation()"></app-location>
+          </ng-container>
+        </div>
+        <div class="page-footer">
+          <ng-container *ngIf="play.getPlayer()">
+            <app-player-preview [player]="getPlayer()"></app-player-preview>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="play.isEnded()">
+        <p>Cette histoire est achevée.</p>
+        <button class="back-home-button" (click)="onClickBackHome()">
+          <span class="button-inner">Revenir en lieu sûr</span>
+        </button>
+      </ng-container>
     </ng-container>
-
     <div class="loading" *ngIf="!play">
       <p>chargement...</p>
     </div>

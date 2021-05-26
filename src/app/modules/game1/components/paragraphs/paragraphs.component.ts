@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { InterfaceService } from 'src/app/services/interface.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Entity } from 'src/game/core/models/Entity';
 import { Paragraph } from 'src/game/core/models/Paragraph';
 
@@ -10,12 +9,13 @@ import { Paragraph } from 'src/game/core/models/Paragraph';
 })
 export class ParagraphsComponent implements OnInit {
   @Input() paragraphs: Paragraph[];
+  @Output() itemClicked =new EventEmitter<Entity>();
 
-  constructor(private interfaceService:InterfaceService) {}
+  constructor() {}
 
   ngOnInit() {}
 
   onClickItem(entity: Entity): void {
-    this.interfaceService.setSelection(entity)
+    this.itemClicked.emit(entity)
   }
 }

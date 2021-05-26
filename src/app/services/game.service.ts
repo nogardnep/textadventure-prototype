@@ -4,7 +4,7 @@ import { Audio } from 'src/game/core/models/Audio';
 import { Choice } from 'src/game/core/models/Choice';
 import { Entity } from 'src/game/core/models/Entity';
 import { Paragraph } from 'src/game/core/models/Paragraph';
-import { Play, StoredPlay } from 'src/game/core/models/Play';
+import { EndMode, Play, StoredPlay } from 'src/game/core/models/Play';
 import { Scenario } from 'src/game/core/models/Scenario';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
@@ -19,7 +19,7 @@ const PLAY_STORAGE_KEY = 'play';
 export type MessageWrapper = {
   paragraphs: Paragraph[];
   choices?: Choice[];
-  onReaded?: () => void;
+  onRead?: () => void;
   read: boolean;
 };
 
@@ -67,16 +67,12 @@ export class GameService {
     return this.play;
   }
 
-  addMessage(
-    paragraphs: Paragraph[],
-    choices?: Choice[],
-    onReaded?: () => void
-  ) {
+  addMessage(paragraphs: Paragraph[], choices?: Choice[], onRead?: () => void) {
     this.messages.push({
       paragraphs,
       choices,
       read: false,
-      onReaded,
+      onRead: onRead,
     });
 
     this.emitMessages();
@@ -91,11 +87,13 @@ export class GameService {
   }
 
   setPlay(play: Play): void {
-    this.play = play;
-    this.emitPlay();
-    this.interfaceService.setSelection(null);
-    this.updateLocation();
-    // this.audioService.stopAllSounds();
+    this.audioService.load(play.getScenario().audios, () => {
+      this.play = play;
+      this.emitPlay();
+      this.interfaceService.setSelection(null);
+      this.updateAudioAmbiance();
+      this.audioService.stopAllSounds();
+    });
   }
 
   getStoredPlay(): Promise<StoredPlay> {
@@ -108,7 +106,7 @@ export class GameService {
 
   createPlay(scenario: Scenario): Play {
     return new Play(scenario, {
-      onSave: () => {
+      onAutoSave: () => {
         // TODO: move condition?
         if (this.play) {
           this.savePlay();
@@ -117,47 +115,71 @@ export class GameService {
       onMessageSend: (
         paragraphs: Paragraph[],
         choices?: Choice[],
-        onReaded?: () => void
+        onRead?: () => void
       ) => {
-        this.addMessage(paragraphs, choices, onReaded);
-        this.interfaceService.goToMessages();
+        this.sendMessage(paragraphs, choices, onRead);
       },
-      onStartConversation: (interlocutor: Entity) => {},
+      onStartConversation: (interlocutor: Entity) => {
+        this.interfaceService.goToConversation(interlocutor.getId());
+      },
       onUpdate: () => {
         this.emitPlay();
-        this.updateLocation();
+        this.updateAudioAmbiance();
       },
       onPlayMusic: (audio: Audio) => {
-        this.audioService.play(audio, AudioLayerKey.Music);
+        this.audioService.clearLayer(AudioLayerKey.Music);
+        this.audioService.play(audio, AudioLayerKey.Music, {
+          fadeOut: 1000,
+        });
       },
       onPlaySoundEffect: (audio: Audio) => {
         this.audioService.play(audio, AudioLayerKey.BriefEffects);
       },
+      onEnd: (mode: EndMode, paragraphs: Paragraph[]) => {
+        this.sendMessage(paragraphs, [], () => {
+          this.interfaceService.goToHome();
+        });
+      },
     });
   }
 
-  private updateLocation(): void {
-    const newLocation = (this.play.getPlayer() as Character).getParent();
+  sendMessage(
+    paragraphs: Paragraph[],
+    choices?: Choice[],
+    onRead?: () => void
+  ): void {
+    this.addMessage(paragraphs, choices, onRead);
+    this.interfaceService.goToMessages();
+  }
 
-    if (!this.location || (newLocation && !newLocation.equals(this.location))) {
-      this.location = (this.play.getPlayer() as Character).getParent();
+  updateAudioAmbiance(): void {
+    if (this.play) {
+      const newLocation = (this.play.getPlayer() as Character).getParent();
 
-      if (this.location) {
-        this.audioService.clearLayer(AudioLayerKey.LocationAmbiance);
+      if (
+        !this.location ||
+        (newLocation && !newLocation.equals(this.location))
+      ) {
+        this.location = (this.play.getPlayer() as Character).getParent();
 
-        this.location.getAudioAmbiance().forEach((ambiance) => {
-          if (!ambiance.check || ambiance.check()) {
-            this.audioService.play(
-              ambiance.audio,
-              AudioLayerKey.LocationAmbiance,
-              {
-                loop: true,
-                fade: true,
-                volume: ambiance.volume ? ambiance.volume : 1,
-              }
-            );
-          }
-        });
+        if (this.location) {
+          this.audioService.clearLayer(AudioLayerKey.LocationAmbiance);
+
+          this.location.getAudioAmbiance().forEach((ambiance) => {
+            if (!ambiance.check || ambiance.check()) {
+              this.audioService.play(
+                ambiance.audio,
+                AudioLayerKey.LocationAmbiance,
+                {
+                  loop: true,
+                  // fadeIn: 1000,
+                  // fadeOut: 1000,
+                  volume: ambiance.volume ? ambiance.volume : 1,
+                }
+              );
+            }
+          });
+        }
       }
     }
   }

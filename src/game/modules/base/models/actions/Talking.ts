@@ -1,4 +1,3 @@
-import { Choice } from 'src/game/core/models/Choice';
 import { Action } from 'src/game/core/models/Action';
 import { Character } from '../entities/material/Character';
 
@@ -13,7 +12,7 @@ export class Talking extends Action {
     let target = args[0] as Character;
 
     // TODO
-    if (!target.dead) {
+    if (!target.isDead()) {
       if (author.canSee(target)) {
         usable = true;
       }

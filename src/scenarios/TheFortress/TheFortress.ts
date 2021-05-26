@@ -1,7 +1,8 @@
 import { Gender } from 'src/game/core/dictionnaries/Gender';
 import { ConjugationTime } from 'src/game/core/models/Glossary';
 import { ParagraphTag } from 'src/game/core/models/Paragraph';
-import { Play } from 'src/game/core/models/Play';
+import { EndMode, Play } from 'src/game/core/models/Play';
+import { BaseCaracteristicKey } from 'src/game/modules/base/dictionnaries/caracteristics';
 import { BaseScenario } from 'src/game/modules/base/models/BaseScenario';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { Place } from 'src/game/modules/base/models/entities/material/Place';
@@ -12,10 +13,10 @@ import { IMAGES } from './images';
 import { SUBJECTS } from './subjects';
 
 export class TheFortress extends BaseScenario {
-  static entityConstructors = ENTITY_CONSTRUCTORS;
-  static images = IMAGES;
-  static audios = AUDIO;
-  static subjects = SUBJECTS;
+  static readonly entityConstructors = ENTITY_CONSTRUCTORS;
+  static readonly images = IMAGES;
+  static readonly audios = AUDIO;
+  static readonly subjects = SUBJECTS;
 
   starting = {
     maxSpells: 2,
@@ -74,7 +75,7 @@ export class TheFortress extends BaseScenario {
     play.setPlayer(player);
   }
 
-  start(play: Play): void {
+  start(play: Play) {
     const firstRoom = play.getFirstEntityOfType(
       TheFortress.entityConstructors.MountainousPath.name
     ) as Place;
@@ -93,5 +94,21 @@ export class TheFortress extends BaseScenario {
         play.playMusic(TheFortress.audios.music);
       }
     );
+  }
+
+  update(play: Play) {
+    const player = play.getPlayer() as Character;
+    if (player.getEffectiveCaracteristicValue(BaseCaracteristicKey.Life) <= 0) {
+      play.end(EndMode.Defeat, [
+        { tag: ParagraphTag.Event, text: 'Les forces vous manquent...' },
+      ]);
+    }
+
+    for (let i = 0; i <= 100; i++) {
+      (play.getPlayer() as Character).testCaracteristic(
+        BaseCaracteristicKey.Resistance,
+        0
+      );
+    }
   }
 }

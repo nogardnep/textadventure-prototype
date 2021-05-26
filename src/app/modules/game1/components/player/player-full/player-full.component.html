@@ -4,7 +4,7 @@
     </div>
   </div>
   <div class="player-description">
-    <app-paragraphs [paragraphs]="player.getFullDescription()"></app-paragraphs>
+    <app-paragraphs [paragraphs]="player.getFullDescription()" (itemClicked)="onItemClicked($event)"></app-paragraphs>
   </div>
   <div class="section caracteristics-section">
     <h3 class="section-title">Caractéristiques</h3>
@@ -74,7 +74,7 @@
   <div class="section effects-section">
     <h3 class="section-title">Effets</h3>
     <div class="section-inner">
-      <ng-container *ngIf="player.effectsId.length > 0; then effects else nothing"></ng-container>
+      <ng-container *ngIf="player.getEffects().length > 0; then effects else nothing"></ng-container>
       <ng-template #effects>
         <ul class="list">
           <li class="list-item" *ngFor="let entity of player.getEffects()">

@@ -13,18 +13,19 @@ export interface StoredEntity {
   type: EntityType;
 }
 
-export class Entity implements StoredEntity {
-  name: string;
-  id: EntityId;
-  type: EntityType;
-  // protected onGetPlay: () => Play;
+export class Entity {
+  private name: string;
+  private id: EntityId;
+  private type: EntityType;
+  private destroyed = false;
+  private  onGetPlay: () => Play;
 
   constructor(play: Play) {
-    // this.onGetPlay = () => {
-    //   return play;
-    // };
-    this.id = Utils.generateId();
+    this.onGetPlay = () => {
+      return play;
+    };
     this.type = this.constructor.name;
+    this.id = this.type + '-' + Utils.generateId();
   }
 
   init(): void {}
@@ -43,13 +44,22 @@ export class Entity implements StoredEntity {
     return stored as StoredEntity;
   }
 
+  destroy(): void {
+    this.destroyed = true;
+    this.save();
+  }
+
+  isDestroyed(): boolean {
+    return this.destroyed;
+  }
+
   save(): void {
     this.getPlay().storeEntity(this);
   }
 
   getPlay(): Play {
-    return GameManager.getPlay();
-    // return this.onGetPlay();
+    // return GameManager.getPlay();
+    return this.onGetPlay();
   }
 
   getType(): string {
@@ -83,6 +93,12 @@ export class Entity implements StoredEntity {
   }
 
   inheritsFrom(type: EntityType): boolean {
+    const constructor = this.getPlay().getScenario().entityConstructors[type];
+
+    if (!constructor) {
+      console.error('Unfound constructor for ' + type);
+    }
+
     return (
       this instanceof this.getPlay().getScenario().entityConstructors[type]
     );

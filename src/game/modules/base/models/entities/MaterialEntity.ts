@@ -1,19 +1,41 @@
 import { ActionReport } from 'src/game/core/models/Action';
 import { Entity, EntityId, EntityType } from 'src/game/core/models/Entity';
+import { Utils } from 'src/game/core/Utils';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { Caracteristic } from '../Caracteristic';
 import { BaseGlossaryKey } from './../BaseGlossary';
 import { BaseEntity } from './BaseEntity';
 import { Effect } from './immaterial/Effect';
+import { Faction } from './immaterial/Faction';
 import { Spell } from './immaterial/Spell';
 
+export type CaracteristTestReport = {
+  success: boolean;
+  critical: boolean;
+};
+
+const MIN_CARACTERISTIC_VALUE = 0;
+const MAX_CARACTERISTIC_VALUE = 100;
+
 export class MaterialEntity extends BaseEntity {
-  invisible = false;
-  childrenId: EntityId[] = [];
-  parentId: EntityId = null;
-  caracteristics: { [key: string]: Caracteristic } = {};
-  effectsId: EntityId[] = [];
-  factionId: EntityId = null;
+  private invisible = false;
+  private childrenId: EntityId[] = [];
+  private parentId: EntityId = null;
+  private caracteristics: { [key: string]: Caracteristic } = {};
+  private effectsId: EntityId[] = [];
+  private factionsId: EntityId[] = [];
+
+  setCaracteristic(key: string, caracteristic: Caracteristic): void {
+    this.caracteristics[key] = caracteristic;
+  }
+
+  setInvisible(invisible: boolean): void {
+    this.invisible = invisible;
+  }
+
+  isInvisible(): boolean {
+    return this.invisible;
+  }
 
   isOwning(entity: Entity, deepSearch: boolean): boolean {
     let found = false;
@@ -31,7 +53,42 @@ export class MaterialEntity extends BaseEntity {
 
   onVisitedBy(entity: MaterialEntity): void {
     // this.getPlay().updateDisplay();
-    // To be override in other classes
+    // To be override
+  }
+
+  testCaracteristic(key: string, difficulty: number): CaracteristTestReport {
+    let success = false;
+    let critical = false;
+    let value = this.getEffectiveCaracteristicValue(key) - difficulty;
+
+    if (value <= MIN_CARACTERISTIC_VALUE) {
+      value = MIN_CARACTERISTIC_VALUE + 1;
+    } else if (value >= MAX_CARACTERISTIC_VALUE) {
+      value = MAX_CARACTERISTIC_VALUE - 1;
+    }
+
+    const random = Utils.getRandom(
+      MIN_CARACTERISTIC_VALUE,
+      MAX_CARACTERISTIC_VALUE
+    );
+
+    if (random <= value) {
+      success = true;
+    }
+
+    if (
+      random === MIN_CARACTERISTIC_VALUE ||
+      random === MAX_CARACTERISTIC_VALUE
+    ) {
+      critical = true;
+    }
+
+    this.getEffectiveCaracteristicValue(key);
+
+    return {
+      success,
+      critical,
+    };
   }
 
   getEffects(): Effect[] {
@@ -45,15 +102,73 @@ export class MaterialEntity extends BaseEntity {
     return entities;
   }
 
-  giveEffectOfType(type: EntityType, doNotCreateNew: boolean): Effect {
-    return this.giveEntityOfTypeInList(
-      type,
-      this.effectsId,
-      doNotCreateNew
-    ) as Effect;
+  getFactions(): Faction[] {
+    const entities: Faction[] = [];
+
+    this.factionsId.forEach((id: EntityId) => {
+      const entity = this.getPlay().getEntity(id);
+      entities.push(entity as Faction);
+    });
+
+    return entities;
   }
 
-  giveChildOfType(type: EntityType, doNotCreateNew: boolean): MaterialEntity {
+  ownsToFaction(faction: Faction): boolean {
+    let found = false;
+
+    this.getFactions().forEach((item) => {
+      if (item.equals(faction)) {
+        found = true;
+      }
+    });
+
+    return found;
+  }
+
+  getEffectsOfType(type: EntityType): Effect[] {
+    let found: Effect[] = [];
+
+    this.getEffects().forEach((effect) => {
+      if (effect.inheritsFrom(type)) {
+        found.push(effect);
+      }
+    });
+
+    return found;
+  }
+
+  removeEffectsOfTypes(types: EntityType[]): Effect[] {
+    let found: Effect[] = [];
+
+    this.effectsId.forEach((id, index) => {
+      const effect = this.getPlay().getEntity(id) as Effect;
+
+      types.forEach((type) => {
+        if (effect.inheritsFrom(type)) {
+          found.push(effect);
+          effect.destroy();
+          this.effectsId.splice(index, 1);
+        }
+      });
+    });
+
+    return found;
+  }
+
+  giveEffect(effect: Effect): Effect {
+    this.effectsId.push(effect.getId());
+    effect.getOwner().equals(this);
+    effect.save();
+    return effect;
+  }
+
+  giveEffectOfType(type: EntityType, doNotCreateNew = false): Effect {
+    const effect = this.getPlay().addEntity(type) as Effect;
+    this.giveEffect(effect);
+    return effect;
+  }
+
+  giveChildOfType(type: EntityType, doNotCreateNew = false): MaterialEntity {
     const entity = this.giveEntityOfTypeInList(
       type,
       this.childrenId,
@@ -66,6 +181,12 @@ export class MaterialEntity extends BaseEntity {
     }
 
     return entity;
+  }
+
+  giveChildrenOfType(types: EntityType[]): void {
+    types.forEach((type) => {
+      this.giveChildOfType(type);
+    });
   }
 
   getChildrenOfType(type: EntityType, list: EntityId[]): MaterialEntity[] {
@@ -96,11 +217,11 @@ export class MaterialEntity extends BaseEntity {
     }
 
     if (target) {
-      target.childrenId.push(this.id);
+      target.childrenId.push(this.getId());
       target.save();
     }
 
-    this.parentId = target.id;
+    this.parentId = target.getId();
     this.save();
 
     target.onVisitedBy(this);
@@ -183,9 +304,17 @@ export class MaterialEntity extends BaseEntity {
     return value;
   }
 
-  getCaracteristicValue(key: string): number {
-    return this.caracteristics[key].current;
+  getCaracteristic(key: string): Caracteristic {
+    return this.caracteristics[key];
   }
+
+  getCaracteristics(): { [key: string]: Caracteristic } {
+    return this.caracteristics;
+  }
+
+  // getCaracteristicValue(key: string): number {
+  //   return this.caracteristics[key].current;
+  // }
 
   protected giveEntityOfTypeInList(
     type: EntityType,
@@ -194,6 +323,7 @@ export class MaterialEntity extends BaseEntity {
   ): Entity {
     let entity = null;
 
+    // TODO: "getChildrenOfType" is an error?
     if (!doNotCreateNew || this.getChildrenOfType(type, list).length === 0) {
       entity = this.getPlay().addEntity(type);
       this.addToList(entity, list);

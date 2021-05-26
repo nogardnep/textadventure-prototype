@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GameService } from 'src/app/services/game.service';
+import { InterfaceService } from 'src/app/services/interface.service';
+import { Entity } from 'src/game/core/models/Entity';
 import { TextWrapper } from 'src/game/core/TextManager';
-import { BASE_CARACTERISTIC_NAMES } from 'src/game/modules/base/dictionnaries/caracteristics';
-import { Caracteristic } from 'src/game/modules/base/models/Caracteristic';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { UsuableObject } from 'src/game/modules/base/models/entities/material/thing/UsuableObject';
 
@@ -17,7 +16,7 @@ export class PlayerFullComponent implements OnInit {
     caracteristics: { fr: 'caracteristiques', en: 'caracteristics' },
   };
 
-  constructor() {}
+  constructor(private interfaceService: InterfaceService) {}
 
   getInventoryObjects(): UsuableObject[] {
     return this.player.getInventoryObjects();
@@ -32,4 +31,8 @@ export class PlayerFullComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  onItemClicked(item: Entity) {
+    this.interfaceService.setSelection(item);
+  }
 }

@@ -12,7 +12,7 @@ export class MagicStick extends HoldableObject {
       [BaseCaracteristicKey.Magic]: {
         value: 5,
         check: () => {
-          return this.held;
+          return this.isHeld();
         },
       },
     };

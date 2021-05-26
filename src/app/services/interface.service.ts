@@ -25,15 +25,28 @@ export enum ButtonType {
 })
 export class InterfaceService {
   private selection: Entity;
-  audioPath ='interface/audios';
+  private loading: boolean = true;
+  private readonly audioPath = 'interface/audios';
+  readonly audios = {
+    back: new Audio(this.audioPath + '/back.wav', 0.5),
+    validation: new Audio(this.audioPath + '/validation.wav', 0.5),
+    cancel: new Audio(this.audioPath + '/back.wav', 0.5),
+    click: new Audio(this.audioPath + '/click.wav', 0.2),
+    home: new Audio('interface/audios/home.wav', 0.2),
+  };
   selectionSubject = new Subject<Entity>();
+  loadingSubject = new Subject<boolean>();
 
   constructor(
     private router: Router,
     private location: Location,
     private modalController: ModalController,
     private audioService: AudioService
-  ) {}
+  ) {
+    this.audioService.load(this.audios, () => {
+      this.setLoading(false);
+    });
+  }
 
   async openPopup(paragraphs: Paragraph[], choices?: Choice[]) {
     const modal = await this.modalController.create({
@@ -53,8 +66,17 @@ export class InterfaceService {
     }
   }
 
+  setLoading(loading: boolean): void {
+    this.loading = loading;
+    this.emitLoading();
+  }
+
   emitSelection(): void {
     this.selectionSubject.next(this.selection);
+  }
+
+  emitLoading(): void {
+    this.loadingSubject.next(this.loading);
   }
 
   getSelection(): Entity {
@@ -66,16 +88,16 @@ export class InterfaceService {
 
     switch (type) {
       case ButtonType.Back:
-        audio = new Audio(this.audioPath +'/back.wav', 0.5);
+        audio = this.audios.back;
         break;
       case ButtonType.Validation:
-        audio = new Audio(this.audioPath +'/validation.wav', 0.5);
+        audio = this.audios.validation;
         break;
       case ButtonType.Cancel:
-        audio = new Audio(this.audioPath +'/back.wav', 0.5);
+        audio = this.audios.cancel;
         break;
       default:
-        audio = new Audio(this.audioPath +'/click.wav', 0.2);
+        audio = this.audios.click;
         break;
     }
 
@@ -112,5 +134,9 @@ export class InterfaceService {
 
   goToSelection(id: string): void {
     this.router.navigate(['/' + INTERFACE_ID + '/selection/' + id]);
+  }
+
+  goToConversation(id: string): void {
+    this.router.navigate(['/' + INTERFACE_ID + '/conversation/' + id]);
   }
 }

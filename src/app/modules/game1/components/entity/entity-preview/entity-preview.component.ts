@@ -1,5 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ButtonType, InterfaceService } from 'src/app/services/interface.service';
+import {
+  ButtonType,
+  InterfaceService,
+} from 'src/app/services/interface.service';
+import { Entity } from 'src/game/core/models/Entity';
 import { Name } from 'src/game/core/models/Name';
 import { EMPLACEMENT_NAMES } from 'src/game/modules/base/dictionnaries/emplacement';
 import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
@@ -15,7 +19,7 @@ import { WearableObject } from 'src/game/modules/base/models/entities/material/t
 export class EntityPreviewComponent implements OnInit {
   @Input() entity: BaseEntity;
 
-  constructor(private interfaceService:InterfaceService) {}
+  constructor(private interfaceService: InterfaceService) {}
 
   ngOnInit() {}
 
@@ -32,26 +36,41 @@ export class EntityPreviewComponent implements OnInit {
   }
 
   isWorn(): boolean {
-    return (this.entity as WearableObject).worn;
+    return this.entity instanceof WearableObject && this.entity.isWorn();
   }
 
   isOpen(): boolean {
-    return (this.entity as Thing).openable && !(this.entity as Thing).closed;
+    return (
+      this.entity instanceof Thing &&
+      this.entity.isOpenable() &&
+      !this.entity.isClosed()
+    );
   }
 
   isClosed(): boolean {
-    return (this.entity as Thing).openable && (this.entity as Thing).closed;
+    return (
+      this.entity instanceof Thing &&
+      this.entity.isOpenable() &&
+      this.entity.isClosed()
+    );
   }
 
   isDead(): boolean {
-    return (this.entity as Character).dead;
+    return this.entity instanceof Character && this.entity.isDead();
   }
 
   contentIsVisible(): boolean {
-    return !(this.entity as Thing).closed || (this.entity as Thing).transparent;
+    return (
+      this.entity instanceof Thing &&
+      (!this.entity.isClosed() || this.entity.isTransparent())
+    );
   }
 
   getEmplacementName(): Name {
     return EMPLACEMENT_NAMES[(this.entity as WearableObject).getEmplacement()];
+  }
+
+  onItemClicked(item: Entity) {
+    this.interfaceService.setSelection(item);
   }
 }

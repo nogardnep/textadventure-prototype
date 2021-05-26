@@ -1,10 +1,10 @@
-import { Spell } from 'src/game/modules/base/models/entities/immaterial/Spell';
 import { Name } from 'src/game/core/models/Name';
+import { ExteriorSpell } from './ExteriorSpell';
 
-export class DestructionSpell extends Spell {
+export class DestructionSpell extends ExteriorSpell {
   getName() {
-    return  new Name('destruction' ,{
-      properNoun: true
+    return new Name('destruction', {
+      properNoun: true,
     });
   }
 }

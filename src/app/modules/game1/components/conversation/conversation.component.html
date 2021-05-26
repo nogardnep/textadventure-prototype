@@ -1,9 +1,27 @@
-<!-- <div *ngIf="entity && subjects.length > 0">
-  <div>Intégroger sur</div>
-  <div>
-    <ng-container *ngFor="let item of subjects">
-      <button *ngIf="!item.check || item.check() " (click)="onClickSubject(item)"
-        [innerHTML]="item.title"></button>
-    </ng-container>
+<ng-container *ngIf="entity">
+  <div *ngIf=" choices.length > 0" class="conversation">
+    <div class="conversation-subjects">
+      <div class="conversation-subjects-label">Intégroger {{entity.getName().printWithDefiniteArticle()}} sur</div>
+      <ul class="subject-list">
+        <ng-container *ngFor="let item of choices">
+          <li class="subject-list-item">
+            <button class="subject-button" *ngIf="!item.check || item.check() " (click)="onClickChoice(item)">
+              <span class="button-inner" [innerHTML]="item.text"></span>
+            </button>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+    <div class="conversation-speeches">
+      <div *ngIf="choices.length === 0" class="nothing-to-say">
+        <p>{{entity.getName().printWithDefiniteArticle()}} n'a rien à vous dire</p>
+      </div>
+      <ng-container *ngIf="speeches.length > 0">
+        <div class="speech">
+          <div class="interlocutor-name">{{entity.getName().printWithDefiniteArticle(true)}}</div>
+          <app-paragraphs [paragraphs]="getLastSpeech()" (itemClicked)="onItemClicked($event)"></app-paragraphs>
+        </div>
+      </ng-container>
+    </div>
   </div>
-</div> -->
+</ng-container>

@@ -26,7 +26,7 @@ export class GoingTo extends Action {
 
     if (!passage) {
       usable = true;
-    } else if (passage.closed) {
+    } else if (passage.isClosed()) {
       // TODO: failureMessage
     } else {
       usable = true;

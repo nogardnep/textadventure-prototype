@@ -1,6 +1,8 @@
-import { Entity } from 'src/game/core/models/Entity';
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { ConversationResponse } from 'src/game/modules/base/models/Conversation';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Choice } from 'src/game/core/models/Choice';
+import { Entity } from 'src/game/core/models/Entity';
+import { Paragraph } from 'src/game/core/models/Paragraph';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 
 @Component({
@@ -9,33 +11,84 @@ import { Character } from 'src/game/modules/base/models/entities/material/Charac
   styleUrls: ['./conversation.component.scss'],
 })
 export class ConversationComponent implements OnInit, OnChanges {
-  @Input() entity: Entity;
-  subjects = [];
+  @Input() entity: Character;
+  choices: Choice[];
+  speeches: Paragraph[][] = [];
+  responses: {
+    [key: string]: ConversationResponse;
+  } = {};
 
   constructor() {}
 
   ngOnInit() {}
 
   ngOnChanges() {
-    // this.update();
+    this.speeches = [];
+    this.update();
   }
 
-  // private update() {
-  //   this.subjects = [];
-  //   const player = this.entity.getPlay().getPlayer() as Character;
+  private update() {
+    this.choices = [];
+    const player = this.entity.getPlay().getPlayer() as Character;
+    this.responses = this.entity.getConversationResponses(player);
 
-  //   if (this.entity instanceof Character) {
-  //     this.entity.getConversationResponses().forEach((item) => {
-  //       if (!item.check || item.check(player)) {
-  //         this.subjects.push(item);
-  //       }
-  //     });
-  //   }
-  // }
+    for (let key in this.responses) {
+      if (player.knowsEntity(key)) {
+        const response = this.responses[key];
 
-  // onClickSubject(subject: ConversationResponse) {
-  //   const player = this.entity.getPlay().getPlayer() as Character;
-  //   subject.onAsked(player);
-  //   this.update();
-  // }
+        if (response) {
+          let text: string;
+
+          if (response.getSubjectTitle) {
+            text = response.getSubjectTitle();
+          } else if (this.entity.isOfType(key)) {
+            text = this.entity.getName().getObjectComplement();
+          } else {
+            text = this.entity
+              .getPlay()
+              .getFirstEntityOfType(key)
+              .getName()
+              .printWithDefiniteArticle();
+          }
+
+          this.choices.push({
+            text,
+            proceed: () => {
+              this.ask(key);
+            },
+            check: () => {
+              return !response.check || response.check(player);
+            },
+          });
+        }
+      }
+    }
+  }
+
+  ask(subject: string) {
+    const player = this.entity.getPlay().getPlayer() as Character;
+    const response = this.responses[subject];
+
+    if (response) {
+      this.speeches.push(response.paragraphs);
+      if (response.onAsked) {
+        response.onAsked(player);
+      }
+    } else {
+      console.error('No response found for "' + subject + '"');
+    }
+  }
+
+  onClickChoice(choices: Choice) {
+    choices.proceed();
+    this.update();
+  }
+
+  getLastSpeech(): Paragraph[] {
+    return this.speeches[this.speeches.length - 1];
+  }
+
+  onItemClicked(entity: Entity): void {
+    this.ask(entity.getType());
+  }
 }

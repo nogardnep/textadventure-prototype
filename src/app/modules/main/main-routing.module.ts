@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { ConfigPage } from './pages/config/config.page';
 import { HomePage } from './pages/home/home.page';
 import { NewPlayPage } from './pages/new-play/new-play.page';

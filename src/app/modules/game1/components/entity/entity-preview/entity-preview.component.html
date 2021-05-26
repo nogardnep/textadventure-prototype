@@ -1,6 +1,6 @@
 <div class="entity-preview" *ngIf="entity" [ngClass]="{'selected': isSelected()}">
   <div class="entity-preview-core">
-    <div class="entity-preview-description-container">
+    <div class="entity-preview-presentation-container">
       <div class="entity-preview-name-container">
         <div class="entity-preview-name">
           <button (click)="onClickEntity()">
@@ -17,11 +17,14 @@
       <ng-container *ngIf="entity.getPreviewImage() && entity.getPreviewImage()">
         <img class="entity-preview-image" src="assets/{{entity.getPreviewImage().source}}" alt="" width="50" />
       </ng-container>
-      <div *ngIf="entity.getPreviewDescription().length > 0" class="entity-preview-description">
-        <app-paragraphs [paragraphs]="entity.getPreviewDescription()"></app-paragraphs>
-      </div>
-      <div class="entity-preview-caractertic-modifiers">
-        <app-caracteristic-modifiers [entity]="entity"></app-caracteristic-modifiers>
+      <div class="entity-preview-description-container">
+        <div *ngIf="entity.getPreviewDescription().length > 0" class="entity-preview-description">
+          <app-paragraphs [paragraphs]="entity.getPreviewDescription()" (itemClicked)="onItemClicked($event)">
+          </app-paragraphs>
+        </div>
+        <div class="entity-preview-caractertic-modifiers">
+          <app-caracteristic-modifiers [entity]="entity"></app-caracteristic-modifiers>
+        </div>
       </div>
     </div>
     <div class="entity-preview-interactions">

@@ -1,0 +1,32 @@
+.not-found-page {
+  .page-core {
+    $backgroundColor: rgba(255, 255, 255, 0.8);
+
+    background: url($imagePath + "/texture-2.png");
+    position: relative;
+    background-size: 100% auto;
+
+    &:before {
+      content: "";
+      height: 20px;
+      background-image: url($imagePath + "/border-1.png");
+      width: 100%;
+      background-size: 100% 100%;
+      display: block;
+    }
+
+    &:after {
+      content: "";
+      width: 100%;
+      background-size: 100% 100%;
+      display: block;
+      height: 10px;
+      background-image: url($imagePath + "/border-2.png");
+    }
+  }
+
+  .page-core-inner {
+    padding: 20px 5px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.7));
+  }
+}

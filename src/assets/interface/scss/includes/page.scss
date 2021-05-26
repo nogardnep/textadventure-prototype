@@ -3,7 +3,7 @@
   $headerHeight: 50px;
   $footerHeight: 130px;
   background: rgb(129, 129, 129);
-  background-image: url($imagePath + '/texture-3.png');
+  background-image: url($imagePath + "/texture-3.png");
   background-size: 100% auto;
   color: white;
 
@@ -60,6 +60,10 @@
     flex-grow: 1;
     background-image: url($imagePath + "/texture-1.png");
     background-size: 100% auto;
+  }
+
+  .back-home-button {
+    @include button();
   }
 
   // .page-footer {

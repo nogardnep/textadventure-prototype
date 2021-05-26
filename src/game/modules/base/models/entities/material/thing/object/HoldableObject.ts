@@ -7,7 +7,11 @@ import { Character } from '../../Character';
 import { UsuableObject } from '../UsuableObject';
 
 export class HoldableObject extends UsuableObject {
-  held = false;
+  private held = false;
+
+  isHeld(): boolean {
+    return this.held;
+  }
 
   getDisplayedActionKeys() {
     return Utils.removeDuplications(
@@ -28,20 +32,23 @@ export class HoldableObject extends UsuableObject {
   heldBy(target: Character): ActionReport {
     let success = false;
     let failureMessage: string;
-    let owner = this.getPlay().getEntity(this.parentId) as Character;
 
-    const allHandsUsed = owner.getHeldObjects().length >= owner.hands;
+    if (target.isOwning(this, false)) {
+      const allHandsUsed = target.getHeldObjects().length >= target.getHands();
 
-    if (allHandsUsed) {
-      failureMessage = BaseGlossaryKey.AllHandsUsed;
-      success = false;
+      if (allHandsUsed) {
+        failureMessage = this.getPlay().getPhrase(BaseGlossaryKey.AllHandsUsed, [this]);
+        success = false;
+      } else {
+        success = true;
+      }
+
+      if (success) {
+        this.held = true;
+        this.save();
+      }
     } else {
-      success = true;
-    }
-
-    if (success) {
-      this.held = true;
-      this.save();
+      failureMessage = this.getPlay().getPhrase(BaseGlossaryKey.NotOwned, [this]);
     }
 
     return {
@@ -65,9 +72,7 @@ export class HoldableObject extends UsuableObject {
     let success = true;
 
     if (this.held) {
-      success = this.getPlay()
-        .getAction(BaseActionKeys.Releasing)
-        .use(target, [this]);
+      success = target.useAction(BaseActionKeys.Releasing, [this]);
     }
 
     if (success) {

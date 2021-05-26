@@ -1,8 +1,6 @@
-import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 import { Action } from 'src/game/core/models/Action';
-import { Entity } from 'src/game/core/models/Entity';
+import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 import { UsuableObject } from '../../models/entities/material/thing/UsuableObject';
-import { BaseGlossaryKey } from '../BaseGlossary';
 import { Character } from '../entities/material/Character';
 
 export class Taking extends Action {
@@ -17,7 +15,7 @@ export class Taking extends Action {
 
     // TODO
     // if (test instanceof UsuableObject) {
-    if (!target.fixed) {
+    if (!target.isFixed()) {
       if (!author.isOwning(target, false)) {
         if (author.canReach(target)) {
           usable = true;

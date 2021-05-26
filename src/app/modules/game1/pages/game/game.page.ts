@@ -17,7 +17,10 @@ export class GamePage implements OnInit {
   playerSelected: boolean = false;
   private playSubscription: Subscription;
 
-  constructor(private gameService: GameService) {
+  constructor(
+    private gameService: GameService,
+    private interfaceService: InterfaceService
+  ) {
     gameService.checkPlay();
     // GameController.startNewPlay(this.gameService.getCurrentScenario())
     // GameController.getPlay().getScenario().start()
@@ -31,6 +34,8 @@ export class GamePage implements OnInit {
     );
 
     this.gameService.emitPlay();
+
+    this.gameService.updateAudioAmbiance();
   }
 
   ngOnDestroy(): void {
@@ -53,5 +58,9 @@ export class GamePage implements OnInit {
 
   getLocation(): MaterialEntity {
     return this.getPlayer().getParent();
+  }
+
+  onClickBackHome(): void {
+    this.interfaceService.goToHome();
   }
 }

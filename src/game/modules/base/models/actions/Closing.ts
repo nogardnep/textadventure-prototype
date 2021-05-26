@@ -12,7 +12,7 @@ export class Closing extends Action {
     let usable = false;
     const target = args[0];
 
-    if (target instanceof Thing && target.openable && !target.closed) {
+    if (target instanceof Thing && target.isOpenable() && !target.isClosed()) {
       usable = true;
     }
 

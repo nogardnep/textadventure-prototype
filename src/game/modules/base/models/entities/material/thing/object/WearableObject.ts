@@ -7,7 +7,7 @@ import { Character } from '../../Character';
 import { UsuableObject } from '../UsuableObject';
 
 export class WearableObject extends UsuableObject {
-  worn = false;
+  private worn = false;
 
   getDisplayedActionKeys() {
     return Utils.removeDuplications(
@@ -15,6 +15,10 @@ export class WearableObject extends UsuableObject {
         .getDisplayedActionKeys()
         .concat([BaseActionKeys.Putting, BaseActionKeys.Pulling])
     );
+  }
+
+  isWorn(): boolean {
+    return this.worn;
   }
 
   moveTo(newParent: MaterialEntity) {
@@ -32,7 +36,15 @@ export class WearableObject extends UsuableObject {
 
     const alreadyWornObject = owner.getWornObject(this.getEmplacement());
 
-    if (alreadyWornObject) {
+    if (!target.isOwning(this, false)) {
+      const taken = target.useAction(BaseActionKeys.Taking, [this]);
+
+      if (taken) {
+        target.useAction(BaseActionKeys.Putting, [this]);
+      } else {
+        success = false;
+      }
+    } else if (alreadyWornObject) {
       failureMessage = this.getPlay().getPhrase(
         BaseGlossaryKey.SomethingAlreadyWorn,
         [target, this]
@@ -64,10 +76,8 @@ export class WearableObject extends UsuableObject {
   droppedBy(target: Character): ActionReport {
     let success = true;
 
-    if (this.worn) {
-      success = this.getPlay()
-        .getAction(BaseActionKeys.Pulling)
-        .use(target, [this]);
+    if (target.isHolding(this)) {
+      success = target.useAction(BaseActionKeys.Pulling, [this]);
     }
 
     if (success) {

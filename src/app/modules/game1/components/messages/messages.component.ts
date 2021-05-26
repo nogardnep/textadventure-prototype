@@ -1,7 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MessageWrapper } from 'src/app/services/game.service';
 import { ButtonType, InterfaceService } from 'src/app/services/interface.service';
 import { Choice } from 'src/game/core/models/Choice';
+import { Entity } from 'src/game/core/models/Entity';
 
 @Component({
   selector: 'app-messages',
@@ -14,7 +15,7 @@ export class MessagesComponent {
 
   constructor(private interfaceService: InterfaceService) {}
 
-  onClickReaded() {
+  onClickRead() {
     this.interfaceService.onClickButton(ButtonType.Simple);
 
     this.emptyEvent.emit();
@@ -22,8 +23,8 @@ export class MessagesComponent {
     this.messages.forEach((item) => {
       item.read = true;
 
-      if (item.onReaded) {
-        item.onReaded();
+      if (item.onRead) {
+        item.onRead();
       }
     });
   }
@@ -35,5 +36,9 @@ export class MessagesComponent {
 
   isVisible(choice: Choice): boolean {
     return !choice.check || choice.check();
+  }
+
+  onItemClicked(item: Entity) {
+    this.interfaceService.setSelection(item);
   }
 }

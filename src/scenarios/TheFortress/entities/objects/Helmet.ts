@@ -1,3 +1,4 @@
+import { ParagraphTag } from './../../../../game/core/models/Paragraph';
 import { Name } from 'src/game/core/models/Name';
 import { BaseCaracteristicKey } from 'src/game/modules/base/dictionnaries/caracteristics';
 import { EmplacementKey } from 'src/game/modules/base/dictionnaries/emplacement';
@@ -13,6 +14,10 @@ export class Helmet extends WearableObject {
     return TheFortress.images.helmetPreview;
   }
 
+  getPreviewDescription() {
+    return [{ tag: ParagraphTag.Description, text: 'un casque en fer' }];
+  }
+
   getFullImages() {
     return [{ image: TheFortress.images.helmetFull }];
   }
@@ -26,7 +31,7 @@ export class Helmet extends WearableObject {
       [BaseCaracteristicKey.Resistance]: {
         value: 1,
         check: () => {
-          return this.worn;
+          return this.isWorn();
         },
       },
     };

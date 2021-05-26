@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Audio } from 'src/game/core/models/Audio';
+import { Audio, AudioId } from 'src/game/core/models/Audio';
 import { Utils } from 'src/game/core/Utils';
 import * as Tone from 'tone';
-
-const FADE_DURATION = 1000;
 
 export enum AudioChannelKey {
   Music = 'music',
@@ -46,13 +44,14 @@ type AudioLayer = {
   providedIn: 'root',
 })
 export class AudioService {
-  private layers: { [key: string]: AudioLayer };
-  private channels: { [key: string]: AudioChannel };
+  private readonly baseUrl = 'assets';
+  private layers: { [key in AudioLayerKey]?: AudioLayer } = {};
+  private channels: { [key in AudioChannelKey]?: AudioChannel } = {};
+  private audioWrappers: {
+    [key: string]: { audio: Audio; buffer: Tone.ToneAudioBuffer };
+  } = {};
 
   constructor() {
-    this.channels = {};
-    this.layers = {};
-
     for (let key in AudioChannelKey) {
       this.addChannel(AudioChannelKey[key]);
     }
@@ -63,6 +62,35 @@ export class AudioService {
     this.addLayer(AudioLayerKey.LocationAmbiance, AudioChannelKey.Effects);
 
     document.addEventListener('click', this.initAudio);
+  }
+
+  load(audios: { [key: string]: Audio }, onLoadedAll: () => void): void {
+    audios = Object.assign({}, audios);
+    const size = Utils.getObjectSize(audios);
+
+    if (size > 0) {
+      const audio = Utils.getFirstFromObject(audios);
+      const buffer = new Tone.ToneAudioBuffer({
+        url: this.baseUrl + '/' + audio.source,
+        onload: () => {
+          this.audioWrappers[audio.getId()] = {
+            audio,
+            buffer,
+          };
+          this.loadNext(audios, onLoadedAll);
+        },
+        onerror: () => {
+          this.loadNext(audios, onLoadedAll);
+        },
+      });
+    } else {
+      onLoadedAll();
+    }
+  }
+
+  private loadNext(audios: { [key: string]: Audio }, onLoadedAll: () => void) {
+    delete audios[Object.keys(audios)[0]];
+    this.load(audios, onLoadedAll);
   }
 
   stopAllSounds(): void {
@@ -96,32 +124,41 @@ export class AudioService {
     layerKey: AudioLayerKey,
     params?: {
       loop?: boolean;
-      fade?: boolean;
+      fadeIn?: number;
+      fadeOut?: number;
       volume?: number;
     }
   ): void {
-    const layer = this.layers[layerKey];
-    const id = Utils.generateId();
+    const audioWrapper = this.audioWrappers[audio.getId()];
 
-    const player = new Tone.Player({
-      url: 'assets/' + audio.source,
-      volume: this.convertToDecibels(
-        audio.volume * (params && params.volume ? params.volume : 1)
-      ),
-      loop: params && params.loop ? params.loop : false,
-      autostart: true,
-      onload: () => {},
-      onstop: () => {
-        this.remove(id, layerKey);
-      },
-    }).connect(layer.channel.toneChannel);
+    if (audioWrapper) {
+      const layer = this.layers[layerKey];
+      const soundId = Utils.generateId();
+      const player = new Tone.Player({
+        volume: this.convertToDecibels(
+          audio.volume * (params && params.volume ? params.volume : 1)
+        ),
+        loop: params && params.loop ? params.loop : false,
+        autostart: true,
+        onstop: () => {
+          this.remove(soundId, layerKey);
+        },
+      }).connect(layer.channel.toneChannel);
 
-    if (params && params.fade) {
-      player.fadeIn = FADE_DURATION / 1000;
-      player.fadeOut = FADE_DURATION / 1000;
+      if (params && params.fadeIn) {
+        player.fadeIn = params.fadeIn / 1000;
+      }
+
+      if (params && params.fadeOut) {
+        player.fadeOut = params.fadeOut / 1000;
+      }
+
+      player.buffer = audioWrapper.buffer;
+      player.start();
+      this.layers[layerKey].sounds.push({ id: soundId, player });
+    } else {
+      console.error('Unfound audio buffer', audio);
     }
-
-    this.layers[layerKey].sounds.push({ id, player });
   }
 
   private remove(id: string, layerKey: AudioLayerKey): void {

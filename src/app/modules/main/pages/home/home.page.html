@@ -1,5 +1,5 @@
 <ion-content>
-  <div class="home-page">
+  <div class="home-page" *ngIf="!loading">
     <div class="home-page-inner">
       <nav class="home-menu">
         <ul>
@@ -21,5 +21,8 @@
         </ul>
       </nav>
     </div>
+  </div>
+  <div *ngIf="loading">
+    Chargement...
   </div>
 </ion-content>

@@ -8,5 +8,6 @@ export enum BaseGlossaryKey {
   AllHandsUsed = 'allHandsUsed',
   SomethingAlreadyWorn = 'somethingAlreadyWorn',
   UnusefulSpell = 'unusefulSpell',
-  NothingToSayAboutEntity = 'nothingToSayAboutEntity'
+  NothingToSayAboutEntity = 'nothingToSayAboutEntity',
+  NotOwned = 'notOwned'
 }

@@ -4,6 +4,7 @@ import { Character } from 'src/game/modules/base/models/entities/material/Charac
 import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 import { Entity } from 'src/game/core/models/Entity';
 import { Thing } from 'src/game/modules/base/models/entities/material/Thing';
+import { Container } from 'src/game/modules/base/models/entities/material/thing/object/Container';
 
 @Component({
   selector: 'app-entity-list',
@@ -25,11 +26,15 @@ export class EntityListComponent implements OnInit {
     let label: string;
 
     if (this.entity instanceof Character) {
-      label = 'portant';
+      label = 'ayant';
     } else if (this.entity instanceof Place) {
       label = 'il y a là';
     } else if (this.entity instanceof Thing) {
-      label = 'surportant';
+      if (this.entity instanceof Container) {
+        label = 'contenant';
+      } else {
+        label = 'surportant';
+      }
     }
 
     return label;

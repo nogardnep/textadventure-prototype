@@ -1,3 +1,5 @@
+import { InterfaceService } from 'src/app/services/interface.service';
+import { Entity } from 'src/game/core/models/Entity';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 import { Place } from 'src/game/modules/base/models/entities/material/Place';
@@ -12,7 +14,7 @@ export class EntityFullComponent implements OnInit, OnDestroy {
   hasConnections: boolean;
   entityAsPlace: Place;
 
-  constructor() {}
+  constructor(private interfaceService: InterfaceService) {}
 
   ngOnInit() {}
 
@@ -23,4 +25,8 @@ export class EntityFullComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {}
+
+  onItemClicked(item: Entity) {
+    this.interfaceService.setSelection(item);
+  }
 }

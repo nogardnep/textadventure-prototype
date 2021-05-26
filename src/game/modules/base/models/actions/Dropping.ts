@@ -15,7 +15,7 @@ export class Dropping extends Action {
     let usable = false;
     const target = args[0] as UsuableObject;
 
-    if (!target.fixed && author.isOwning(target, false)) {
+    if (!target.isFixed() && author.isOwning(target, false)) {
       usable = true;
     }
 

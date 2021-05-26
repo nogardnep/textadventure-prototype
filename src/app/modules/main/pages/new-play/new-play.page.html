@@ -43,7 +43,7 @@
             <div class="value">{{usedPoints}}/{{scenario.starting.caracteristicsPoints}}</div>
           </div>
           <ul class="caracteristic-list">
-            <li class="caracteristic-list-item" *ngFor="let item of this.player.caracteristics | keyvalue">
+            <li class="caracteristic-list-item" *ngFor="let item of this.player.getCaracteristics() | keyvalue">
               <div class="caracteristic">
                 <div class="label">{{caracteristicNames[item.key].printSimple()|capitalizeFirst}}</div>
                 <div class="value">{{item.value.current}} (+{{caracteristicModifiers[item.key]}})</div>

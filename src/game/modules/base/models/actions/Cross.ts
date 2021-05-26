@@ -1,11 +1,5 @@
 import { Action } from 'src/game/core/models/Action';
-import {
-  Connection,
-  DEFAULT_DISTANCE,
-  DEFAULT_SPEED,
-} from 'src/game/modules/base/models/entities/material/Place';
 import { Character } from '../entities/material/Character';
-import { Place } from '../entities/material/Place';
 import { Passage } from '../entities/material/thing/Passage';
 
 export class Cross extends Action {
@@ -19,7 +13,7 @@ export class Cross extends Action {
     let target = args[0] as Passage;
 
     // TODO
-    if (!target.closed && author.canReach(target)) {
+    if (!target.isClosed() && author.canReach(target)) {
       usable = true;
     }
 

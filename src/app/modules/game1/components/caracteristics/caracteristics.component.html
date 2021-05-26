@@ -1,10 +1,10 @@
 <ul class="caracteristic-list">
-  <li class="caracteristic-list-item" *ngFor="let caracteristic of entity.caracteristics | keyvalue">
-    <span class="caracteristic-name">{{caracteristicNames[caracteristic.key].printSimple()|capitalizeFirst}}</span>
-    <span class="caracteristic-value">{{entity.caracteristics[caracteristic.key].current}}
-      <span class="caracteristic-modifier" *ngIf="entity.getCaracteristicModifiers(caracteristic.key) !== 0"
-        [ngClass]="{bonus: entity.getCaracteristicModifiers(caracteristic.key) > 0, malus: entity.getCaracteristicModifiers(caracteristic.key) < 0}">{{(entity.getCaracteristicModifiers(caracteristic.key)
-        < 0 ? '' :'+') + entity.getCaracteristicModifiers(caracteristic.key)}}</span>
+  <li class="caracteristic-list-item" *ngFor="let item of entity.getCaracteristics() | keyvalue">
+    <span class="caracteristic-name">{{caracteristicNames[item.key].printSimple()|capitalizeFirst}}</span>
+    <span class="caracteristic-value">{{entity.getCaracteristic(item.key).current}}
+      <span class="caracteristic-modifier" *ngIf="entity.getCaracteristicModifiers(item.key) !== 0"
+        [ngClass]="{bonus: entity.getCaracteristicModifiers(item.key) > 0, malus: entity.getCaracteristicModifiers(item.key) < 0}">{{(entity.getCaracteristicModifiers(item.key)
+        < 0 ? '' :'+') + entity.getCaracteristicModifiers(item.key)}}</span>
       </span>
   </li>
 </ul>

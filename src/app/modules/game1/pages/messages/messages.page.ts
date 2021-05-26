@@ -39,7 +39,7 @@ export class MessagesPage implements OnInit, OnDestroy {
       (message: MessageWrapper[]) => {
         this.messages = message;
 
-        if (this.getUnreadedMessages().length === 0) {
+        if (this.getUnreadMessages().length === 0) {
           this.onEmpty();
         }
       }
@@ -53,7 +53,7 @@ export class MessagesPage implements OnInit, OnDestroy {
     this.playSubscription.unsubscribe();
   }
 
-  getUnreadedMessages(): MessageWrapper[] {
+  getUnreadMessages(): MessageWrapper[] {
     let found: MessageWrapper[] = [];
 
     this.messages.forEach((item) => {

@@ -1,3 +1,6 @@
+import { MagicalProtection } from './effects/MagicalProtection';
+import { Wound } from './effects/Wound';
+import { Chest } from './objects/Chest';
 import { Azkarar } from './characters/Azkarar';
 import { Torrent } from './scenaries/Torrent';
 import { Fortress } from './scenaries/Fortress';
@@ -20,6 +23,7 @@ import { MountainousPath } from './places/MountainousPath';
 import { GreatEntry } from './places/GreatEntry';
 import { Crevasse } from './places/Crevasse';
 import { Bridge } from './passages/Bridge';
+import { ArmWound } from './effects/ArmWound';
 
 export const ENTITY_CONSTRUCTORS = {
   Bridge,
@@ -43,5 +47,9 @@ export const ENTITY_CONSTRUCTORS = {
   MagicStick,
   Fortress,
   Torrent,
-  Azkarar
+  Azkarar,
+  Chest,
+  ArmWound,
+  Wound,
+  MagicalProtection
 };

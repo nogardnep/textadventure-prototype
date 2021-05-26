@@ -12,13 +12,13 @@ export class Sword extends HoldableObject {
       [BaseCaracteristicKey.Force]: {
         value: 2,
         check: () => {
-          return this.held;
+          return this.isHeld();
         },
       },
       [BaseCaracteristicKey.Dexterity]: {
         value: -2,
         check: () => {
-          return this.held;
+          return this.isHeld();
         },
       },
     };

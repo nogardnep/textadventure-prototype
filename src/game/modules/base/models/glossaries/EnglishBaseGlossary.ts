@@ -7,6 +7,9 @@ export class EnglishBaseGlossary extends EnglishGlossary {
   constructor() {
     super(
       {
+        notOwned: (args: any[]) => {
+          return this.asSentence('you do not own that');
+        },
         allHandsUsed: (args: any[]) => {
           return this.asSentence('all your hands are taken');
         },
@@ -27,7 +30,7 @@ export class EnglishBaseGlossary extends EnglishGlossary {
           );
         },
         outOfReach: (args: any[]) => {
-          return this.asSentence("it is out of reach");
+          return this.asSentence('it is out of reach');
         },
         somethingAlreadyWorn: (args: any[]) => {
           return null;

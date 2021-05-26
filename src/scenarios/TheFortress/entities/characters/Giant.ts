@@ -1,11 +1,28 @@
+import { Helmet } from './../objects/Helmet';
 import { Name } from 'src/game/core/models/Name';
 import { ParagraphTag } from 'src/game/core/models/Paragraph';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { TheFortress } from './../../TheFortress';
+import { Sword } from './../objects/Sword';
 
 export class Giant extends Character {
   init() {
-    this.giveChildOfType(TheFortress.entityConstructors.Helmet.name, false);
+    (
+      this.giveChildOfType(TheFortress.entityConstructors.Sword.name) as Sword
+    ).takenBy(this);
+
+    (
+      this.giveChildOfType(TheFortress.entityConstructors.Helmet.name) as Helmet
+    ).puttedBy(this);
+
+    this.giveChildOfType(TheFortress.entityConstructors.Helmet.name);
+
+    this.giveChildOfType(
+      TheFortress.entityConstructors.Chest.name
+    ).giveChildrenOfType([
+      TheFortress.entityConstructors.Helmet.name,
+      TheFortress.entityConstructors.Sword.name,
+    ]);
   }
 
   getName() {
@@ -18,21 +35,21 @@ export class Giant extends Character {
         tag: ParagraphTag.Description,
         text: 'assis',
         check: () => {
-          return this.isOnTheBridge() && !this.dead;
+          return this.isOnTheBridge() && !this.isDead();
         },
       },
       {
         tag: ParagraphTag.Description,
         text: 'ne vous quittant pas des yeux',
         check: () => {
-          return this.isOnTheBridge() && !this.dead;
+          return this.isOnTheBridge() && !this.isDead();
         },
       },
       {
         tag: ParagraphTag.Description,
         text: 'gîsant là',
         check: () => {
-          return this.isOnTheBridge() && this.dead;
+          return this.isOnTheBridge() && this.isDead();
         },
       },
     ];
@@ -42,33 +59,53 @@ export class Giant extends Character {
     return [
       {
         tag: ParagraphTag.Description,
-        text: "Un grand homme hirsute, vêtu de peaux. Des chaînes à ses mains l'attachent au pont.",
+        text: 'Un grand homme hirsute, vêtu de peaux. Des chaînes à ses mains le retiennent attachés au pont.',
       },
       {
         tag: ParagraphTag.Description,
         text: 'Son corps meutri gît sur le sol.',
         check: () => {
-          return this.dead;
+          return this.isDead();
         },
       },
     ];
   }
 
-  getConversationResponses(author: Character) {
+  getConversationResponses(asker: Character) {
     return {
       [this.getType()]: {
-        text:
-          "J'ai été enchaîné ici par le sorcier " +
-          this.getSorcerersName() +
-          ". Je dois garder ce pont. La liberté m'a été promise si je m'acquitte pour trente ans de cette charge.",
+        paragraphs: [
+          {
+            tag: ParagraphTag.Speech,
+            items: [
+              {
+                text: "J'ai été enchaîné ici par le sorcier ",
+              },
+              {
+                text: this.getSorcerersName(),
+                entity: this.getPlay().getFirstEntityOfType(
+                  TheFortress.entityConstructors.Azkarar.name
+                ),
+              },
+              {
+                text: ". Je dois garder ce pont. La liberté m'a été promise si je m'acquitte pour trente ans de cette charge.",
+              },
+            ],
+          },
+        ],
         onAsked: (author: Character) => {
           author.addKnownEntity(TheFortress.entityConstructors.Azkarar.name);
         },
       },
       [TheFortress.entityConstructors.Azkarar.name]: {
-        text:
-          this.getSorcerersName() +
-          " est le seigneur de ce domaine. Personne n'est autorisé à y pénéter sans sa permission.",
+        paragraphs: [
+          {
+            tag: ParagraphTag.Speech,
+            text:
+              this.getSorcerersName() +
+              " est le seigneur de ce domaine. Personne n'est autorisé à y pénéter sans sa permission.",
+          },
+        ],
       },
     };
   }
@@ -85,14 +122,23 @@ export class Giant extends Character {
       () => {
         this.getPlay().sendMessage([
           {
+            text: 'Le géant vous blesse au bras.',
+            tag: ParagraphTag.Event,
+          },
+        ]);
+
+        author.giveEffectOfType(TheFortress.entityConstructors.ArmWound.name);
+
+        this.getPlay().sendMessage([
+          {
             text: 'Le géant succombe.',
             tag: ParagraphTag.Event,
           },
         ]);
+
+        this.die();
       }
     );
-
-    this.kill();
 
     return {
       success: true,

@@ -3,7 +3,7 @@
     <ng-container *ngFor="let item of messages ; let isLast = last">
       <li class="message-list-item">
         <div class="message">
-          <app-paragraphs [paragraphs]="item.paragraphs"></app-paragraphs>
+          <app-paragraphs [paragraphs]="item.paragraphs" (itemClicked)="onItemClicked($event)"></app-paragraphs>
           <ng-container *ngIf="item.choices && item.choices.length > 0">
             <ul class="choice-list">
               <ng-container *ngFor="let choice of item.choices">
@@ -19,7 +19,7 @@
     </ng-container>
   </ul>
   <div class="no-message" *ngIf="messages.length === 0">(aucun message)</div>
-  <button class="read-button" (click)="onClickReaded()">
+  <button class="read-button" (click)="onClickRead()">
     <span class="button-inner">Continuer</span>
   </button>
 </div>

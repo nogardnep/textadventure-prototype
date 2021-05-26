@@ -1,5 +1,5 @@
 <div class="entity-content" *ngIf="entity && getEntities().length > 0">
-  <div class="content-label" [innerHTML]="getLabel() | capitalizeFirst"></div>
+  <div class="content-label" [innerHTML]="getLabel()"></div>
   <ul class="entity-content-list">
     <ng-container *ngFor="let child of getEntities()">
       <li *ngIf="isVisible(child)" class="entity-content-list-item">

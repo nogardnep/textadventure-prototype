@@ -12,7 +12,7 @@ export class Attacking extends Action {
     let target = args[0] as Character;
 
     // TODO
-    if (!target.dead) {
+    if (!target.isDead()) {
       if (author.canReach(target)) {
         usable = true;
       }

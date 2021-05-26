@@ -7,7 +7,7 @@
   </div>
   <app-entity-window [entity]="entity"></app-entity-window>
   <div class="entity-full-description">
-    <app-paragraphs [paragraphs]="entity.getFullDescription()"></app-paragraphs>
+    <app-paragraphs [paragraphs]="entity.getFullDescription()" (itemClicked)="onItemClicked($event)"></app-paragraphs>
   </div>
   <div class="entity-full-content">
     <div class="entity-full-content-inner">

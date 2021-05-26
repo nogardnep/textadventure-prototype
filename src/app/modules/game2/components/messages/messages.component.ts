@@ -9,7 +9,7 @@ import { MessageWrapper } from 'src/app/services/game.service';
 export class MessagesComponent {
   @Input() messages: MessageWrapper[];
 
-  onClickReaded(message: MessageWrapper) {
+  onClickRead(message: MessageWrapper) {
     message.read = true;
   }
 }

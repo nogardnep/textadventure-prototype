@@ -135,17 +135,23 @@
             list-style: none;
 
             .caracteristic {
-              display: flex;
-              max-width: 300px;
+              // display: flex;
+              max-width: 500px;
 
               .label,
               .value,
               .add-remove-buttons {
                 flex: 1 1 0px;
+                display: inline-block;
               }
 
               .label {
+                min-width: 100px;
                 margin: 0 5px 0 0;
+              }
+
+              .value {
+                min-width: 60px;
               }
             }
           }

@@ -66,7 +66,7 @@ export class GamePage implements OnInit, OnDestroy {
     return (this.play.getPlayer() as Character).getParent();
   }
 
-  getFirstUnreadedMessage(): MessageWrapper {
+  getFirstUnreadMessage(): MessageWrapper {
     let found: MessageWrapper = null;
 
     this.messages.forEach((item) => {

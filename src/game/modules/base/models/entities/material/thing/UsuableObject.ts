@@ -17,17 +17,25 @@ export class UsuableObject extends Thing {
   giveTo(entity: MaterialEntity): boolean {
     this.moveTo(entity);
 
+    if (entity instanceof Character) {
+      entity.addKnownEntity(this.getType());
+    }
+
     return true;
   }
 
-  droppedBy(target: Character): ActionReport {
-    this.moveTo(target.getParent());
+  droppedBy(entity: Character): ActionReport {
+    this.moveTo(entity.getParent());
 
     return { success: true };
   }
 
-  takenBy(target: MaterialEntity): ActionReport {
-    this.moveTo(target);
+  takenBy(entity: MaterialEntity): ActionReport {
+    this.moveTo(entity);
+
+    if (entity instanceof Character) {
+      entity.addKnownEntity(this.getType());
+    }
 
     return { success: true };
   }

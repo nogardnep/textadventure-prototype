@@ -50,7 +50,7 @@ export class NewPlayPage implements OnInit {
     this.scenario = this.play.getScenario() as BaseScenario;
 
     if (this.player) {
-      for (let key in this.player.caracteristics) {
+      for (let key in this.player.getCaracteristics()) {
         this.caracteristicModifiers[key] = 0;
       }
 
@@ -80,8 +80,8 @@ export class NewPlayPage implements OnInit {
         this.player.giveSpell(item);
       });
 
-      for (let key in this.player.caracteristics) {
-        const caracteristic = this.player.caracteristics[key];
+      for (let key in this.player.getCaracteristics()) {
+        const caracteristic = this.player.getCaracteristics()[key];
         caracteristic.max += this.caracteristicModifiers[key];
         caracteristic.current = caracteristic.max;
       }

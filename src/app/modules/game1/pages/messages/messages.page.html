@@ -7,9 +7,9 @@
       <app-time *ngIf="play" [play]="play"></app-time>
       <div class="page-core">
         <div class="page-core-inner">
-          <app-messages *ngIf="getUnreadedMessages().length > 0" [messages]="getUnreadedMessages()" (emptyEvent)="onEmpty()"></app-messages>
-          <div class="no-message" *ngIf="getUnreadedMessages().length === 0">(aucun message)</div>
-          <button *ngIf="getUnreadedMessages().length === 0" class="close-button" (click)="onClickOk()">
+          <app-messages *ngIf="getUnreadMessages().length > 0" [messages]="getUnreadMessages()" (emptyEvent)="onEmpty()"></app-messages>
+          <div class="no-message" *ngIf="getUnreadMessages().length === 0">(aucun message)</div>
+          <button *ngIf="getUnreadMessages().length === 0" class="close-button" (click)="onClickOk()">
             <span class="button-inner">Fermer</span>
           </button>
         </div>
