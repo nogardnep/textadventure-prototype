@@ -1,19 +1,9 @@
-<ion-content>
-  <div class="page messages-page">
-    <div class="page-container">
-      <div class="page-header">
-        <app-main-menu></app-main-menu>
-      </div>
-      <app-time *ngIf="play" [play]="play"></app-time>
-      <div class="page-core">
-        <div class="page-core-inner">
-          <app-messages *ngIf="getUnreadMessages().length > 0" [messages]="getUnreadMessages()" (emptyEvent)="onEmpty()"></app-messages>
-          <div class="no-message" *ngIf="getUnreadMessages().length === 0">(aucun message)</div>
-          <button *ngIf="getUnreadMessages().length === 0" class="close-button" (click)="onClickOk()">
-            <span class="button-inner">Fermer</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</ion-content>
+<app-base-page [type]="'messages'">
+  <app-time *ngIf="play" [play]="play"></app-time>
+  <app-messages *ngIf="unreaded.length > 0" [messages]="unreaded" (emptyEvent)="onEmpty()">
+  </app-messages>
+  <div class="no-message" *ngIf="unreaded.length === 0">(aucun message)</div>
+  <button *ngIf="unreaded.length === 0" class="close-button" (click)="onClickOk()">
+    <span class="button-inner">Fermer</span>
+  </button>
+</app-base-page>

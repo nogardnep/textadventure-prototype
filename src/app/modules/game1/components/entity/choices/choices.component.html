@@ -1,7 +1,7 @@
-<ng-container *ngIf="getChoices().length > 0">
+<ng-container *ngIf="choices.length > 0">
   <ul class="choice-list">
-    <ng-container *ngFor="let choice of getChoices()">
-      <li *ngIf="isVisible(choice)" class="choice-list-item">
+    <ng-container *ngFor="let choice of choices">
+      <li class="choice-list-item">
         <app-action-button [text]="choice.text" (clickEvent)="onClickChoice(choice)"></app-action-button>
       </li>
     </ng-container>

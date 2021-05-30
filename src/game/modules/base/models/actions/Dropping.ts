@@ -1,21 +1,27 @@
-import { Action } from 'src/game/core/models/Action';
+import { BasePlay } from '../../BasePlay';
+import { BaseAction } from '../BaseAction';
 import { Character } from '../entities/material/Character';
 import { UsuableObject } from '../entities/material/thing/UsuableObject';
 
-export class Dropping extends Action {
-  getDuration() {
-    return 0;
+export class Dropping extends BaseAction {
+  constructor(play: BasePlay) {
+    super(play, {
+      text: () => {
+        return 'poser';
+      },
+      patterns: [],
+    });
   }
 
-  getText() {
-    return  'poser';
+  getDuration() {
+    return 0;
   }
 
   check(author: Character, args: any[]) {
     let usable = false;
     const target = args[0] as UsuableObject;
 
-    if (!target.isFixed() && author.isOwning(target, false)) {
+    if (!target.isFixed() && author.owns(target, false)) {
       usable = true;
     }
 

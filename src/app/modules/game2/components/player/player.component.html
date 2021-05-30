@@ -1,0 +1,10 @@
+<div class="player">
+  <h3>Inventaire</h3>
+  <ul>
+    <ng-container *ngFor="let item of entity.getChildren()">
+      <li>
+        <app-entity [entity]="item" [preview]="true" [clickable]="true"></app-entity>
+      </li>
+    </ng-container>
+  </ul>
+</div>

@@ -3,11 +3,11 @@ import { ActionReport } from 'src/game/core/models/Action';
 import { Choice } from 'src/game/core/models/Choice';
 import { Entity, EntityId, EntityType } from 'src/game/core/models/Entity';
 import { ParagraphItemTag, ParagraphTag } from 'src/game/core/models/Paragraph';
-import { Play } from 'src/game/core/models/Play';
 import { BaseActionKeys } from '../../../dictionnaries/actions';
 import { ConversationResponse } from '../../Conversation';
 import { Spell } from '../immaterial/Spell';
 import { MaterialEntity } from '../MaterialEntity';
+import { BasePlay } from './../../../BasePlay';
 import { BaseCaracteristicKey } from './../../../dictionnaries/caracteristics';
 import { Place } from './Place';
 import { Thing } from './Thing';
@@ -24,7 +24,7 @@ export class Character extends MaterialEntity {
   private knownEntities: EntityType[] = [];
   private gender: Gender = Gender.Male;
 
-  constructor(play: Play) {
+  constructor(play: BasePlay) {
     super(play);
 
     for (let key in BaseCaracteristicKey) {
@@ -69,18 +69,20 @@ export class Character extends MaterialEntity {
   }
 
   say(text: string) {
-    this.getPlay().sendMessage([
-      {
-        items: [
-          {
-            text: this.getName().printWithDefiniteArticle(true) + '&nbsp;- ',
-            tag: ParagraphItemTag.Speacher,
-          },
-          { text: text },
-        ],
-        tag: ParagraphTag.Speech,
-      },
-    ]);
+    this.getPlay().sendMessage({
+      paragraphs: [
+        {
+          items: [
+            {
+              text: this.getName().printWithDefiniteArticle(true) + '&nbsp;- ',
+              tag: ParagraphItemTag.Speacher,
+            },
+            { text: text },
+          ],
+          tag: ParagraphTag.Speech,
+        },
+      ],
+    });
   }
 
   talkedBy(author: Character) {
@@ -117,7 +119,7 @@ export class Character extends MaterialEntity {
             text,
             proceed: () => {
               this.getPlay();
-              this.getPlay().sendMessage(response.paragraphs);
+              this.getPlay().sendMessage({ paragraphs: response.paragraphs });
 
               if (response.onAsked) {
                 response.onAsked(author);
@@ -132,8 +134,8 @@ export class Character extends MaterialEntity {
       }
     }
 
-    this.getPlay().sendMessage(
-      [
+    this.getPlay().sendMessage({
+      paragraphs: [
         {
           tag: ParagraphTag.Information,
           text:
@@ -154,13 +156,13 @@ export class Character extends MaterialEntity {
           },
         },
       ],
-      choices
-    );
+      choices,
+    });
   }
 
-  getDisplayedActionKeys() {
+  getDisplayedActions() {
     return super
-      .getDisplayedActionKeys()
+      .getDisplayedActions()
       .concat([BaseActionKeys.Attacking, BaseActionKeys.Talking]);
   }
 
@@ -213,7 +215,7 @@ export class Character extends MaterialEntity {
   isHolding(entity: Entity): boolean {
     return (
       entity instanceof HoldableObject &&
-      this.isOwning(entity, false) &&
+      this.owns(entity, false) &&
       entity.isHeld()
     );
   }
@@ -221,7 +223,7 @@ export class Character extends MaterialEntity {
   isWearing(entity: Entity): boolean {
     return (
       entity instanceof WearableObject &&
-      this.isOwning(entity, false) &&
+      this.owns(entity, false) &&
       entity.isWorn()
     );
   }
@@ -301,6 +303,8 @@ export class Character extends MaterialEntity {
 
     if (!entity.isInvisible()) {
       if (entity instanceof Scenary) {
+        response = true;
+      } else if (entity.owns(this, false)) {
         response = true;
       } else if (entity instanceof Passage) {
         response = (this.getParent() as Place).hasPassage(entity);

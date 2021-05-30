@@ -1,0 +1,66 @@
+<app-base-page [type]="'new-play'" [pageTitle]="text.title|text">
+  <ng-container *ngIf="scenario && player">
+    <div class="sections">
+      <div class="section name-section">
+        <ng-container *ngIf="scenario.getStarting().askForName">
+          <label>Name</label>
+          <input type="text" [(ngModel)]="name" />
+        </ng-container>
+        <ng-container *ngIf="!scenario.getStarting().askForName">
+          <div class="player-name">{{player.getName().printSimple()}}</div>
+        </ng-container>
+      </div>
+      <div class="section spells-section">
+        <h3 class="section-title">{{text.spells|text}}</h3>
+        <div class="remaining-spells">
+          <div class="label">Sorts restants</div>
+          <div class="value">{{selectedSpells.length}}/{{scenario.getStarting().maxSpells}}</div>
+        </div>
+        <ul class="spell-list">
+          <ng-container *ngFor="let item of availableSpells">
+            <li class="spell-list-item" [ngClass]="{'selected': spellIsSelected(item)}">
+              <div class="spell">
+                <div class="spell-name" (click)="onClickSpell(item)">{{item.getName().printSimple()}}</div>
+                <div class="add-remove-buttons">
+                  <button class="remove-button" (click)="onClickRemoveSpell(item)"
+                    [disabled]="!spellIsSelected(item)">-</button>
+                  <button class="add-button" (click)="onClickAddSpell(item)"
+                    [disabled]="spellIsSelected(item)  || selectedSpells.length >= scenario.getStarting().maxSpells">+</button>
+                </div>
+              </div>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+      <div class="section caracteristics-section">
+        <h3 class="section-title">{{text.caracteristics|text}}</h3>
+        <div class="remaining-points">
+          <div class="label">Points restants</div>
+          <div class="value">{{usedPoints}}/{{scenario.getStarting().caracteristicsPoints}}</div>
+        </div>
+        <ul class="caracteristic-list">
+          <li class="caracteristic-list-item" *ngFor="let item of this.player.getCaracteristics() | keyvalue">
+            <div class="caracteristic">
+              <div class="label">{{caracteristicNames[item.key].printSimple()|capitalizeFirst}}</div>
+              <div class="value">{{item.value.current}} (+{{caracteristicModifiers[item.key]}})</div>
+              <div class="add-remove-buttons">
+                <button class="remove-button" (click)="onClickRemovePoint(item.key)"
+                  [disabled]="caracteristicModifiers[item.key] == 0">-</button>
+                <button class="add-button" (click)="onClickAddPoint(item.key)"
+                  [disabled]="usedPoints >= scenario.getStarting().caracteristicsPoints">+</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="validation-buttons">
+      <button class="validate-button" (click)="onClickValidate()">
+        <span class="button-inner">{{text.validate|text}}</span>
+      </button>
+      <button class="cancel-button" (click)="onClickCancel()">
+        <span class="button-inner">{{text.cancel|text}}</span>
+      </button>
+    </div>
+  </ng-container>
+</app-base-page>

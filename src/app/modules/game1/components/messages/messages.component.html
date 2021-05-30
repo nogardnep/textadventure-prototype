@@ -2,19 +2,7 @@
   <ul class="message-list">
     <ng-container *ngFor="let item of messages ; let isLast = last">
       <li class="message-list-item">
-        <div class="message">
-          <app-paragraphs [paragraphs]="item.paragraphs" (itemClicked)="onItemClicked($event)"></app-paragraphs>
-          <ng-container *ngIf="item.choices && item.choices.length > 0">
-            <ul class="choice-list">
-              <ng-container *ngFor="let choice of item.choices">
-                <li *ngIf="isVisible(choice)" class="choice-list-item">
-                  <app-action-button [text]="choice.text" [disabled]="!isLast" (clickEvent)="onClickChoice(choice)">
-                  </app-action-button>
-                </li>
-              </ng-container>
-            </ul>
-          </ng-container>
-        </div>
+          <app-message [message]="item.message"></app-message>
       </li>
     </ng-container>
   </ul>

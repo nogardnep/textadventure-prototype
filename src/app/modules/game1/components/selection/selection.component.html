@@ -1,8 +1,8 @@
 <ng-container *ngIf="entity">
-  <ng-container *ngIf="isVisible()">
+  <ng-container *ngIf="visible">
     <app-entity-full [entity]="entity"></app-entity-full>
   </ng-container>
-  <ng-container *ngIf="!isVisible()">
+  <ng-container *ngIf="!visible">
     <div class="invisible-entity">
       <p>Vous ne pouvez voir cela</p>
     </div>

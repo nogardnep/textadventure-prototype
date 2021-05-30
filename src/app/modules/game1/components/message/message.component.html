@@ -1,0 +1,13 @@
+<div class="message">
+  <app-paragraphs [paragraphs]="message.paragraphs" (itemClicked)="onItemClicked($event)"></app-paragraphs>
+  <ng-container *ngIf="message.choices && message.choices.length > 0">
+    <ul class="choice-list">
+      <ng-container *ngFor="let choice of message.choices">
+        <li class="choice-list-item">
+          <app-action-button [text]="choice.text" [disabled]="!last" (clickEvent)="onClickChoice(choice)">
+          </app-action-button>
+        </li>
+      </ng-container>
+    </ul>
+  </ng-container>
+</div>

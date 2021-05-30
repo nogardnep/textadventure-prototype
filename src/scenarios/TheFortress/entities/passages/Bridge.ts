@@ -32,7 +32,7 @@ export class Bridge extends Passage {
   }
 
   isKept(): boolean {
-    return this.isOwning(this.getGiant(), true) && !this.getGiant().isDead();
+    return this.owns(this.getGiant(), true) && !this.getGiant().isDead();
   }
 
   getGiant(): Giant {

@@ -1,46 +1,50 @@
-import { BASE_SUBJECTS } from './../dictionnaries/subjects';
-import { ScenarioId } from 'src/game/core/models/Scenario';
-import { Action } from 'src/game/core/models/Action';
+import { Action, ActionContructor } from 'src/game/core/models/Action';
 import { Audio } from 'src/game/core/models/Audio';
 import { Entity, EntityType } from 'src/game/core/models/Entity';
 import { Glossary } from 'src/game/core/models/Glossary';
 import { Image } from 'src/game/core/models/Image';
 import { Play } from 'src/game/core/models/Play';
-import { Scenario } from 'src/game/core/models/Scenario';
+import { Scenario, ScenarioId } from 'src/game/core/models/Scenario';
 import { FrenchBaseGlossary } from 'src/game/modules/base/models/glossaries/FrenchBaseGlossary';
 import { BASE_ACTIONS } from '../dictionnaries/actions';
 import {
   Direction,
   DirectionKey,
-  getOppositeDirection,
+  getOppositeDirection
 } from '../dictionnaries/direction';
 import { BASE_DIRECTIONS } from './../dictionnaries/direction';
+import { BASE_SUBJECTS } from './../dictionnaries/subjects';
+import { Subject } from './Conversation';
 import { Place } from './entities/material/Place';
 import { EnglishBaseGlossary } from './glossaries/EnglishBaseGlossary';
-import { Subject } from './Conversation';
+
+export type Starting = {
+  maxSpells: number;
+  caracteristicsPoints: number;
+  availableSpells: EntityType[];
+  askForName: boolean;
+};
 
 export abstract class BaseScenario extends Scenario {
-  directions: { [key: string]: Direction } = {};
-  starting: {
-    maxSpells: number;
-    caracteristicsPoints: number;
-    availableSpells: EntityType[];
-    askForName: boolean;
-  };
+  private directions: { [key: string]: Direction } = {};
+  private starting: Starting;
 
   constructor(
     id: ScenarioId,
     params: {
-      glossaries?: { [languageKey: string]: Glossary };
+      starting: Starting;
       entityConstructors: { [key: string]: new (play: Play) => Entity };
+      glossaries?: { [languageKey: string]: Glossary };
       images?: { [key: string]: Image };
       audios?: { [key: string]: Audio };
-      actions?: { [key: string]: Action };
+      actions?: { [key: string]: ActionContructor };
       subjects?: { [key: string]: Subject };
       directions?: { [key: string]: Direction };
     }
   ) {
     super(id, params);
+
+    this.starting = params.starting;
 
     this.setActions(BASE_ACTIONS);
     this.setDirection(BASE_DIRECTIONS);
@@ -65,6 +69,14 @@ export abstract class BaseScenario extends Scenario {
     if (params.subjects) {
       this.setSubjects(params.subjects);
     }
+  }
+
+  getDirections(): { [key: string]: Direction } {
+    return this.directions;
+  }
+
+  getStarting(): Starting {
+    return this.starting;
   }
 
   protected setDirection(directions: { [key: string]: Direction }): void {

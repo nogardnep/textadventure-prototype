@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'capitalizeFirst' })
+@Pipe({ name: 'capitalizeFirst', pure: true })
 export class CapitalizeFirstPipe implements PipeTransform {
   constructor() {}
 

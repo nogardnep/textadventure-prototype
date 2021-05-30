@@ -1,0 +1,7 @@
+<span *ngIf="!item.entity" [innerHTML]="item.text"></span>
+<ng-container *ngIf="item.entity">
+  <button [disabled]="!clickable" (click)="onClick()" [innerHTML]="item.text"></button>
+  <ng-container *ngIf="clickable && actionsShown">
+    <app-actions [entity]="item.entity|asEntity"></app-actions>
+  </ng-container>
+</ng-container>

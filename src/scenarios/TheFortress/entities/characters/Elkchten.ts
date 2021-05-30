@@ -21,12 +21,15 @@ export class Elkchten extends Character {
       TheFortress.entityConstructors.Sword.name
     ) as HoldableObject;
 
+    console.log(helmet)
+    console.log(this)
+
     helmet.moveTo(this);
-    magicStick.moveTo(this);
-    sword.moveTo(this);
-    helmet.puttedBy(this);
-    magicStick.heldBy(this);
-    sword.heldBy(this);
+    // magicStick.moveTo(this);
+    // sword.moveTo(this);
+    // helmet.puttedBy(this);
+    // magicStick.heldBy(this);
+    // sword.heldBy(this);
   }
 
   getFullDescription() {

@@ -1,10 +1,16 @@
-import { Action } from 'src/game/core/models/Action';
+import { BaseAction } from '../BaseAction';
 import { Character } from '../entities/material/Character';
 import { HoldableObject } from '../entities/material/thing/object/HoldableObject';
+import { BasePlay } from './../../BasePlay';
 
-export class Releasing extends Action {
-  getText() {
-    return  'ranger' ;
+export class Releasing extends BaseAction {
+  constructor(play: BasePlay) {
+    super(play, {
+      text: () => {
+        return 'ranger';
+      },
+      patterns: [],
+    });
   }
 
   check(author: Character, args: any[]) {
@@ -13,7 +19,7 @@ export class Releasing extends Action {
 
     if (
       //target instanceof HoldableObject &&
-      author.isOwning(target, false) &&
+      author.owns(target, false) &&
       target.held
     ) {
       usable = true;

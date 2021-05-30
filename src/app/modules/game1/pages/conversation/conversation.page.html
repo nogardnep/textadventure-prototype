@@ -1,17 +1,11 @@
-<ion-content [fullscreen]="true">
-  <div class="page-container conversation-page">
-
-    <div class="page-header">
-      <app-main-menu></app-main-menu>
-    </div>
-    <app-time [play]="play"></app-time>
-    <div class="page-core">
-      <div class="page-core-inner">
-        <app-back-button></app-back-button>
-        <ng-container *ngIf="interlocutor">
-          <app-conversation [entity]="interlocutor"></app-conversation>
-        </ng-container>
-      </div>
+<app-base-page [type]="'conversation'">
+  <app-time [play]="play"></app-time>
+  <div class="page-core">
+    <div class="page-core-inner">
+      <app-back-button></app-back-button>
+      <ng-container *ngIf="interlocutor">
+        <app-conversation [entity]="interlocutor"></app-conversation>
+      </ng-container>
     </div>
   </div>
-</ion-content>
+</app-base-page>

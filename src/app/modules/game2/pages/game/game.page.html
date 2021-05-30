@@ -1,14 +1,25 @@
-<ion-content [fullscreen]="true">
+<app-page-container>
   <app-main-menu></app-main-menu>
   <div *ngIf="play">
     <div>Time: {{play.getTime()}}</div>
-    <div>
-      <ng-container *ngFor="let item of stream">
-        <app-location [entity]="item"></app-location>
-      </ng-container>
+    <div class="game">
+      <div class="stream-container">
+        <h2>Récit</h2>
+        <div #streamElement class="stream">
+          <div #itemElement *ngFor="let item of streamItems; let last = last">
+            <ng-container *ngIf="item.type === 'entity'">
+              <app-entity [entity]="item.object|asEntity"></app-entity>
+            </ng-container>
+            <ng-container *ngIf="item.type === 'message'">
+              <app-message [message]="item.object|asMessage"></app-message>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="player-container">
+        <h2>Personnage</h2>
+        <app-player [entity]="player"></app-player>
+      </div>
     </div>
-    <!-- <app-location *ngIf="!getFirstUnreadMessage()" [entity]="getLocation()"></app-location> -->
-    <!-- <app-messages *ngIf="getFirstUnreadMessage()" [messages]="[getFirstUnreadMessage()]"></app-messages> -->
   </div>
-
-</ion-content>
+</app-page-container>

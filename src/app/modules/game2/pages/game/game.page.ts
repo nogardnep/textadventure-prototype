@@ -1,13 +1,20 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
-import { GameService, MessageWrapper } from 'src/app/services/game.service';
-import { Entity } from 'src/game/core/models/Entity';
-import { Narration } from 'src/game/core/models/Narration';
+import {
+  GameService,
+  MessageWrapper,
+  StreamItem,
+} from 'src/app/services/game.service';
 import { Play } from 'src/game/core/models/Play';
-import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
-import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 
 @Component({
   selector: 'app-game',
@@ -15,15 +22,19 @@ import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEn
   styleUrls: ['./game.page.scss'],
 })
 export class GamePage implements OnInit, OnDestroy {
-  play: Play;
-  messages: MessageWrapper[];
+  @ViewChild('streamElement')
+  streamElement: ElementRef;
+  @ViewChildren('itemElement') itemElement: QueryList<any>;
   private playSubscription: Subscription;
   private messagesSubscription: Subscription;
-  stream: BaseEntity[] = [];
+  private streamSubscription: Subscription;
+  play: Play;
+  messages: MessageWrapper[];
+  streamItems: StreamItem[] = [];
+  player: Character;
 
-  constructor(private gameService: GameService, private router: Router) {
-    // GameController.startNewPlay(this.gameService.getCurrentScenario())
-    // GameController.getPlay().getScenario().start()
+  constructor(private gameService: GameService) {
+    gameService.checkPlay();
   }
 
   ngOnInit(): void {
@@ -31,7 +42,7 @@ export class GamePage implements OnInit, OnDestroy {
       (play: Play) => {
         if (play) {
           this.play = play;
-          this.stream.push((play.getPlayer() as Character).getParent());
+          this.player = this.play.getPlayer() as Character;
         } else {
           this.play = null;
         }
@@ -47,34 +58,40 @@ export class GamePage implements OnInit, OnDestroy {
     );
 
     this.gameService.emitMessages();
+
+    this.streamSubscription = this.gameService.streamSubject.subscribe(
+      (stream) => {
+        this.streamItems = stream;
+      }
+    );
+
+    this.gameService.emitMessages();
   }
 
   ngOnDestroy(): void {
     this.messagesSubscription.unsubscribe();
     this.playSubscription.unsubscribe();
+    this.streamSubscription.unsubscribe();
   }
 
-  getPlayer(): Character {
-    return this.play.getPlayer() as Character;
+  ngAfterViewInit() {
+    this.itemElement.changes.subscribe((list) => this.scroll(list));
   }
 
-  getNarration(): Narration {
-    return this.play.getNarration();
-  }
+  private scroll(list: QueryList<any>): void {
+    const streamHTML = this.streamElement.nativeElement as HTMLElement;
+    const itemHTML = (list.last as ElementRef).nativeElement as HTMLElement;
+    console.log(itemHTML.scrollHeight);
 
-  getLocation(): Entity {
-    return (this.play.getPlayer() as Character).getParent();
-  }
-
-  getFirstUnreadMessage(): MessageWrapper {
-    let found: MessageWrapper = null;
-
-    this.messages.forEach((item) => {
-      if (!found && !item.read) {
-        found = item;
-      }
+    streamHTML.scroll({
+      top: streamHTML.scrollHeight - itemHTML.scrollHeight - 20,
+      left: 0,
+      behavior: 'smooth',
     });
+  }
 
-    return found;
+
+  test() {
+    return 'd'
   }
 }

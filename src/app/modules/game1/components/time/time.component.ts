@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Play } from 'src/game/core/models/Play';
 
 @Component({
@@ -6,21 +6,26 @@ import { Play } from 'src/game/core/models/Play';
   templateUrl: './time.component.html',
   styleUrls: ['./time.component.scss'],
 })
-export class TimeComponent implements OnInit {
+export class TimeComponent {
   @Input() play: Play;
+  printed: string;
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnChanges() {
+    this.update();
+  }
 
-  print(): string {
-    return new Intl.DateTimeFormat('fr', {
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    }).format(this.play.getDate());
+  private update(): void {
+    if (this.play) {
+      this.printed = new Intl.DateTimeFormat('fr', {
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }).format(this.play.getDate());
+    }
   }
 }

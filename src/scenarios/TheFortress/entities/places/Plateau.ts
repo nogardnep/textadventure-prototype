@@ -1,13 +1,11 @@
-import { EntityType } from 'src/game/core/models/Entity';
 import { Name } from 'src/game/core/models/Name';
 import { ParagraphTag } from 'src/game/core/models/Paragraph';
-import { EndMode, Play } from 'src/game/core/models/Play';
 import { DirectionKeys } from 'src/game/modules/base/dictionnaries/direction';
 import { Spell } from 'src/game/modules/base/models/entities/immaterial/Spell';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import {
   Connection,
-  Place,
+  Place
 } from 'src/game/modules/base/models/entities/material/Place';
 import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 import { TheFortress } from '../../TheFortress';
@@ -65,12 +63,14 @@ export class Plateau extends Place {
       ) &&
       this.getBridge().isKept()
     ) {
-      this.getPlay().sendMessage([
-        {
-          tag: ParagraphTag.Event,
-          text: 'Le géant succombe sous un déluge de flammes.',
-        },
-      ]);
+      this.getPlay().sendMessage({
+        paragraphs: [
+          {
+            tag: ParagraphTag.Event,
+            text: 'Le géant succombe sous un déluge de flammes.',
+          },
+        ],
+      });
       this.getBridge().getGiant().die();
       report.success = true;
     } else {
@@ -88,12 +88,14 @@ export class Plateau extends Place {
       passage.equals(this.getBridge()) &&
       this.getBridge().isKept()
     ) {
-      this.getPlay().sendMessage([
-        {
-          tag: ParagraphTag.Information,
-          text: 'Vous ne pouvez passer, le géant garde le pont.',
-        },
-      ]);
+      this.getPlay().sendMessage({
+        paragraphs: [
+          {
+            tag: ParagraphTag.Information,
+            text: 'Vous ne pouvez passer, le géant garde le pont.',
+          },
+        ],
+      });
       return { success: false };
     } else {
       return super.connectionUsed(author, connection);

@@ -1,14 +1,7 @@
-<ion-content [fullscreen]="true">
-  <div class="page-container">
-    <div class="page-header">
-      <app-main-menu></app-main-menu>
-    </div>
-    <div class="page-core">
-      <app-back-button></app-back-button>
-      <app-time [play]="play"></app-time>
-      <ng-container *ngIf="selection">
-        <app-selection [entity]="selection"></app-selection>
-      </ng-container>
-    </div>
-  </div>
-</ion-content>
+<app-base-page [type]="'selection'">
+  <app-back-button></app-back-button>
+  <app-time [play]="play"></app-time>
+  <ng-container *ngIf="selection">
+    <app-selection [entity]="selection"></app-selection>
+  </ng-container>
+</app-base-page>

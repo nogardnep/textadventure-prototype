@@ -19,6 +19,7 @@ import { Passage } from 'src/game/modules/base/models/entities/material/thing/Pa
 })
 export class ConnectionsComponent implements OnInit {
   @Input() entity: Entity;
+  @Input() clickable: boolean = true;
   connections: Connection[] = [];
 
   constructor() {}
@@ -34,16 +35,18 @@ export class ConnectionsComponent implements OnInit {
   }
 
   onClickConnection(connection: Connection): void {
-    const action = this.entity.getPlay().getAction(BaseActionKeys.GoingTo);
-    const player = this.entity.getPlay().getPlayer();
+    if (this.clickable) {
+      const action = this.entity.getPlay().getAction(BaseActionKeys.GoingTo);
+      const player = this.entity.getPlay().getPlayer();
 
-    action.use(player, [connection]);
+      action.use(player, [connection]);
+    }
   }
 
   getDirection(key: DirectionKey): Direction {
-    return (this.entity.getPlay().getScenario() as BaseScenario).directions[
-      key
-    ];
+    return (
+      this.entity.getPlay().getScenario() as BaseScenario
+    ).getDirections()[key];
   }
 
   getPassage(connection: Connection): Passage {

@@ -58,18 +58,22 @@ export class Crevasse extends Place {
     let success = false;
 
     if (spell.inheritsFrom(TheFortress.entityConstructors.ControlSpell.name)) {
-      this.getPlay().sendMessage([
-        {
-          tag: ParagraphTag.Event,
-          text: 'Vous formez un milieu du torrent un passage où les eaux ne peuvent plus se déverser.',
-        },
-      ]);
-      this.getPlay().sendMessage([
-        {
-          tag: ParagraphTag.Event,
-          text: "Vous rejoignez ainsi l'autre rive.",
-        },
-      ]);
+      this.getPlay().sendMessage({
+        paragraphs: [
+          {
+            tag: ParagraphTag.Event,
+            text: 'Vous formez un milieu du torrent un passage où les eaux ne peuvent plus se déverser.',
+          },
+        ],
+      });
+      this.getPlay().sendMessage({
+        paragraphs: [
+          {
+            tag: ParagraphTag.Event,
+            text: "Vous rejoignez ainsi l'autre rive.",
+          },
+        ],
+      });
 
       success = true;
     }

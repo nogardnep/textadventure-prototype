@@ -1,10 +1,13 @@
+import { GameService } from 'src/app/services/game.service';
+import { Subscription } from 'rxjs';
 import { Place } from 'src/game/modules/base/models/entities/material/Place';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 import { Entity } from 'src/game/core/models/Entity';
 import { Thing } from 'src/game/modules/base/models/entities/material/Thing';
 import { Container } from 'src/game/modules/base/models/entities/material/thing/object/Container';
+import { BaseEntity } from 'src/game/modules/base/models/BaseEntity';
 
 @Component({
   selector: 'app-entity-list',
@@ -12,17 +15,28 @@ import { Container } from 'src/game/modules/base/models/entities/material/thing/
   styleUrls: ['./entity-list.component.scss'],
 })
 export class EntityListComponent implements OnInit {
-  @Input() entity: Entity;
+  @Input() entity: BaseEntity;
+  private updateSubscription: Subscription;
+  label: string;
+  entities: BaseEntity[];
 
-  constructor() {}
+  constructor(private gameService: GameService) {}
 
-  ngOnInit() {}
-
-  isVisible(entity: MaterialEntity): boolean {
-    return (this.entity.getPlay().getPlayer() as Character).canSee(entity);
+  ngOnInit() {
+    this.updateSubscription = this.gameService.updateEvent.subscribe(() => {
+      this.update();
+    });
   }
 
-  getLabel(): string {
+  ngOnChanges() {
+    this.update();
+  }
+
+  ngOnDestroy() {
+    this.updateSubscription.unsubscribe();
+  }
+
+  private getLabel(): string {
     let label: string;
 
     if (this.entity instanceof Character) {
@@ -40,12 +54,12 @@ export class EntityListComponent implements OnInit {
     return label;
   }
 
-  getEntities(): MaterialEntity[] {
-    let found: MaterialEntity[] = [];
+  private getEntities(): BaseEntity[] {
+    let found: BaseEntity[] = [];
 
     if (this.entity instanceof MaterialEntity) {
       this.entity.getChildren().forEach((item) => {
-        const player = this.entity.getPlay().getPlayer() as Character;
+        const player = this.entity.getPlay().getPlayer();
         if (!item.isThePlayer() && player.canSee(item)) {
           found.push(item);
         }
@@ -53,5 +67,11 @@ export class EntityListComponent implements OnInit {
     }
 
     return found;
+  }
+
+  private update() {
+    this.entities = [];
+    this.label = this.getLabel();
+    this.entities = this.getEntities();
   }
 }

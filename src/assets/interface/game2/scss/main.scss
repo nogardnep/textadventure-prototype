@@ -1,0 +1,39 @@
+.page {
+  color: rgb(48, 48, 48);
+  background-color: rgb(231, 231, 231);
+}
+
+.game {
+  display: flex;
+
+  .stream-container {
+    flex-grow: 1;
+
+    .stream {
+      max-height: 200px;
+      overflow: auto;
+    }
+  }
+
+  .player-container {
+    flex-grow: 1;
+  }
+
+  .action-list {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+
+    .action-list-item {
+      display: inline-block;
+    }
+  }
+
+  .name-container {
+    font-size: 1.2em;
+
+    .name-button {
+      font-size: inherit;
+    }
+  }
+}

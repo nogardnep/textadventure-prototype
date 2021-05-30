@@ -57,6 +57,10 @@ export class Name {
     return this.props.feminin;
   }
 
+  needsEllision(): boolean {
+    return this.props.elision || this.beginsWithVowel();
+  }
+
   printSimple(capitalizeFirstLetter?: boolean): string {
     return this.printWithCaptial(this.coreName, capitalizeFirstLetter);
   }
@@ -165,7 +169,7 @@ export class Name {
       if (this.props.invariable) {
         if (this.props.feminin) {
           article = 'de la ';
-        } else if (this.props.elision) {
+        } else if (this.needsEllision()) {
           article = "de l'";
         } else {
           article = 'du';
@@ -188,7 +192,7 @@ export class Name {
     if (!this.props.properNoun) {
       if (this.props.plural || (forPlural && !this.props.invariable)) {
         article = 'les ';
-      } else if (this.props.elision) {
+      } else if (this.needsEllision()) {
         article = "l'";
       } else if (this.props.feminin) {
         article = 'la ';
@@ -251,5 +255,13 @@ export class Name {
     }
 
     return toPrint;
+  }
+
+  private beginsWithVowel(): boolean {
+    return this.isVowel(this.coreName.charAt(0));
+  }
+
+  private isVowel(letter: string): boolean {
+    return ['a', 'e', 'i', 'o', 'u'].indexOf(letter.toLowerCase()) !== -1;
   }
 }

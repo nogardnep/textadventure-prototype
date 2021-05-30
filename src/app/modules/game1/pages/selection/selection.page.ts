@@ -1,9 +1,10 @@
+import { InterfaceService } from 'src/app/services/interface.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GameService } from 'src/app/services/game.service';
 import { Play } from 'src/game/core/models/Play';
-import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
+import { BaseEntity } from 'src/game/modules/base/models/BaseEntity';
 
 @Component({
   selector: 'app-selection-page',
@@ -13,32 +14,25 @@ import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 export class SelectionPage implements OnInit, OnDestroy {
   selection: BaseEntity;
   play: Play;
-  private selectionSubscription: Subscription;
   private playSubscription: Subscription;
+  interfaceId: string;
 
-  constructor(private gameService: GameService, private route: ActivatedRoute) {
+  constructor(
+    private gameService: GameService,
+    private activatedRoute: ActivatedRoute,
+    private interfaceService: InterfaceService
+  ) {
     gameService.checkPlay();
+    this.interfaceId = this.interfaceService.getInterfaceId();
   }
 
   ngOnInit() {
-    // this.selectionSubscription = this.gameService.selectionSubject.subscribe(
-    //   (selection: Entity) => {
-    //     if (selection) {
-    //       this.selection = selection;
-    //     } else {
-    //       this.selection = null;
-    //     }
-    //   }
-    // );
-
-    // this.gameService.emitSelection();
-
     this.playSubscription = this.gameService.playSubject.subscribe(
       (play: Play) => {
         if (play) {
           this.play = play;
           const entity = this.play.getEntity(
-            this.route.snapshot.paramMap.get('id')
+            this.activatedRoute.snapshot.paramMap.get('id')
           ) as BaseEntity;
           // this.gameService.setSelection(entity);
           this.selection = entity;
@@ -52,7 +46,6 @@ export class SelectionPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.selectionSubscription.unsubscribe();
     this.playSubscription.unsubscribe();
   }
 }

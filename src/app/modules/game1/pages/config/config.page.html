@@ -1,0 +1,37 @@
+<app-base-page [type]="'config'" [pageTitle]="'Configurations'">
+  <ng-container *ngIf="data">
+    <div class="config-data">
+      <div class="section audio-section">
+        <h2 class="section-title">Audio</h2>
+        <div class="form-group mute-group">
+          <label for="mute">Muet</label>
+          <input id="mute" class="mute-input" type="checkbox" [(ngModel)]="data.audio.muted"
+            (ngModelChange)="onValueChange()" />
+        </div>
+        <div class="subsection">
+          <h3 class="subsection-title">Volumes</h3>
+          <div *ngFor="let item of audioChannelKey | keyvalue" class="form-group layer-volume-group">
+            <label for="{{item.value}}Volume" [innerHTML]="channelNames[item.value]|capitalizeFirst"></label>
+            <input id="{{item.value}}Volume" class="layer-volume-input" name="volume" type="range" min="0" max="1"
+              step="0.01" [(ngModel)]="data.audio.volumes[item.value]" (ngModelChange)="onValueChange()">
+          </div>
+        </div>
+      </div>
+      <div class="section language-section">
+        <div>
+          <h2 class="section-title">Langue</h2>
+          <div class="form-group">
+            <select [(ngModel)]="data.language" (ngModelChange)="onValueChange()">
+              <ng-container *ngFor="let item of languageKeys | keyvalue ">
+                <option [innerHTML]="languageNames[item.value]|name" [ngValue]="item.value"></option>
+              </ng-container>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <button class="back-button" (click)="onClickBack()">
+    <span class="button-inner">Valider</span>
+  </button>
+</app-base-page>

@@ -1,13 +1,13 @@
 <div class="entity-full" *ngIf="entity">
-  <div *ngIf="entity.getName()" class="entity-full-name-container">
+  <div *ngIf="name" class="entity-full-name-container">
     <div class="entity-full-name">
       <span class="entity-full-name-inner">
-        {{ entity.getName().printWithIndefiniteArticle()|capitalizeFirst }}</span>
+        {{ name|capitalizeFirst }}</span>
     </div>
   </div>
   <app-entity-window [entity]="entity"></app-entity-window>
   <div class="entity-full-description">
-    <app-paragraphs [paragraphs]="entity.getFullDescription()" (itemClicked)="onItemClicked($event)"></app-paragraphs>
+    <app-paragraphs [paragraphs]="description" (itemClicked)="onItemClicked($event)"></app-paragraphs>
   </div>
   <div class="entity-full-content">
     <div class="entity-full-content-inner">

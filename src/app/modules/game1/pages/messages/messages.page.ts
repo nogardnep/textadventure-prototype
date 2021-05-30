@@ -12,6 +12,7 @@ import { Play } from 'src/game/core/models/Play';
 export class MessagesPage implements OnInit, OnDestroy {
   messages: MessageWrapper[];
   play: Play;
+  unreaded: MessageWrapper[];
   private messagesSubscription: Subscription;
   private playSubscription: Subscription;
 
@@ -39,7 +40,15 @@ export class MessagesPage implements OnInit, OnDestroy {
       (message: MessageWrapper[]) => {
         this.messages = message;
 
-        if (this.getUnreadMessages().length === 0) {
+        this.unreaded = []
+
+        this.messages.forEach((item) => {
+          if (!item.read) {
+            this.unreaded.push(item);
+          }
+        });
+
+        if (this.unreaded.length === 0) {
           this.onEmpty();
         }
       }
@@ -51,18 +60,6 @@ export class MessagesPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.messagesSubscription.unsubscribe();
     this.playSubscription.unsubscribe();
-  }
-
-  getUnreadMessages(): MessageWrapper[] {
-    let found: MessageWrapper[] = [];
-
-    this.messages.forEach((item) => {
-      if (!item.read) {
-        found.push(item);
-      }
-    });
-
-    return found;
   }
 
   onClickBack(): void {

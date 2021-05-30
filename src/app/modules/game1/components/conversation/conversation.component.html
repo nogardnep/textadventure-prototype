@@ -19,7 +19,7 @@
       <ng-container *ngIf="speeches.length > 0">
         <div class="speech">
           <div class="interlocutor-name">{{entity.getName().printWithDefiniteArticle(true)}}</div>
-          <app-paragraphs [paragraphs]="getLastSpeech()" (itemClicked)="onItemClicked($event)"></app-paragraphs>
+          <app-paragraphs [paragraphs]="speeches[speeches.length - 1]" (itemClicked)="onItemClicked($event)"></app-paragraphs>
         </div>
       </ng-container>
     </div>

@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import * as createjs from 'createjs-module';
 import { Image, WINDOW_REFERENCE } from 'src/game/core/models/Image';
-import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
+import { BaseEntity } from 'src/game/modules/base/models/BaseEntity';
 
 const TICK_EVENT = 'tick';
 

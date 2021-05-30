@@ -9,9 +9,9 @@ export class Thing extends MaterialEntity {
   private openable = false;
   private closed = false;
 
-  getDisplayedActionKeys() {
+  getDisplayedActions() {
     return super
-      .getDisplayedActionKeys()
+      .getDisplayedActions()
       .concat([BaseActionKeys.Opening, BaseActionKeys.Closing]);
   }
 

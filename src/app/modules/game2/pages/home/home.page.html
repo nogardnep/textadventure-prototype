@@ -1,0 +1,29 @@
+<ion-content>
+  <div class="home-page" *ngIf="!loading">
+    <div class="home-page-inner">
+      <a href="/">Retour</a>
+      <nav class="home-menu">
+        <ul>
+          <li>
+            <button class="menu-link" (click)="onClickNew()">
+              <span class="button-inner">Nouveau jeu</span>
+            </button>
+          </li>
+          <li>
+            <button [disabled]="!lastPlayExists" class="menu-link" (click)="onClickLoad()">
+              <span class="button-inner">Charger</span>
+            </button>
+          </li>
+          <li>
+            <button class="menu-link" (click)="onClickConfig()">
+              <span class="button-inner">Configurations</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <div *ngIf="loading">
+    Chargement...
+  </div>
+</ion-content>

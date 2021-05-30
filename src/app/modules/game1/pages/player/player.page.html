@@ -1,14 +1,7 @@
-<ion-content>
-  <div class="page-container">
-    <div class="page-header">
-      <app-main-menu></app-main-menu>
-    </div>
-    <div class="page-core">
-      <app-back-button></app-back-button>
-      <div *ngIf="play">
-        <app-time [play]="play"></app-time>
-        <app-player-full [player]="getPlayer()"></app-player-full>
-      </div>
-    </div>
+<app-base-page [type]="'player'">
+  <app-back-button></app-back-button>
+  <div *ngIf="play">
+    <app-time [play]="play"></app-time>
+    <app-player-full [player]="player"></app-player-full>
   </div>
-</ion-content>
+</app-base-page>

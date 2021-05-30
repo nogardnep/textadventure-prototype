@@ -114,6 +114,4 @@ On peut interroger un personnage sur les sujets de conversation qui lui sont con
 
 ## Bugs
 
-Les liens dans les descriptions ne sont parfois plus cliquables (pas trouvé la raison)
-
-La partie enregistrée n'est plus récupérable après ce cas de figure : Nouvelle partie / Annuler / Charger (dans ce cas recommencer une nouvelle partie)
+Rien à signaler pour le moment.

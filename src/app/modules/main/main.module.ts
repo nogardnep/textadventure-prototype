@@ -5,12 +5,12 @@ import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { MainRoutingModule } from './main-routing.module';
-import { ConfigPage } from './pages/config/config.page';
 import { HomePage } from './pages/home/home.page';
-import { NewPlayPage } from './pages/new-play/new-play.page';
 
 @NgModule({
-  declarations: [NewPlayPage, ConfigPage, HomePage],
+  declarations: [
+    HomePage,
+  ],
   entryComponents: [],
   imports: [
     SharedModule,

@@ -1,8 +1,8 @@
-<div class="entity-content" *ngIf="entity && getEntities().length > 0">
-  <div class="content-label" [innerHTML]="getLabel()"></div>
+<div class="entity-content" *ngIf="entity && entities.length > 0">
+  <div class="content-label" [innerHTML]="label"></div>
   <ul class="entity-content-list">
-    <ng-container *ngFor="let child of getEntities()">
-      <li *ngIf="isVisible(child)" class="entity-content-list-item">
+    <ng-container *ngFor="let child of entities">
+      <li class="entity-content-list-item">
         <app-entity-preview [entity]="child"></app-entity-preview>
       </li>
     </ng-container>

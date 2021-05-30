@@ -1,17 +1,5 @@
-import { Choice } from './models/Choice';
-import { Paragraph } from './models/Paragraph';
-import { Play, StoredPlay } from './models/Play';
-
-type Callbacks = {
-  onInform: (paragraphs: Paragraph[], actions?: Choice[]) => void;
-  onLoaded: (play: Play) => void;
-  onStart: () => void;
-  onSave: (storedPlay: StoredPlay) => void;
-  onLoad: () => Promise<StoredPlay>;
-};
 
 export class GameManager {
-  private static play: Play;
 
   static interpret(prompt: string): void {
     // let response: TextWrapper;
@@ -26,13 +14,5 @@ export class GameManager {
     //     },
     //   ],
     // });
-  }
-
-  static setPlay(play: Play) {
-    this.play = play;
-  }
-
-  static getPlay() {
-    return this.play;
   }
 }

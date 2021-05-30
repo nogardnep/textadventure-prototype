@@ -1,6 +1,15 @@
+import { GameService } from 'src/app/services/game.service';
+import { Subscription } from 'rxjs';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { Action } from 'src/game/core/models/Action';
 import { Entity } from 'src/game/core/models/Entity';
+
+export type ActionWrapper = {
+  key: string;
+  args: any[];
+  action: Action;
+  text: string;
+};
 
 @Component({
   selector: 'app-actions',
@@ -9,35 +18,54 @@ import { Entity } from 'src/game/core/models/Entity';
 })
 export class ActionsComponent implements OnInit {
   @Input() entity: Entity;
+  private updateSubscription: Subscription;
+  toDisplay: boolean;
+  actions: ActionWrapper[];
 
-  constructor() {}
+  constructor(private gameService: GameService) {
+  }
 
-  ngOnInit() {}
-
-  getActions(): { [key: string]: Action } {
-    const actions = {};
-
-    this.entity.getDisplayedActionKeys().forEach((key: string) => {
-      const action = this.entity.getPlay().getAction(key);
-
-      if (this.isVisible(action)) {
-        actions[key] = action;
-      }
+  ngOnInit() {
+    this.updateSubscription = this.gameService.updateEvent.subscribe(() => {
+      this.update();
     });
-
-    return actions;
   }
 
-  onClickAction(action: Action): void {
-    action.use(this.entity.getPlay().getPlayer(), [this.entity]);
+  ngOnChanges() {
+    this.update();
   }
 
-  isVisible(action: Action): boolean {
-    return action.check(this.entity.getPlay().getPlayer(), [this.entity], true)
-      .usable;
+  ngOnDestroy() {
+    this.updateSubscription.unsubscribe();
   }
 
-  toDisplay(): boolean {
-    return Object.keys(this.getActions()).length > 0;
+  onClickItem(item: ActionWrapper): void {
+    item.action.try(this.entity.getPlay().getPlayer(), item.args);
+  }
+
+  private checkUsuable(action: Action, args: any[]): boolean {
+    return action.check(this.entity.getPlay().getPlayer(), args, true).usable;
+  }
+
+  private update() :void {
+    this.actions = [];
+
+
+    if (this.entity) {
+      this.entity.getDisplayedActions().forEach((item) => {
+        const key = typeof item === 'string' ? item : item.key;
+        const action = this.entity.getPlay().getAction(key);
+        const args: any[] =
+          typeof item === 'string' ? [this.entity] : item.args;
+
+        if (this.checkUsuable(action, args)) {
+          this.actions.push({ key, args, action, text: action.getText() });
+        }
+      });
+
+
+    }
+
+    this.toDisplay = this.actions.length > 0;
   }
 }

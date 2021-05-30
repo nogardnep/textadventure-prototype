@@ -9,10 +9,10 @@ import { UsuableObject } from '../UsuableObject';
 export class WearableObject extends UsuableObject {
   private worn = false;
 
-  getDisplayedActionKeys() {
+  getDisplayedActions() {
     return Utils.removeDuplications(
       super
-        .getDisplayedActionKeys()
+        .getDisplayedActions()
         .concat([BaseActionKeys.Putting, BaseActionKeys.Pulling])
     );
   }
@@ -36,7 +36,7 @@ export class WearableObject extends UsuableObject {
 
     const alreadyWornObject = owner.getWornObject(this.getEmplacement());
 
-    if (!target.isOwning(this, false)) {
+    if (!target.owns(this, false)) {
       const taken = target.useAction(BaseActionKeys.Taking, [this]);
 
       if (taken) {

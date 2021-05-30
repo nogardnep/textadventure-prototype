@@ -1,0 +1,11 @@
+<app-page-container [type]="type">
+  <div class="page-header">
+    <app-main-menu></app-main-menu>
+  </div>
+  <div class="page-core">
+    <div *ngIf="pageTitle" class="page-title-container">
+      <h1 class="page-title">{{pageTitle}}</h1>
+    </div>
+    <ng-content></ng-content>
+  </div>
+</app-page-container>

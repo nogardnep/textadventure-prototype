@@ -9,7 +9,7 @@
         <ng-container *ngIf="connection.passageId">
           <!-- <app-entity-preview [entity]="getPassage(connection)"></app-entity-preview> -->
         </ng-container>
-        <button *ngIf="isUsable(connection)" (click)="onClickConnection(connection)">Aller</button>
+        <button [disabled]="!clickable" *ngIf="isUsable(connection)" (click)="onClickConnection(connection)">Aller</button>
       </li>
     </ng-container>
   </ul>

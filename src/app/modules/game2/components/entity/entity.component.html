@@ -1,0 +1,16 @@
+<div *ngIf="entity">
+  <div class="name-container">
+    <button class="name-button" (click)="onClick()">
+      <b>{{ name|capitalizeFirst }}</b>
+    </button>
+  </div>
+  <ng-container *ngIf="clickable && actionsShown">
+    <app-actions [clickable]="clickable" [entity]="entity"></app-actions>
+  </ng-container>
+  <entity-paragraphs [clickable]="clickable" [paragraphs]="description"></entity-paragraphs>
+  <!-- <app-connections [clickable]="isClickable()" [entity]="entity"></app-connections> -->
+  <app-choices [clickable]="clickable" [entity]="entity"></app-choices>
+</div>
+<div *ngIf="!entity">
+  <p>Entity not found</p>
+</div>

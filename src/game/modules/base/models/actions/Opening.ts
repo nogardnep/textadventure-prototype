@@ -1,10 +1,16 @@
-import { Action } from 'src/game/core/models/Action';
+import { BasePlay } from '../../BasePlay';
+import { BaseAction } from '../BaseAction';
 import { Character } from '../entities/material/Character';
 import { Thing } from '../entities/material/Thing';
 
-export class Opening extends Action {
-  getText() {
-    return  'ouvrir' ;
+export class Opening extends BaseAction {
+  constructor(play: BasePlay) {
+    super(play, {
+      text: () => {
+        return 'ouvrir';
+      },
+      patterns: [],
+    });
   }
 
   check(author: Character, args: any[]) {

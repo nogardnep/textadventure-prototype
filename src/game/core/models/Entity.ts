@@ -1,8 +1,6 @@
-import { GameManager } from 'src/game/core/GameManager';
 import { Utils } from '../Utils';
 import { Choice } from './Choice';
 import { Name } from './Name';
-import { Paragraph } from './Paragraph';
 import { Play } from './Play';
 
 export type EntityId = string;
@@ -13,12 +11,19 @@ export interface StoredEntity {
   type: EntityType;
 }
 
+export type EntityGetters = {
+  name?: () => Name;
+  choices?: () => Choice[];
+};
+
 export class Entity {
   private name: string;
   private id: EntityId;
   private type: EntityType;
   private destroyed = false;
-  private  onGetPlay: () => Play;
+  private onGetPlay: () => Play;
+  private onGetName: () => Name;
+  private onGetChoices: () => Choice[];
 
   constructor(play: Play) {
     this.onGetPlay = () => {
@@ -26,6 +31,16 @@ export class Entity {
     };
     this.type = this.constructor.name;
     this.id = this.type + '-' + Utils.generateId();
+    this.setGetters(this.configure());
+  }
+
+  protected configure(): EntityGetters {
+    return {};
+  }
+
+  protected setGetters(getters: EntityGetters): void {
+    this.onGetName = getters.name;
+    this.onGetChoices = getters.choices;
   }
 
   init(): void {}
@@ -58,7 +73,6 @@ export class Entity {
   }
 
   getPlay(): Play {
-    // return GameManager.getPlay();
     return this.onGetPlay();
   }
 
@@ -67,19 +81,17 @@ export class Entity {
   }
 
   getName(): Name {
-    if (this.name) {
-      return new Name(this.name);
-    } else {
-      return null;
-    }
+    return this.onGetName
+      ? this.onGetName()
+      : new Name(this.name ? this.name : '');
   }
 
-  getDisplayedActionKeys(): string[] {
+  getDisplayedActions(): (string | { key: string; args: any[] })[] {
     return [];
   }
 
   getChoices(): Choice[] {
-    return [];
+    return this.onGetChoices ? this.onGetChoices() : [];
   }
 
   getResponseToAction(key: string): void {}
@@ -93,14 +105,16 @@ export class Entity {
   }
 
   inheritsFrom(type: EntityType): boolean {
-    const constructor = this.getPlay().getScenario().entityConstructors[type];
+    const constructor = this.getPlay().getScenario().getEntityConstructors()[
+      type
+    ];
 
     if (!constructor) {
       console.error('Unfound constructor for ' + type);
     }
 
     return (
-      this instanceof this.getPlay().getScenario().entityConstructors[type]
+      this instanceof this.getPlay().getScenario().getEntityConstructors()[type]
     );
   }
 
@@ -110,11 +124,5 @@ export class Entity {
 
   isThePlayer(): boolean {
     return this.equals(this.getPlay().getPlayer());
-  }
-
-  inform(paragraphs: Paragraph[], choices?: Choice[]): void {
-    if (this.equals(this.getPlay().getPlayer())) {
-      this.getPlay().sendMessage(paragraphs, choices);
-    }
   }
 }

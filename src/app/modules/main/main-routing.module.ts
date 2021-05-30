@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ConfigPage } from './pages/config/config.page';
 import { HomePage } from './pages/home/home.page';
-import { NewPlayPage } from './pages/new-play/new-play.page';
 
 const routes: Routes = [
   {
@@ -14,14 +12,10 @@ const routes: Routes = [
     path: 'home',
     component: HomePage,
   },
-  {
-    path: 'config',
-    component: ConfigPage,
-  },
-  {
-    path: 'new-play',
-    component: NewPlayPage,
-  },
+  // {
+  //   path: 'new-play',
+  //   component: NewPlayPage,
+  // },
 ];
 
 @NgModule({

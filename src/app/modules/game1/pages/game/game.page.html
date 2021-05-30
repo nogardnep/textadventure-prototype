@@ -1,31 +1,23 @@
-<ion-content [fullscreen]="true">
-  <div class="page-container">
-    <div class="page-header">
-      <app-main-menu></app-main-menu>
-    </div>
-    <ng-container *ngIf="play">
-      <ng-container *ngIf="!play.isEnded()">
-        <div class="page-core">
-          <app-time [play]="play"></app-time>
-          <ng-container *ngIf="play.getPlayer()">
-            <app-location [entity]="getLocation()"></app-location>
-          </ng-container>
-        </div>
-        <div class="page-footer">
-          <ng-container *ngIf="play.getPlayer()">
-            <app-player-preview [player]="getPlayer()"></app-player-preview>
-          </ng-container>
-        </div>
+<app-base-page [type]="'game'">
+  <ng-container *ngIf="play">
+    <ng-container *ngIf="!ended">
+      <!-- <app-prompter [play]="play"></app-prompter> -->
+      <app-time [play]="play"></app-time>
+      <ng-container *ngIf="player">
+        <app-location [entity]="location"></app-location>
       </ng-container>
-      <ng-container *ngIf="play.isEnded()">
-        <p>Cette histoire est achevée.</p>
-        <button class="back-home-button" (click)="onClickBackHome()">
-          <span class="button-inner">Revenir en lieu sûr</span>
-        </button>
+      <ng-container *ngIf="player">
+        <!-- <app-player-preview [player]="player"></app-player-preview> -->
       </ng-container>
     </ng-container>
-    <div class="loading" *ngIf="!play">
-      <p>chargement...</p>
-    </div>
+    <ng-container *ngIf="ended">
+      <p>Cette histoire est achevée.</p>
+      <button class="back-home-button" (click)="onClickBackHome()">
+        <span class="button-inner">Revenir en lieu sûr</span>
+      </button>
+    </ng-container>
+  </ng-container>
+  <div class="loading" *ngIf="!play">
+    <p>chargement...</p>
   </div>
-</ion-content>
+</app-base-page>

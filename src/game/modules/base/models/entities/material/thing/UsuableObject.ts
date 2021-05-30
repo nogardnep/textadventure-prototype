@@ -6,10 +6,10 @@ import { Thing } from '../Thing';
 import { ActionReport } from 'src/game/core/models/Action';
 
 export class UsuableObject extends Thing {
-  getDisplayedActionKeys() {
+  getDisplayedActions() {
     return Utils.removeDuplications(
       super
-        .getDisplayedActionKeys()
+        .getDisplayedActions()
         .concat([BaseActionKeys.Taking, BaseActionKeys.Dropping])
     );
   }

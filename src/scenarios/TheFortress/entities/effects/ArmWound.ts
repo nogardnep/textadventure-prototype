@@ -22,9 +22,11 @@ export class ArmWound extends Wound {
       this.delay = 0;
 
       if (this.getOwner().isThePlayer()) {
-        this.getPlay().sendMessage([
-          { tag: ParagraphTag.Warning, text: "Votre blessure s'agrave..." },
-        ]);
+        this.getPlay().sendMessage({
+          paragraphs: [
+            { tag: ParagraphTag.Warning, text: "Votre blessure s'agrave..." },
+          ],
+        });
       }
 
       this.severity += 2;

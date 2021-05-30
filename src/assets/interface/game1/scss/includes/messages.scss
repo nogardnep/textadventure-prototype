@@ -1,0 +1,96 @@
+.messages-page {
+  .page-core {
+    $backgroundColor: rgba(255, 255, 255, 0.8);
+
+    background: url($imagePath + "/texture-2.png");
+    position: relative;
+    background-size: 100% auto;
+
+    &:before {
+      content: "";
+      height: 20px;
+      background-image: url($imagePath + "/border-1.png");
+      width: 100%;
+      background-size: 100% 100%;
+      display: block;
+    }
+
+    &:after {
+      content: "";
+      width: 100%;
+      background-size: 100% 100%;
+      display: block;
+      height: 10px;
+      background-image: url($imagePath + "/border-2.png");
+    }
+
+    .messages {
+      padding: 20px 5px;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.7));
+
+      .message-list {
+        margin: 0;
+        padding: 0;
+
+        .message-list-item {
+          list-style: none;
+          padding:  0 0 10px;
+
+          .paragraphs {
+            .paragraph {
+              margin: 0 0 5px;
+
+              .paragraph-interactive-text {
+                background: none;
+                border: none;
+                text-decoration: underline;
+                font-weight: bold;
+                color: $interactiveTextFontColor;
+                padding: 0;
+                line-height: inherit;
+                font-size: inherit;
+              }
+            }
+          }
+
+          .choice-list {
+            margin: 10px 0 0;
+
+            .choice-list-item {
+              color: $interactiveTextFontColor;
+              margin: 0 0 10px;
+
+              button {
+                color: inherit;
+                font-size: inherit;
+
+                &:disabled {
+                  opacity: 0.5;
+                }
+              }
+            }
+          }
+
+          &:not(:last-child):after {
+            content: "";
+            margin: 10px 0 0;
+            display: block;
+            background-image: url($imagePath + "/border-3.png");
+            background-repeat: repeat;
+            background-size: 100% 100%;
+            height: 5px;
+            box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+            opacity: 0.8;
+          }
+        }
+      }
+
+      .close-button,
+      .read-button {
+        display: block;
+        margin: 20px auto 0;
+        @include button();
+      }
+    }
+  }
+}

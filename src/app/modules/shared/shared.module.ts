@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { InformComponent } from './components/inform/inform.component';
-import { MainMenuComponent } from './components/main-menu/main-menu.component';
 import { CapitalizeFirstPipe } from './pipes/capitalize-first';
 import { KebabCasePipe } from './pipes/kebab-case';
 import { NamePipe } from './pipes/name.pipe';
@@ -15,7 +14,6 @@ import { TextPipe } from './pipes/text.pipe';
     NamePipe,
     TextPipe,
     InformComponent,
-    MainMenuComponent,
     CapitalizeFirstPipe,
     KebabCasePipe,
   ],
@@ -30,7 +28,6 @@ import { TextPipe } from './pipes/text.pipe';
   exports: [
     NamePipe,
     TextPipe,
-    MainMenuComponent,
     CapitalizeFirstPipe,
     KebabCasePipe,
     FormsModule,

@@ -1,10 +1,16 @@
-import { Action } from 'src/game/core/models/Action';
+import { BasePlay } from '../../BasePlay';
+import { BaseAction } from '../BaseAction';
 import { Character } from '../entities/material/Character';
 import { WearableObject } from '../entities/material/thing/object/WearableObject';
 
-export class Pulling extends Action {
-  getText() {
-    return  'retirer' ;
+export class Pulling extends BaseAction {
+  constructor(play: BasePlay) {
+    super(play, {
+      text: () => {
+        return 'retirer';
+      },
+      patterns: [],
+    });
   }
 
   check(author: Character, args: any[]) {
@@ -13,7 +19,7 @@ export class Pulling extends Action {
 
     if (
       // target instanceof WearableObject &&
-      author.isOwning(target, false) &&
+      author.owns(target, false) &&
       target.worn
     ) {
       usable = true;

@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
+import { Route } from '@angular/compiler/src/core';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router, ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { AudioService } from 'src/app/services/audio.service';
@@ -10,8 +11,12 @@ import { Entity } from 'src/game/core/models/Entity';
 import { Paragraph } from 'src/game/core/models/Paragraph';
 import { InformComponent } from '../modules/shared/components/inform/inform.component';
 import { AudioLayerKey } from './audio.service';
+import { GameKey } from './game.service';
 
-const INTERFACE_ID = 'game1'; // TODO: temp
+export enum DisplayMode {
+  Simple,
+  Stream,
+}
 
 export enum ButtonType {
   Validation,
@@ -24,8 +29,10 @@ export enum ButtonType {
   providedIn: 'root',
 })
 export class InterfaceService {
+  private basePath: string;
+  private displayMode: DisplayMode;
   private selection: Entity;
-  private loading: boolean = true;
+  private loading: boolean;
   private readonly audioPath = 'interface/audios';
   readonly audios = {
     back: new Audio(this.audioPath + '/back.wav', 0.5),
@@ -43,9 +50,56 @@ export class InterfaceService {
     private modalController: ModalController,
     private audioService: AudioService
   ) {
+    this.loading = true;
+    this.update();
+
     this.audioService.load(this.audios, () => {
       this.setLoading(false);
     });
+
+    this.router.events.subscribe((value) => {
+      if (value instanceof NavigationEnd) {
+        this.update();
+      }
+    });
+  }
+
+  update(): void {
+    this.basePath = this.router.url.split('/')[1];
+  }
+
+  getGameKey(): GameKey {
+    let gameKey: GameKey;
+
+    switch (this.basePath) {
+      case 'game1':
+        gameKey = GameKey.TheFortress;
+        break;
+      case 'game2':
+        gameKey = GameKey.TheGarden;
+        break;
+    }
+
+    return gameKey;
+  }
+
+  getInterfaceId():string {
+    return this.getGameKey();
+  }
+
+  getDisplayMode(): DisplayMode {
+    let displayMode: DisplayMode;
+
+    switch (this.getGameKey()) {
+      case GameKey.TheFortress:
+        displayMode = DisplayMode.Simple;
+        break;
+      case GameKey.TheGarden:
+        displayMode = DisplayMode.Stream;
+        break;
+    }
+
+    return displayMode;
   }
 
   async openPopup(paragraphs: Paragraph[], choices?: Choice[]) {
@@ -105,11 +159,11 @@ export class InterfaceService {
   }
 
   goToHome(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/' + this.basePath]);
   }
 
   goToConfig(): void {
-    this.router.navigate(['/config']);
+    this.router.navigate(['/' + this.basePath + '/config']);
   }
 
   back(): void {
@@ -117,26 +171,26 @@ export class InterfaceService {
   }
 
   goToGame(): void {
-    this.router.navigate(['/' + INTERFACE_ID]);
+    this.router.navigate(['/' + this.basePath + '/game']);
   }
 
   goToPlayer(): void {
-    this.router.navigate(['/' + INTERFACE_ID + '/player']);
+    this.router.navigate(['/' + this.basePath + '/player']);
   }
 
   goToMessages(): void {
-    this.router.navigate(['/' + INTERFACE_ID + '/messages']);
+    this.router.navigate(['/' + this.basePath + '/messages']);
   }
 
   goToNewPlay(): void {
-    this.router.navigate(['/new-play']);
+    this.router.navigate(['/' + this.basePath + '/new-play']);
   }
 
   goToSelection(id: string): void {
-    this.router.navigate(['/' + INTERFACE_ID + '/selection/' + id]);
+    this.router.navigate(['/' + this.basePath + '/selection/' + id]);
   }
 
   goToConversation(id: string): void {
-    this.router.navigate(['/' + INTERFACE_ID + '/conversation/' + id]);
+    this.router.navigate(['/' + this.basePath + '/conversation/' + id]);
   }
 }

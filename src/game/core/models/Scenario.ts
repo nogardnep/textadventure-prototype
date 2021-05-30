@@ -1,6 +1,6 @@
 import { Subject } from 'src/game/modules/base/models/Conversation';
 import { Gender } from './../dictionnaries/Gender';
-import { Action } from './Action';
+import { Action, ActionContructor } from './Action';
 import { Audio } from './Audio';
 import { Entity, EntityType } from './Entity';
 import { ConjugationTime, Glossary, Person } from './Glossary';
@@ -8,25 +8,33 @@ import { Image } from './Image';
 import { Play } from './Play';
 
 export type ScenarioId = string;
+export type EntityConstructor = new (play: Play) => Entity;
 
 export abstract class Scenario {
-  id: ScenarioId;
-  entityConstructors: { [key: string]: new (play: Play) => Entity } = {};
-  actions: { [key: string]: Action } = {};
-  glossaries: { [languageKey: string]: Glossary } = {};
-  images: { [key: string]: Image } = {};
-  audios: { [key: string]: Audio } = {};
-  subjects: { [key: string]: Subject } = {};
-  startDate: Date;
+  private id: ScenarioId;
+  private entityConstructors: { [key: string]: EntityConstructor } = {};
+  private actions: { [key: string]: ActionContructor } = {};
+  private glossaries: { [languageKey: string]: Glossary } = {};
+  private images: { [key: string]: Image } = {};
+  private audios: { [key: string]: Audio } = {};
+  private subjects: { [key: string]: Subject } = {};
+  private startDate: Date;
+
+  // TODO: move?
+  private glossaryConfiguration: {
+    conjugationTime: ConjugationTime;
+    receiverGender: Gender;
+    receiverPerson: Person;
+  };
 
   constructor(
     id: ScenarioId,
     params: {
       glossaries?: { [languageKey: string]: Glossary };
-      entityConstructors: { [key: string]: new (play: Play) => Entity };
+      entityConstructors: { [key: string]: EntityConstructor };
       images?: { [key: string]: Image };
       audios?: { [key: string]: Audio };
-      actions?: { [key: string]: Action };
+      actionsConstructor?: { [key: string]: ActionContructor };
       subjects?: { [key: string]: Subject };
     }
   ) {
@@ -40,8 +48,8 @@ export abstract class Scenario {
       this.setGlossaries(params.glossaries);
     }
 
-    if (params.actions) {
-      this.setActions(params.actions);
+    if (params.actionsConstructor) {
+      this.setActions(params.actionsConstructor);
     }
 
     if (params.audios) {
@@ -57,13 +65,6 @@ export abstract class Scenario {
     }
   }
 
-  // TODO: move?
-  glossaryConfiguration: {
-    conjugationTime: ConjugationTime;
-    receiverGender: Gender;
-    receiverPerson: Person;
-  };
-
   init(play: Play): void {}
 
   start(play: Play): void {}
@@ -74,11 +75,45 @@ export abstract class Scenario {
     return null;
   }
 
+  setStartDate(date: Date): void {
+    this.startDate = date;
+  }
+
+  getGlossaryConfiguration() {}
+
+  getId(): string {
+    return this.id;
+  }
+
   getStartDate(): Date {
     return this.startDate;
   }
 
-  setActions(actions: { [key: string]: Action }): void {
+  getAudios(): { [key: string]: Audio } {
+    return this.audios;
+  }
+
+  getImages(): { [key: string]: Image } {
+    return this.images;
+  }
+
+  getEntityConstructors(): { [key: string]: EntityConstructor } {
+    return this.entityConstructors;
+  }
+
+  getGlossaries(): { [key: string]: Glossary } {
+    return this.glossaries;
+  }
+
+  getActionConstructors(): { [key: string]: ActionContructor } {
+    return this.actions;
+  }
+
+  getSubjects(): { [key: string]: Subject } {
+    return this.subjects;
+  }
+
+  setActions(actions: { [key: string]: ActionContructor }): void {
     this.actions = Object.assign({}, this.actions, actions);
   }
 

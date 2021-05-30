@@ -4,8 +4,8 @@ import { ImmaterialEntity } from '../ImmaterialEntity';
 import { Character } from '../material/Character';
 
 export class Spell extends ImmaterialEntity {
-  getDisplayedActionKeys() {
-    return super.getDisplayedActionKeys().concat([BaseActionKeys.CastingOn]);
+  getDisplayedActions() {
+    return super.getDisplayedActions().concat([BaseActionKeys.CastingOn]);
   }
 
   castedBy(author: Character): ActionReport {

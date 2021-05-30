@@ -1,0 +1,27 @@
+<app-page-container [type]="'home'">
+  <ng-container *ngIf="!loading">
+    <a href="/">Retour</a>
+    <nav class="home-menu">
+      <ul>
+        <li>
+          <button class="menu-link" (click)="onClickNew()">
+            <span class="button-inner">Nouveau jeu</span>
+          </button>
+        </li>
+        <li>
+          <button [disabled]="!lastPlayExists" class="menu-link" (click)="onClickLoad()">
+            <span class="button-inner">Charger</span>
+          </button>
+        </li>
+        <li>
+          <button class="menu-link" (click)="onClickConfig()">
+            <span class="button-inner">Configurations</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </ng-container>
+  <ng-container *ngIf="loading">
+    <div>Chargement...</div>
+  </ng-container>
+</app-page-container>

@@ -1,17 +1,26 @@
+import { ShootableObject } from './material/thing/object/ShootableObject';
+import { BasePlay } from './../../BasePlay';
 import { ActionReport } from 'src/game/core/models/Action';
 import { Entity, EntityId, EntityType } from 'src/game/core/models/Entity';
 import { Utils } from 'src/game/core/Utils';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { Caracteristic } from '../Caracteristic';
 import { BaseGlossaryKey } from './../BaseGlossary';
-import { BaseEntity } from './BaseEntity';
+import { BaseEntity } from '../BaseEntity';
 import { Effect } from './immaterial/Effect';
 import { Faction } from './immaterial/Faction';
 import { Spell } from './immaterial/Spell';
+import { BaseActionKeys } from '../../dictionnaries/actions';
 
 export type CaracteristTestReport = {
   success: boolean;
   critical: boolean;
+};
+
+export type ContentWrapper = {
+  type: EntityType;
+  id?: EntityId;
+  content?: { [key: string]: ContentWrapper };
 };
 
 const MIN_CARACTERISTIC_VALUE = 0;
@@ -24,6 +33,32 @@ export class MaterialEntity extends BaseEntity {
   private caracteristics: { [key: string]: Caracteristic } = {};
   private effectsId: EntityId[] = [];
   private factionsId: EntityId[] = [];
+  protected content: { [key: string]: ContentWrapper } = {};
+
+  makeContent() {
+    this.populate(this, this.content);
+  }
+
+  private populate(
+    parent: MaterialEntity,
+    content: { [key: string]: ContentWrapper }
+  ) {
+    for (let key in content) {
+      const item = content[key];
+      const entity = this.getPlay().addEntity(item.type) as MaterialEntity;
+
+      item.id = entity.getId();
+      entity.moveTo(parent);
+
+      if (item.content) {
+        this.populate(entity, item.content);
+      }
+    }
+  }
+
+  getContent(content: ContentWrapper): BaseEntity {
+    return this.getPlay().getEntity(content.id);
+  }
 
   setCaracteristic(key: string, caracteristic: Caracteristic): void {
     this.caracteristics[key] = caracteristic;
@@ -37,14 +72,28 @@ export class MaterialEntity extends BaseEntity {
     return this.invisible;
   }
 
-  isOwning(entity: Entity, deepSearch: boolean): boolean {
+  shootedBy(author: Character, object: ShootableObject): ActionReport {
+    return { success: true };
+  }
+
+  lookedBy(author: Character): ActionReport {
+    this.getPlay().getOutputs().onLookingAt(author, this);
+
+    return { success: true };
+  }
+
+  getDisplayedActions() {
+    return super.getDisplayedActions().concat([BaseActionKeys.LookingAt]);
+  }
+
+  owns(entity: Entity, deepSearch: boolean): boolean {
     let found = false;
 
     this.getChildren().forEach((item: MaterialEntity) => {
       if (item.equals(entity)) {
         found = true;
       } else if (!found && deepSearch) {
-        found = item.isOwning(entity, deepSearch);
+        found = item.owns(entity, deepSearch);
       }
     });
 
@@ -203,7 +252,7 @@ export class MaterialEntity extends BaseEntity {
     return found;
   }
 
-  moveTo(target: MaterialEntity): boolean {
+  moveTo(destination: MaterialEntity): boolean {
     const previousParent = this.getParent();
 
     if (previousParent) {
@@ -216,15 +265,16 @@ export class MaterialEntity extends BaseEntity {
       previousParent.save();
     }
 
-    if (target) {
-      target.childrenId.push(this.getId());
-      target.save();
+    if (destination) {
+      destination.childrenId.push(this.getId());
+      destination.onVisitedBy(this);
+      destination.save();
     }
 
-    this.parentId = target.getId();
+    this.parentId = destination.getId();
     this.save();
 
-    target.onVisitedBy(this);
+    this.getPlay().getOutputs().onMoving(this, destination);
 
     return true;
   }

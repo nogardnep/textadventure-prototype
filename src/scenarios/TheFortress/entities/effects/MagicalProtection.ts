@@ -21,12 +21,19 @@ export class MagicalProtection extends Effect {
     if (this.delay >= duration) {
       this.delay = 0;
 
-      (this.getOwner() as MaterialEntity).removeEffectsOfTypes([this.getType()])
+      (this.getOwner() as MaterialEntity).removeEffectsOfTypes([
+        this.getType(),
+      ]);
 
       if (this.getOwner().isThePlayer()) {
-        this.getPlay().sendMessage([
-          { tag: ParagraphTag.Warning, text: "Le sort de protection s'est épuisé." },
-        ]);
+        this.getPlay().sendMessage({
+          paragraphs: [
+            {
+              tag: ParagraphTag.Warning,
+              text: "Le sort de protection s'est épuisé.",
+            },
+          ],
+        });
       }
     }
   }

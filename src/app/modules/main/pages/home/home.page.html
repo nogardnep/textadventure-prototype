@@ -1,28 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>home</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
-  <div class="home-page" *ngIf="!loading">
-    <div class="home-page-inner">
-      <nav class="home-menu">
-        <ul>
-          <li>
-            <button class="menu-link" (click)="onClickNew()">
-              <span class="button-inner">Nouveau jeu</span>
-            </button>
-          </li>
-          <li>
-            <button [disabled]="!lastPlayExists" class="menu-link" (click)="onClickLoad()">
-              <span class="button-inner">Charger</span>
-            </button>
-          </li>
-          <li>
-            <button class="menu-link" (click)="onClickConfig()">
-              <span class="button-inner">Configurations</span>
-            </button>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </div>
-  <div *ngIf="loading">
-    Chargement...
-  </div>
+  <nav>
+    <ul>
+      <li>
+        <a href="/game1">Game 1</a>
+      </li>
+      <li>
+        <a href="/game2">Game 2</a>
+      </li>
+    </ul>
+  </nav>
 </ion-content>

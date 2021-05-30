@@ -1,6 +1,8 @@
+import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { Choice } from 'src/game/core/models/Choice';
 import { Entity } from 'src/game/core/models/Entity';
+import { BaseEntity } from 'src/game/modules/base/models/BaseEntity';
 
 @Component({
   selector: 'app-choices',
@@ -8,7 +10,8 @@ import { Entity } from 'src/game/core/models/Entity';
   styleUrls: ['./choices.component.scss'],
 })
 export class ChoicesComponent implements OnInit, OnChanges {
-  @Input() entity: Entity;
+  @Input() entity: BaseEntity;
+  @Input() clickable: boolean = true;
   choices = [];
 
   constructor() {}
@@ -16,14 +19,30 @@ export class ChoicesComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   ngOnChanges() {
-    this.choices = this.entity.getChoices();
+    this.choices = [];
+
+    this.entity.getChoices().forEach((choice) => {
+      if (this.isVisible(choice)) {
+        this.choices.push(choice);
+      }
+    });
   }
 
   onClickChoice(choice: Choice): void {
-    this.entity.getPlay().useChoice(choice);
+    // if (this.clickable) {
+    if (this.isUsable()) {
+      this.entity.getPlay().useChoice(choice);
+    }
   }
 
-  isVisible(choice: Choice): boolean {
+  private isUsable(): boolean {
+    return (
+      !(this.entity instanceof MaterialEntity) ||
+      this.entity.getPlay().getPlayer().canSee(this.entity)
+    );
+  }
+
+  private isVisible(choice: Choice): boolean {
     return !choice.check || choice.check();
   }
 }

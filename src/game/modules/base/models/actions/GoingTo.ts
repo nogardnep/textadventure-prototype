@@ -1,17 +1,26 @@
-import { Place } from './../entities/material/Place';
-import { Action } from 'src/game/core/models/Action';
 import {
   Connection,
   DEFAULT_DISTANCE,
   DEFAULT_SPEED,
 } from 'src/game/modules/base/models/entities/material/Place';
+import { BasePlay } from '../../BasePlay';
+import { BaseAction } from '../BaseAction';
 import { Character } from '../entities/material/Character';
 import { Passage } from '../entities/material/thing/Passage';
+import { Place } from './../entities/material/Place';
 
-export class GoingTo extends Action {
-  getText() {
-    return 'aller';
+export class GoingTo extends BaseAction {
+  constructor(play: BasePlay) {
+    super(play, {
+      text: () => {
+        return 'aller';
+      },
+      patterns: [],
+    });
   }
+  // constructor() {
+  //   super({ regExp: new RegExp('aller au *') });
+  // }
 
   check(author: Character, args: any[]) {
     let usable = false;
@@ -50,10 +59,12 @@ export class GoingTo extends Action {
     const connection = args[0] as Connection;
 
     if (withSuccess) {
-      this.getPlay().increaseTime(
-        (connection.distance ? connection.distance : DEFAULT_DISTANCE) *
-          DEFAULT_SPEED
-      );
+      author
+        .getPlay()
+        .increaseTime(
+          (connection.distance ? connection.distance : DEFAULT_DISTANCE) *
+            DEFAULT_SPEED
+        );
     }
   }
 }

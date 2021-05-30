@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'kebabCase' })
+@Pipe({ name: 'kebabCase', pure: true })
 export class KebabCasePipe implements PipeTransform {
   constructor() {}
 

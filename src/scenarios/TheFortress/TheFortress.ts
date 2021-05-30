@@ -1,16 +1,13 @@
-import { Gender } from 'src/game/core/dictionnaries/Gender';
-import { ConjugationTime } from 'src/game/core/models/Glossary';
 import { ParagraphTag } from 'src/game/core/models/Paragraph';
 import { EndMode, Play } from 'src/game/core/models/Play';
 import { BaseCaracteristicKey } from 'src/game/modules/base/dictionnaries/caracteristics';
 import { BaseScenario } from 'src/game/modules/base/models/BaseScenario';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { Place } from 'src/game/modules/base/models/entities/material/Place';
-import { Person } from '../../game/core/models/Glossary';
-import { AUDIO } from './audios';
-import { ENTITY_CONSTRUCTORS } from './entities/entities';
-import { IMAGES } from './images';
-import { SUBJECTS } from './subjects';
+import { AUDIO } from './dictionnaries/audios';
+import { ENTITY_CONSTRUCTORS } from './dictionnaries/entities';
+import { IMAGES } from './dictionnaries/images';
+import { SUBJECTS } from './dictionnaries/subjects';
 
 export class TheFortress extends BaseScenario {
   static readonly entityConstructors = ENTITY_CONSTRUCTORS;
@@ -18,24 +15,23 @@ export class TheFortress extends BaseScenario {
   static readonly audios = AUDIO;
   static readonly subjects = SUBJECTS;
 
-  starting = {
-    maxSpells: 2,
-    caracteristicsPoints: 5,
-    availableSpells: [
-      TheFortress.entityConstructors.DestructionSpell.name,
-      TheFortress.entityConstructors.IllusionSpell.name,
-      TheFortress.entityConstructors.PrescienceSpell.name,
-      TheFortress.entityConstructors.InvocationSpell.name,
-      TheFortress.entityConstructors.ProtectionSpell.name,
-      TheFortress.entityConstructors.HealingSpell.name,
-      TheFortress.entityConstructors.LevitationSpell.name,
-      TheFortress.entityConstructors.ControlSpell.name,
-    ],
-    askForName: false,
-  };
-
   constructor() {
     super('the_fortress', {
+      starting: {
+        maxSpells: 2,
+        caracteristicsPoints: 5,
+        availableSpells: [
+          TheFortress.entityConstructors.DestructionSpell.name,
+          TheFortress.entityConstructors.IllusionSpell.name,
+          TheFortress.entityConstructors.PrescienceSpell.name,
+          TheFortress.entityConstructors.InvocationSpell.name,
+          TheFortress.entityConstructors.ProtectionSpell.name,
+          TheFortress.entityConstructors.HealingSpell.name,
+          TheFortress.entityConstructors.LevitationSpell.name,
+          TheFortress.entityConstructors.ControlSpell.name,
+        ],
+        askForName: false,
+      },
       entityConstructors: TheFortress.entityConstructors,
       images: TheFortress.images,
       audios: TheFortress.audios,
@@ -43,13 +39,13 @@ export class TheFortress extends BaseScenario {
     });
 
     // TODO: move
-    this.glossaryConfiguration = {
-      conjugationTime: ConjugationTime.Present,
-      receiverGender: Gender.Male,
-      receiverPerson: Person.SecondPersonPlural,
-    };
+    // this.glossaryConfiguration = {
+    //   conjugationTime: ConjugationTime.Present,
+    //   receiverGender: Gender.Male,
+    //   receiverPerson: Person.SecondPersonPlural,
+    // };
 
-    this.startDate = new Date(800, 5, 5, 6, 23);
+    this.setStartDate(new Date(800, 5, 5, 6, 23));
   }
 
   getTitle() {
@@ -60,18 +56,18 @@ export class TheFortress extends BaseScenario {
     const player = play.addEntity(
       TheFortress.entityConstructors.Elkchten.name
     ) as Character;
-    [
-      TheFortress.entityConstructors.DestructionSpell.name,
-      TheFortress.entityConstructors.IllusionSpell.name,
-      TheFortress.entityConstructors.InvocationSpell.name,
-      TheFortress.entityConstructors.PrescienceSpell.name,
-      TheFortress.entityConstructors.ProtectionSpell.name,
-      TheFortress.entityConstructors.HealingSpell.name,
-      TheFortress.entityConstructors.LevitationSpell.name,
-      TheFortress.entityConstructors.ControlSpell.name,
-    ].forEach((item) => {
-      player.giveSpellOfType(item, false);
-    }); // TODO: temp
+    // [
+    //   TheFortress.entityConstructors.DestructionSpell.name,
+    //   TheFortress.entityConstructors.IllusionSpell.name,
+    //   TheFortress.entityConstructors.InvocationSpell.name,
+    //   TheFortress.entityConstructors.PrescienceSpell.name,
+    //   TheFortress.entityConstructors.ProtectionSpell.name,
+    //   TheFortress.entityConstructors.HealingSpell.name,
+    //   TheFortress.entityConstructors.LevitationSpell.name,
+    //   TheFortress.entityConstructors.ControlSpell.name,
+    // ].forEach((item) => {
+    //   player.giveSpellOfType(item, false);
+    // }); // TODO: temp
     play.setPlayer(player);
   }
 
@@ -82,18 +78,17 @@ export class TheFortress extends BaseScenario {
 
     (play.getPlayer() as Character).moveTo(firstRoom);
 
-    play.sendMessage(
-      [
+    play.sendMessage({
+      paragraphs: [
         {
           tag: ParagraphTag.Event,
           text: "Ici commence l'aventure",
         },
       ],
-      [],
-      () => {
+      onRead: () => {
         play.playMusic(TheFortress.audios.music);
-      }
-    );
+      },
+    });
   }
 
   update(play: Play) {

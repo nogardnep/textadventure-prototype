@@ -1,11 +1,11 @@
-import { GameManager } from 'src/game/core/GameManager';
 import { Subject } from 'src/game/modules/base/models/Conversation';
 import { TextManager } from '../TextManager';
-import { Action } from './Action';
+import { Action, ActionPattern } from './Action';
 import { Audio } from './Audio';
 import { Choice } from './Choice';
 import { Entity, EntityId, EntityType, StoredEntity } from './Entity';
 import { ConjugationTime, Glossary, Person } from './Glossary';
+import { Message } from './Message';
 import { Name } from './Name';
 import { Narration, StoredNarration } from './Narration';
 import { Paragraph } from './Paragraph';
@@ -26,32 +26,28 @@ export enum EndMode {
   Defeat,
 }
 
-type PlayCallBacks = {
+export type PlayOutputs = {
   onAutoSave: () => void;
-  onMessageSend: (
-    paragraphs: Paragraph[],
-    choices?: Choice[],
-    onRead?: () => void
-  ) => void;
-  onStartConversation: (interlocutor: Entity) => void;
+  onMessageSend: (message: Message) => void;
   onUpdate: () => void;
   onPlayMusic: (audio: Audio) => void;
   onPlaySoundEffect: (audio: Audio) => void;
   onEnd: (mode: EndMode, paragaphs: Paragraph[]) => void;
+  onSearchingForActionArg: (author: Entity, pattern: ActionPattern) => Promise<Entity>
 };
 
 export class Play {
+  private outputs: PlayOutputs;
   private entities: { [id: string]: Entity };
   private player: Entity;
   private narration: Narration;
   private time: number;
   private scenario: Scenario;
   private stored: StoredPlay;
-  private callbacks: PlayCallBacks;
   private ended: boolean;
   private lastUpdateTime: number;
 
-  constructor(scenario: Scenario, callbacks: PlayCallBacks) {
+  constructor(scenario: Scenario, outputs: PlayOutputs) {
     this.stored = {
       ended: null,
       narration: null,
@@ -62,20 +58,18 @@ export class Play {
       lastUpdateTime: null,
     };
 
-    this.callbacks = callbacks;
+    this.outputs = outputs;
     this.entities = {};
     this.player = null;
     this.narration = new Narration(this);
     this.scenario = scenario;
     this.time = 0;
-    this.stored.scenarioId = this.scenario.id;
+    this.stored.scenarioId = this.scenario.getId();
     this.ended = false;
     this.lastUpdateTime = 0;
 
     Glossary.setReceiverPerson(Person.SecondPersonPlural);
     Glossary.setConjugationTime(ConjugationTime.Present);
-
-    GameManager.setPlay(this);
   }
 
   init(): void {
@@ -85,6 +79,10 @@ export class Play {
     this.storeTime();
     this.storeEnded();
     this.storeLastUpdateTime();
+  }
+
+  getOutputs(): PlayOutputs {
+    return this.outputs;
   }
 
   start(): void {
@@ -101,7 +99,7 @@ export class Play {
 
     this.scenario.update(this);
 
-    this.callbacks.onUpdate();
+    this.outputs.onUpdate();
 
     this.lastUpdateTime = this.time;
     this.storeLastUpdateTime();
@@ -118,7 +116,7 @@ export class Play {
       let entity: Entity = null;
       const storedEntity = storedPlay.storedEntities[id];
       const constructor =
-        this.getScenario().entityConstructors[storedEntity.type];
+        this.getScenario().getEntityConstructors()[storedEntity.type];
 
       if (constructor) {
         entity = new constructor(this);
@@ -145,7 +143,7 @@ export class Play {
   }
 
   end(mode: EndMode, paragaphs: Paragraph[]): void {
-    this.callbacks.onEnd(mode, paragaphs);
+    this.outputs.onEnd(mode, paragaphs);
     this.ended = true;
     this.storeEnded();
   }
@@ -172,7 +170,7 @@ export class Play {
     );
 
     if (!found) {
-      for (let languageKey in this.getScenario().glossaries) {
+      for (let languageKey in this.getScenario().getGlossaries()) {
         if (!found) {
           found = this.searchForPhraseInOneGlossary(
             languageKey,
@@ -196,7 +194,7 @@ export class Play {
     );
 
     if (!found) {
-      for (let languageKey in this.getScenario().glossaries) {
+      for (let languageKey in this.getScenario().getGlossaries()) {
         if (!found) {
           found = this.searchForNameInOneGlossary(languageKey, nameKey, args);
         }
@@ -212,7 +210,7 @@ export class Play {
     args: any[]
   ): string {
     let found: string;
-    let glossary = this.getScenario().glossaries[languageKey];
+    let glossary = this.getScenario().getGlossaries()[languageKey];
 
     if (glossary) {
       found = glossary.getPhrase(phraseKey, args);
@@ -227,7 +225,7 @@ export class Play {
     args: any[]
   ): Name {
     let found: Name;
-    let glossary = this.getScenario().glossaries[languageKey];
+    let glossary = this.getScenario().getGlossaries()[languageKey];
 
     if (glossary) {
       found = glossary.getName(nameKey, args);
@@ -237,7 +235,7 @@ export class Play {
   }
 
   addEntity(type: EntityType): Entity {
-    const constructor = this.getScenario().entityConstructors[type];
+    const constructor = this.getScenario().getEntityConstructors()[type];
     const entity = new constructor(this);
     this.entities[entity.getId()] = entity;
     entity.init();
@@ -341,29 +339,25 @@ export class Play {
   }
 
   save(): void {
-    this.callbacks.onAutoSave();
+    this.outputs.onAutoSave();
   }
 
-  sendMessage(
-    paragraphs: Paragraph[],
-    choices?: Choice[],
-    onRead?: () => void
-  ) {
-    this.callbacks.onMessageSend(paragraphs, choices, onRead);
+  sendMessage(message: Message) {
+    this.outputs.onMessageSend(message);
   }
 
   getAction(key: string): Action {
-    const action = this.getScenario().actions[key];
+    const actionConstructor = this.getScenario().getActionConstructors()[key];
 
-    if (!action) {
+    if (!actionConstructor) {
       console.error('Action "' + key + '" not found');
     }
 
-    return action;
+    return new actionConstructor(this);
   }
 
   getSubject(key: string): Subject {
-    const subject = this.getScenario().subjects[key];
+    const subject = this.getScenario().getSubjects()[key];
 
     if (!subject) {
       console.error('Subject "' + key + '" not found');
@@ -373,23 +367,14 @@ export class Play {
   }
 
   useChoice(choice: Choice): void {
-    // this.narration.addSection({
-    //   paragraphs: [{ text: choice.text }],
-    //   tag: Tag.Choice,
-    // });
-
     choice.proceed();
   }
 
-  startConversation(interlocutor: Entity): void {
-    this.callbacks.onStartConversation(interlocutor);
-  }
-
   playMusic(audio: Audio): void {
-    this.callbacks.onPlayMusic(audio);
+    this.outputs.onPlayMusic(audio);
   }
 
   playSoundEffect(audio: Audio): void {
-    this.callbacks.onPlaySoundEffect(audio);
+    this.outputs.onPlaySoundEffect(audio);
   }
 }

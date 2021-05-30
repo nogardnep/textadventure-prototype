@@ -1,16 +1,31 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { GameService } from 'src/app/services/game.service';
 import { BaseActionKeys } from 'src/game/modules/base/dictionnaries/actions';
 import {
   Direction,
-  DirectionKey
+  DirectionKey,
 } from 'src/game/modules/base/dictionnaries/direction';
+import { BaseEntity } from 'src/game/modules/base/models/BaseEntity';
 import { BaseScenario } from 'src/game/modules/base/models/BaseScenario';
-import { BaseEntity } from 'src/game/modules/base/models/entities/BaseEntity';
 import {
   Connection,
-  Place
+  Place,
 } from 'src/game/modules/base/models/entities/material/Place';
 import { Passage } from 'src/game/modules/base/models/entities/material/thing/Passage';
+
+type DirectionWrapper = {
+  text: string;
+  key: string;
+};
+
+type ConnectionWrapper = {
+  connection: Connection;
+  direction: DirectionWrapper;
+  passage: Passage;
+  usuable: boolean;
+  text: string;
+};
 
 @Component({
   selector: 'app-connections',
@@ -19,20 +34,24 @@ import { Passage } from 'src/game/modules/base/models/entities/material/thing/Pa
 })
 export class ConnectionsComponent implements OnInit {
   @Input() entity: BaseEntity;
-  connections: Connection[] = [];
+  private updateSubscription: Subscription;
+  connections: ConnectionWrapper[] = [];
+  actionText;
 
-  constructor() {}
+  constructor(private gameService: GameService) {}
 
-  ngOnInit() {}
-
-  ngOnChanges() {
-    if (this.entity instanceof Place) {
-      this.connections = this.entity.getConnections();
-    }
+  ngOnInit() {
+    this.updateSubscription = this.gameService.updateEvent.subscribe(() => {
+      this.update();
+    });
   }
 
-  isVisible(connection: Connection): boolean {
-    return !connection.check || connection.check();
+  ngOnChanges() {
+    this.update();
+  }
+
+  ngOnDestroy() {
+    this.updateSubscription.unsubscribe();
   }
 
   onClickConnection(connection: Connection): void {
@@ -42,20 +61,49 @@ export class ConnectionsComponent implements OnInit {
     action.use(player, [connection]);
   }
 
-  getDirection(key: DirectionKey): Direction {
-    return (this.entity.getPlay().getScenario() as BaseScenario).directions[
-      key
-    ];
-  }
+  update(): void {
+    this.connections = [];
 
-  getPassage(connection: Connection): Passage {
-    return this.entity.getPlay().getEntity(connection.passageId) as Passage;
-  }
+    if (this.entity instanceof Place) {
+      const player = this.entity.getPlay().getPlayer();
+      const action = this.entity.getPlay().getAction(BaseActionKeys.GoingTo);
+      this.actionText = action.getText();
 
-  isUsable(connection: Connection): boolean {
-    const player = this.entity.getPlay().getPlayer();
-    const action = this.entity.getPlay().getAction(BaseActionKeys.GoingTo);
+      this.entity.getConnections().forEach((connection) => {
+        if (!connection.check || connection.check()) {
+          let direction: DirectionWrapper;
+          let passage: Passage;
 
-    return action.check(player, [connection], true).usable;
+          if (connection.directionKey) {
+            const directionObject = this.entity
+              .getPlay()
+              .getScenario()
+              .getDirections()[connection.directionKey];
+
+            direction = {
+              text: directionObject.name.printWithPreposition(),
+              key: directionObject.key,
+            };
+          }
+
+          if (connection.passageId) {
+            passage = this.entity
+              .getPlay()
+              .getEntity(connection.passageId) as Passage;
+          }
+
+          let usuable = action.check(player, [connection], true).usable;
+          let text = connection.text;
+
+          this.connections.push({
+            connection,
+            passage,
+            usuable,
+            direction,
+            text,
+          });
+        }
+      });
+    }
   }
 }

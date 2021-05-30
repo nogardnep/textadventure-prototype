@@ -1,0 +1,7 @@
+<ul class="action-list">
+  (<ng-container *ngFor="let item of actions">
+    <li class="action-list-item">
+      <button [disabled]="!clickable" (click)="onClickItem(item)">{{item.text}}</button>
+    </li>
+  </ng-container>)
+</ul>

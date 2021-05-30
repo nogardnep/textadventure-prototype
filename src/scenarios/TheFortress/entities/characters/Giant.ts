@@ -111,34 +111,37 @@ export class Giant extends Character {
   }
 
   attackedBy(author: Character) {
-    this.getPlay().sendMessage(
-      [
+    this.getPlay().sendMessage({
+      paragraphs: [
         {
           text: "Un furieux combat s'engage.",
           tag: ParagraphTag.Event,
         },
       ],
-      [],
-      () => {
-        this.getPlay().sendMessage([
-          {
-            text: 'Le géant vous blesse au bras.',
-            tag: ParagraphTag.Event,
-          },
-        ]);
+      onRead: () => {
+        this.getPlay().sendMessage({
+          paragraphs: [
+            {
+              text: 'Le géant vous blesse au bras.',
+              tag: ParagraphTag.Event,
+            },
+          ],
+        });
 
         author.giveEffectOfType(TheFortress.entityConstructors.ArmWound.name);
 
-        this.getPlay().sendMessage([
-          {
-            text: 'Le géant succombe.',
-            tag: ParagraphTag.Event,
-          },
-        ]);
+        this.getPlay().sendMessage({
+          paragraphs: [
+            {
+              text: 'Le géant succombe.',
+              tag: ParagraphTag.Event,
+            },
+          ],
+        });
 
         this.die();
-      }
-    );
+      },
+    });
 
     return {
       success: true,

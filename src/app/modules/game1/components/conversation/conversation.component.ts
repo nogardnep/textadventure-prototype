@@ -65,7 +65,7 @@ export class ConversationComponent implements OnInit, OnChanges {
     }
   }
 
-  ask(subject: string) {
+  private ask(subject: string) {
     const player = this.entity.getPlay().getPlayer() as Character;
     const response = this.responses[subject];
 
@@ -82,10 +82,6 @@ export class ConversationComponent implements OnInit, OnChanges {
   onClickChoice(choices: Choice) {
     choices.proceed();
     this.update();
-  }
-
-  getLastSpeech(): Paragraph[] {
-    return this.speeches[this.speeches.length - 1];
   }
 
   onItemClicked(entity: Entity): void {

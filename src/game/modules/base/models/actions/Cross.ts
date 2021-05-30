@@ -1,10 +1,16 @@
-import { Action } from 'src/game/core/models/Action';
+import { BasePlay } from '../../BasePlay';
+import { BaseAction } from '../BaseAction';
 import { Character } from '../entities/material/Character';
 import { Passage } from '../entities/material/thing/Passage';
 
-export class Cross extends Action {
-  getText() {
-    return 'traverser';
+export class Cross extends BaseAction {
+  constructor(play: BasePlay) {
+    super(play, {
+      text: () => {
+        return 'traverser';
+      },
+      patterns: [],
+    });
   }
 
   check(author: Character, args: any[]) {

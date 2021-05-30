@@ -1,11 +1,16 @@
-import { templateJitUrl } from '@angular/compiler';
-import { Action } from 'src/game/core/models/Action';
+import { BasePlay } from '../../BasePlay';
+import { BaseAction } from '../BaseAction';
 import { Character } from '../entities/material/Character';
 import { Thing } from '../entities/material/Thing';
 
-export class Closing extends Action {
-  getText() {
-    return  'fermer' ;
+export class Closing extends BaseAction {
+  constructor(play: BasePlay) {
+    super(play, {
+      text: () => {
+        return 'fermer';
+      },
+      patterns: [],
+    });
   }
 
   check(author: Character, args: any[]) {

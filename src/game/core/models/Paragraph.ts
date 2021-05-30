@@ -15,14 +15,16 @@ export enum ParagraphItemTag {
   Speacher = 'speacher',
 }
 
+export type ParagraphItem = {
+  text: string;
+  entity?: Entity;
+  tag?: ParagraphItemTag;
+};
+
 export type Paragraph = {
   image?: Image;
   text?: string;
-  items?: {
-    text: string;
-    entity?: Entity;
-    tag?: ParagraphItemTag;
-  }[];
+  items?: ParagraphItem[];
   tag: ParagraphTag;
   check?: () => boolean;
 };

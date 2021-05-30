@@ -1,11 +1,17 @@
-import { Action } from 'src/game/core/models/Action';
+import { BasePlay } from 'src/game/modules/base/BasePlay';
 import { MaterialEntity } from 'src/game/modules/base/models/entities/MaterialEntity';
 import { UsuableObject } from '../../models/entities/material/thing/UsuableObject';
+import { BaseAction } from '../BaseAction';
 import { Character } from '../entities/material/Character';
 
-export class Taking extends Action {
-  getText() {
-    return 'prendre';
+export class Taking extends BaseAction {
+  constructor(play: BasePlay) {
+    super(play, {
+      text: () => {
+        return 'prendre';
+      },
+      patterns: [],
+    });
   }
 
   check(author: Character, args: any[]) {
@@ -16,7 +22,7 @@ export class Taking extends Action {
     // TODO
     // if (test instanceof UsuableObject) {
     if (!target.isFixed()) {
-      if (!author.isOwning(target, false)) {
+      if (!author.owns(target, false)) {
         if (author.canReach(target)) {
           usable = true;
         } else {

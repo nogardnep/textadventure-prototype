@@ -13,10 +13,10 @@ export class HoldableObject extends UsuableObject {
     return this.held;
   }
 
-  getDisplayedActionKeys() {
+  getDisplayedActions() {
     return Utils.removeDuplications(
       super
-        .getDisplayedActionKeys()
+        .getDisplayedActions()
         .concat([BaseActionKeys.Holding, BaseActionKeys.Releasing])
     );
   }
@@ -33,7 +33,7 @@ export class HoldableObject extends UsuableObject {
     let success = false;
     let failureMessage: string;
 
-    if (target.isOwning(this, false)) {
+    if (target.owns(this, false)) {
       const allHandsUsed = target.getHeldObjects().length >= target.getHands();
 
       if (allHandsUsed) {

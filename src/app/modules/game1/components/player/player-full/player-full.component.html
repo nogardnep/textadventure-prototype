@@ -1,10 +1,10 @@
 <div class="player-full" *ngIf="player">
   <div class="player-name-container">
-    <div class="player-name" [innerHTML]="player.getName().printWithIndefiniteArticle()">
+    <div class="player-name" [innerHTML]="name|capitalizeFirst">
     </div>
   </div>
   <div class="player-description">
-    <app-paragraphs [paragraphs]="player.getFullDescription()" (itemClicked)="onItemClicked($event)"></app-paragraphs>
+    <app-paragraphs [paragraphs]="description" (itemClicked)="onItemClicked($event)"></app-paragraphs>
   </div>
   <div class="section caracteristics-section">
     <h3 class="section-title">Caractéristiques</h3>
@@ -19,10 +19,10 @@
       <div class="subsection">
         <h4 class="subsection-title">Inventaire</h4>
         <div class="subsection-inner">
-          <ng-container *ngIf="getInventoryObjects().length > 0; then inventory else nothing"></ng-container>
-          <ng-template #inventory>
+          <ng-container *ngIf="inventoryObjects.length > 0; then inventoryElement else nothing"></ng-container>
+          <ng-template #inventoryElement>
             <ul class="list">
-              <li class="list-item" *ngFor="let entity of getInventoryObjects()">
+              <li class="list-item" *ngFor="let entity of inventoryObjects">
                 <app-entity-preview [entity]="entity"></app-entity-preview>
               </li>
             </ul>
@@ -33,10 +33,10 @@
       <div class="subsection">
         <h4 class="subsection-title">En main</h4>
         <div class="subsection-inner">
-          <ng-container *ngIf="getHeldObjects().length > 0; then held else nothing"></ng-container>
-          <ng-template #held>
+          <ng-container *ngIf="heldObjects.length > 0; then heldElement else nothing"></ng-container>
+          <ng-template #heldElement>
             <ul class="list">
-              <li class="list-item" *ngFor="let entity of getHeldObjects()">
+              <li class="list-item" *ngFor="let entity of heldObjects">
                 <app-entity-preview [entity]="entity"></app-entity-preview>
               </li>
             </ul>
@@ -46,10 +46,10 @@
       <div class="subsection">
         <h4 class="subsection-title">Porté</h4>
         <div class="subsection-inner">
-          <ng-container *ngIf="getWornObjects().length > 0; then worn else nothing"></ng-container>
-          <ng-template #worn>
+          <ng-container *ngIf="wornObjects.length > 0; then wornElement else nothing"></ng-container>
+          <ng-template #wornElement>
             <ul class="list">
-              <li class="list-item" *ngFor="let entity of getWornObjects()">
+              <li class="list-item" *ngFor="let entity of wornObjects">
                 <app-entity-preview [entity]="entity"></app-entity-preview>
               </li>
             </ul>
@@ -61,10 +61,10 @@
   <div class="section spells-section">
     <h3 class="section-title">Sortilèges</h3>
     <div class="section-inner">
-      <ng-container *ngIf="player.spellsId.length > 0; then spells else nothing"></ng-container>
-      <ng-template #spells>
+      <ng-container *ngIf="spells.length > 0; then spellsElement else nothing"></ng-container>
+      <ng-template #spellsElement>
         <ul class="list">
-          <li class="list-item" *ngFor="let entity of player.getSpells()">
+          <li class="list-item" *ngFor="let entity of spells">
             <app-entity-preview [entity]="entity"></app-entity-preview>
           </li>
         </ul>
@@ -74,10 +74,10 @@
   <div class="section effects-section">
     <h3 class="section-title">Effets</h3>
     <div class="section-inner">
-      <ng-container *ngIf="player.getEffects().length > 0; then effects else nothing"></ng-container>
-      <ng-template #effects>
+      <ng-container *ngIf="effects.length > 0; then effectsElement else nothing"></ng-container>
+      <ng-template #effectsElement>
         <ul class="list">
-          <li class="list-item" *ngFor="let entity of player.getEffects()">
+          <li class="list-item" *ngFor="let entity of effects">
             <app-entity-preview [entity]="entity"></app-entity-preview>
           </li>
         </ul>
