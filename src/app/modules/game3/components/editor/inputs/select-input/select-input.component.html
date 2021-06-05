@@ -1,0 +1,8 @@
+<div>
+  <label for="{{id}}">{{label|capitalizeFirst}}</label>
+  <select id="{{id}}" [(ngModel)]="model" (ngModelChange)="onValueChange()">
+    <ng-container *ngFor="let item of list">
+      <option [ngValue]="item.id">{{item.name[language]}} ({{item.id}})</option>
+    </ng-container>
+  </select>
+</div>

@@ -1,3 +1,4 @@
+import { BaseActionKeys } from 'src/game/modules/base/dictionnaries/actions';
 import { GameService } from 'src/app/services/game.service';
 import { Subscription } from 'rxjs';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
@@ -57,8 +58,9 @@ export class ActionsComponent implements OnInit {
         const action = this.entity.getPlay().getAction(key);
         const args: any[] =
           typeof item === 'string' ? [this.entity] : item.args;
+        console.log(key)
 
-        if (this.checkUsuable(action, args)) {
+        if (key !== BaseActionKeys.LookingAt && this.checkUsuable(action, args)) {
           this.actions.push({ key, args, action, text: action.getText() });
         }
       });

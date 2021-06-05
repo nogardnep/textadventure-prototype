@@ -1,0 +1,13 @@
+<div class="chapter">
+  <div>id: {{chapter.id}}</div>
+  <app-text-input [label]="'name'" [model]="chapter.name" [id]="'chapter-' + chapter.id + '-name'"></app-text-input>
+  <app-select-input [id]="'chapter-' + chapter.id + '-first-scene'" [label]="'first scene'" [model]="chapter.firstSceneId"
+    [list]="chapter.scenes"></app-select-input>
+  <div class="scenes">
+    <h4>Scenes</h4>
+    <app-scene-list [chapter]="chapter"></app-scene-list>
+  </div>
+  <div>
+    <button (click)="onClickRemove()">Remove chapter</button>
+  </div>
+</div>

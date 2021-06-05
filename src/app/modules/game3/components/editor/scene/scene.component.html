@@ -1,0 +1,20 @@
+<div class="scene">
+  <div>Scene ({{scene.id}})</div>
+  <app-text-input [label]="'name'" [model]="scene.name" [id]="'scene-' + scene.id + '-name'"></app-text-input>
+  <app-select-input [id]="'scene-' + scene.id + '-first-snippet'" [label]="'first snippet'" [model]="scene.firstSnippetId"
+    [list]="scene.snippets"></app-select-input>
+  <div class="snippets">
+    <h4>Snippets</h4>
+    <ul>
+      <li *ngFor="let item of scene.snippets">
+        <app-snippet [snippet]="item"></app-snippet>
+      </li>
+    </ul>
+  </div>
+  <div>
+    <button (click)="onClickAddSnippet()">Add snippet</button>
+  </div>
+  <div (click)="onClickRemove()">
+    <button>Remove scene</button>
+  </div>
+</div>

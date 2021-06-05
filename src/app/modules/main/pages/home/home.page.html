@@ -7,11 +7,8 @@
 <ion-content>
   <nav>
     <ul>
-      <li>
-        <a href="/game1">Game 1</a>
-      </li>
-      <li>
-        <a href="/game2">Game 2</a>
+      <li *ngFor="let item of links">
+        <a [href]="item.href" [innerHTML]="item.label"></a>
       </li>
     </ul>
   </nav>

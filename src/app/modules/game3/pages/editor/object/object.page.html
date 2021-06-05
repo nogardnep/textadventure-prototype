@@ -1,0 +1,12 @@
+<app-page-container>
+  <app-main-menu></app-main-menu>
+  <ng-container *ngIf="scenario && object">
+    <app-editor-page [selected]="object">
+      <h1>Object</h1>
+      <app-object [object]="object"></app-object>
+    </app-editor-page>
+  </ng-container>
+  <ng-container *ngIf="!(scenario && object)">
+    <p>Loading...</p>
+  </ng-container>
+</app-page-container>

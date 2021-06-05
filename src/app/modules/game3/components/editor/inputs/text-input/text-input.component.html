@@ -1,0 +1,4 @@
+<div class="form-input-text">
+  <label for="{{id}}-name">{{label|capitalizeFirst}}</label>
+  <input autocomplete="off" id="{{id}}-name" type="text" [(ngModel)]="model.en" (ngModelChange)="onValueChange()" />
+</div>

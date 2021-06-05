@@ -1,0 +1,18 @@
+<div class="snippet">
+  <div>Snippet ({{snippet.id}})</div>
+  <app-text-input [label]="'name'" [model]="snippet.name" [id]="'snippet-' + snippet.id + '-name'"></app-text-input>
+  <div class="choices">
+    <h5>Choices</h5>
+    <ul>
+      <li *ngFor="let choice of snippet.choices">
+        <app-choice [choice]="choice" [snippet]="snippet"></app-choice>
+      </li>
+    </ul>
+  </div>
+  <div>
+    <button (click)="onClickAddChoice()">Add choice</button>
+  </div>
+  <div (click)="onClickRemove()">
+    <button>Remove snippet</button>
+  </div>
+</div>

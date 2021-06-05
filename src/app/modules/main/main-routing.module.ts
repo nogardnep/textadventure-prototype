@@ -12,10 +12,6 @@ const routes: Routes = [
     path: 'home',
     component: HomePage,
   },
-  // {
-  //   path: 'new-play',
-  //   component: NewPlayPage,
-  // },
 ];
 
 @NgModule({

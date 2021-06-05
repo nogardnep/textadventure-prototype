@@ -114,4 +114,4 @@ On peut interroger un personnage sur les sujets de conversation qui lui sont con
 
 ## Bugs
 
-Rien à signaler pour le moment.
+Page d'accueil, quand aucune partie encore sauvegardée, bouton 'charger' reste bloqué même après création d'une partie (ne devient utilisable qu'après avoir relancé l'application)

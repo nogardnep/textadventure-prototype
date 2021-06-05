@@ -19,6 +19,11 @@ const routes: Routes = [
       import('./modules/game2/game2.module').then((m) => m.Game2Module),
   },
   {
+    path: 'game3',
+    loadChildren: () =>
+      import('./modules/game3/game3.module').then((m) => m.Game3Module),
+  },
+  {
     path: '**',
     pathMatch: 'full',
     component: NotFoundPage,

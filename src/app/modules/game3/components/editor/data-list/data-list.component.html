@@ -1,0 +1,7 @@
+<div>
+  <h2>Data</h2>
+  <li *ngFor="let data of model.data">
+    <app-data [model]="model" [data]="data"></app-data>
+  </li>
+  <button (click)="onClickAdd()">Add data</button>
+</div>

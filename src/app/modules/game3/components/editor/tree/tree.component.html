@@ -1,0 +1,61 @@
+<nav>
+  <div class="chapters">
+    <div>Chapters</div>
+    <ul>
+      <li *ngFor="let chapter of scenario.chapters">
+        <button (click)="onClickChapter(chapter)">
+          <span>{{chapter.name[language]}} ({{chapter.id}})</span>
+          <span *ngIf="selected && chapter.id === selected.id"><b>(selected)</b></span>
+        </button>
+        <div class="scenes">
+          <ul>
+            <li *ngFor="let scene of chapter.scenes">
+              <button (click)="onClickScene(scene)">
+                <span>{{scene.name[language]}} ({{scene.id}})</span>
+                <span *ngIf="selected && scene.id === selected.id"><b>(selected)</b></span>
+              </button>
+              <!-- <div class="snippets">
+                <div>Snippets</div>
+                <ul>
+                  <li *ngFor="let snippet of scene.snippets">
+                    <button (click)="onClickSnippet(snippet)">
+                      <span>{{snippet.name[language]}} ({{snippet.id}})</span>
+                      <span *ngIf="selected && snippet.id === selected.id"><b>(selected)</b></span>
+                    </button>
+                  </li>
+                </ul>
+                <button (click)="onClickAddSnippet(scene)">Add snippet</button>
+              </div> -->
+            </li>
+          </ul>
+          <button (click)="onClickAddScene(chapter)">Add scene</button>
+        </div>
+      </li>
+    </ul>
+    <button (click)="onClickAddChapter()">Add chapter</button>
+  </div>
+  <div class="objects">
+    <div>Objects</div>
+    <ul>
+      <li *ngFor="let object of scenario.objects">
+        <button (click)="onClickObject(object)">
+          <span>{{object.name[language]}} ({{object.id}})</span>
+          <span *ngIf="selected && object.id === selected.id"><b>(selected)</b></span>
+        </button>
+      </li>
+    </ul>
+    <button (click)="onClickAddObject()">Add object</button>
+  </div>
+  <div class="characters">
+    <div>Characters</div>
+    <ul>
+      <li *ngFor="let character of scenario.characters">
+        <button (click)="onClickCharacter(character)">
+          <span>{{character.name[language]}} ({{character.id}})</span>
+          <span *ngIf="selected && character.id === selected.id"><b>(selected)</b></span>
+        </button>
+      </li>
+    </ul>
+    <button (click)="onClickAddCharacter()">Add character</button>
+  </div>
+</nav>

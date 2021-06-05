@@ -1,0 +1,11 @@
+<ul>
+  <li *ngFor="let scene of chapter.scenes">
+    <button (click)="onClickItem(scene)">
+      <span>{{scene.name[language]}} ({{scene.id}})</span>
+      <span *ngIf="selected && scene.id === selected.id"><b>(selected)</b></span>
+    </button>
+  </li>
+</ul>
+<div>
+  <button (click)="onClickAdd()">Add scene</button>
+</div>

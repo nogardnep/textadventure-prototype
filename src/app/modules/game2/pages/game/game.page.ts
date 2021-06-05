@@ -89,9 +89,4 @@ export class GamePage implements OnInit, OnDestroy {
       behavior: 'smooth',
     });
   }
-
-
-  test() {
-    return 'd'
-  }
 }

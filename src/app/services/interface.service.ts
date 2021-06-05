@@ -193,4 +193,8 @@ export class InterfaceService {
   goToConversation(id: string): void {
     this.router.navigate(['/' + this.basePath + '/conversation/' + id]);
   }
+
+  goToEditor(): void {
+    this.router.navigate(['/' + this.basePath + '/editor']);
+  }
 }

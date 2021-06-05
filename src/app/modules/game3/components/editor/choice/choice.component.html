@@ -1,0 +1,21 @@
+<app-text-input [label]="'name'" [model]="choice.text" [id]="'choice-' + id + '-name'"></app-text-input>
+<div class="choice-conditions">
+  <h6>Conditions</h6>
+  <ul>
+    <li *ngFor="let condition of choice.conditions">
+      <app-condition [choice]="choice" [condition]="condition"></app-condition>
+    </li>
+  </ul>
+  <button (click)="onClickAddCondition()">Add condition</button>
+</div>
+<div class="choice-actions">
+  <h6>Actions</h6>
+  <ul>
+    <li *ngFor="let action of choice.actions">
+      <app-action [choice]="choice" [action]="action"></app-action>
+    </li>
+  </ul>
+  <button (click)="onClickAddAction()">Add action</button>
+</div>
+
+<button (click)="onClickRemove()">Remove choice</button>

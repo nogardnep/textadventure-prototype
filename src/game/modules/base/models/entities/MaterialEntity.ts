@@ -145,7 +145,7 @@ export class MaterialEntity extends BaseEntity {
 
     this.effectsId.forEach((id: EntityId) => {
       const entity = this.getPlay().getEntity(id);
-      entities.push(entity as Effect);
+      // entities.push(entity as Effect);
     });
 
     return entities;

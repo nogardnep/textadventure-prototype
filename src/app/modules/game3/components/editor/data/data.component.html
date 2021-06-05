@@ -1,0 +1,20 @@
+<div class="data">
+  <div>
+    <label for="{{id}}-data-name">Name</label>
+    <input id="{{id}}-data-name" type="text" [(ngModel)]="data.name" (ngModelChange)="onValueChange()" />
+  </div>
+  <div>
+    <label for="{{id}}-data-type">Type</label>
+  <select id="{{id}}-data-type" [(ngModel)]="data.type" (ngModelChange)="onTypeChange()">
+    <option *ngFor="let item of types | keyvalue" [ngValue]="item.value">{{item.key}}</option>
+  </select>
+</div>
+  <div *ngIf="data.type === types.Number">
+    <label for="{{id}}-data-value">Value</label>
+    <input id="{{id}}-data-value" type="number" [(ngModel)]="data.value" (ngModelChange)="onValueChange()" />
+  </div>
+  <div *ngIf="data.type === types.String">
+    <label for="{{id}}-data-value">Value</label>
+    <input id="{{id}}-data-value" type="text" [(ngModel)]="data.value" (ngModelChange)="onValueChange()" />
+  </div>
+</div>

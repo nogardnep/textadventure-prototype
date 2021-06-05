@@ -6,6 +6,7 @@ import { Place } from 'src/game/modules/base/models/entities/material/Place';
 import { TheFortress } from '../../TheFortress';
 import { ParagraphTag } from 'src/game/core/models/Paragraph';
 
+
 export class Crevasse extends Place {
   getName() {
     return new Name('crevasse', { feminin: true });

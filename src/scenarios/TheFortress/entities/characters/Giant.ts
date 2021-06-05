@@ -4,6 +4,7 @@ import { ParagraphTag } from 'src/game/core/models/Paragraph';
 import { Character } from 'src/game/modules/base/models/entities/material/Character';
 import { TheFortress } from './../../TheFortress';
 import { Sword } from './../objects/Sword';
+import { Azkarar } from './Azkarar';
 
 export class Giant extends Character {
   init() {
@@ -59,7 +60,7 @@ export class Giant extends Character {
     return [
       {
         tag: ParagraphTag.Description,
-        text: 'Un grand homme hirsute, vêtu de peaux. Des chaînes à ses mains le retiennent attachés au pont.',
+        text: 'Un grand homme hirsute, vêtu de peaux. Des chaînes à ses mains le retiennent attaché au pont.',
       },
       {
         tag: ParagraphTag.Description,
@@ -82,10 +83,8 @@ export class Giant extends Character {
                 text: "J'ai été enchaîné ici par le sorcier ",
               },
               {
-                text: this.getSorcerersName(),
-                entity: this.getPlay().getFirstEntityOfType(
-                  TheFortress.entityConstructors.Azkarar.name
-                ),
+                text: this.getSorcerer().getName().printSimple(),
+                entity: this.getSorcerer(),
               },
               {
                 text: ". Je dois garder ce pont. La liberté m'a été promise si je m'acquitte pour trente ans de cette charge.",
@@ -102,7 +101,7 @@ export class Giant extends Character {
           {
             tag: ParagraphTag.Speech,
             text:
-              this.getSorcerersName() +
+              this.getSorcerer().getName().printSimple() +
               " est le seigneur de ce domaine. Personne n'est autorisé à y pénéter sans sa permission.",
           },
         ],
@@ -130,16 +129,16 @@ export class Giant extends Character {
 
         author.giveEffectOfType(TheFortress.entityConstructors.ArmWound.name);
 
-        this.getPlay().sendMessage({
-          paragraphs: [
-            {
-              text: 'Le géant succombe.',
-              tag: ParagraphTag.Event,
-            },
-          ],
-        });
+        // this.getPlay().sendMessage({
+        //   paragraphs: [
+        //     {
+        //       text: 'Le géant succombe.',
+        //       tag: ParagraphTag.Event,
+        //     },
+        //   ],
+        // });
 
-        this.die();
+        // this.die();
       },
     });
 
@@ -148,11 +147,10 @@ export class Giant extends Character {
     };
   }
 
-  private getSorcerersName(): string {
-    return this.getPlay()
-      .getFirstEntityOfType(TheFortress.entityConstructors.Azkarar.name)
-      .getName()
-      .printSimple();
+  private getSorcerer(): Azkarar {
+    return this.getPlay().getFirstEntityOfType(
+      TheFortress.entityConstructors.Azkarar.name
+    ) as Azkarar;
   }
 
   private isOnTheBridge(): boolean {

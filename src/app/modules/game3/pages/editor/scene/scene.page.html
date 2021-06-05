@@ -1,0 +1,12 @@
+<app-page-container>
+  <app-main-menu></app-main-menu>
+  <h1>Chapter</h1>
+  <ng-container *ngIf="scenario && scene">
+    <app-editor-page [selected]="scene">
+      <app-scene [scene]="scene"></app-scene>
+    </app-editor-page>
+  </ng-container>
+  <ng-container *ngIf="!(scenario && scene)">
+    <p>Loading...</p>
+  </ng-container>
+</app-page-container>

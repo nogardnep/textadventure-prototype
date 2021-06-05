@@ -1,0 +1,19 @@
+<app-page-container>
+  <app-main-menu></app-main-menu>
+  <button (click)="onClickNew()">Create new scenario</button>
+  <div *ngIf="scenario">
+    <ion-grid>
+      <ion-row>
+        <ion-col [size]="5">
+          <app-tree [selected]="selected" [scenario]="scenario"></app-tree>
+        </ion-col>
+        <ion-col [size]="7">
+          <ng-content></ng-content>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  <div *ngIf="!scenario">
+    <p>Loading...</p>
+  </div>
+</app-page-container>

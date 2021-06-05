@@ -1,0 +1,13 @@
+<div>
+  <label>Entity type</label>
+  <select [(ngModel)]="condition.entityType" (ngModelChange)="onEntityTypeChange()">
+    <option *ngFor="let item of entityTypes | keyvalue" [ngValue]="item.value">{{item.value}}</option>
+  </select>
+</div>
+<div>
+  <label>Subject</label>
+  <select [(ngModel)]="condition.subject" (ngModelChange)="onValueChange()">
+    <option *ngFor="let item of entityList" [ngValue]="item.id">{{item.name}}</option>
+  </select>
+</div>
+<button (click)="onClickRemove()">Remove</button>

@@ -17,14 +17,6 @@ export class Plateau extends Place {
     return new Name('plateau');
   }
 
-  init() {
-    const chest = this.getPlay().addEntity(
-      TheFortress.entityConstructors.Chest.name
-    ) as Chest;
-    chest.giveChildOfType(TheFortress.entityConstructors.Sword.name, false);
-    chest.moveTo(this);
-  }
-
   getFullDescription() {
     return [
       {
@@ -46,12 +38,30 @@ export class Plateau extends Place {
     ];
   }
 
+  getChoices() {
+    return [
+
+    ]
+  }
+
   getAudioAmbiance() {
     super.getAudioAmbiance;
     return [
       { audio: TheFortress.audios.mountain },
       { audio: TheFortress.audios.rapid, volume: 0.5 },
     ];
+  }
+
+  init() {
+    const chest = this.getPlay().addEntity(
+      TheFortress.entityConstructors.Chest.name
+    ) as Chest;
+
+    const chest2 = this.getPlay().addEntity(
+      TheFortress.entityConstructors.Chest.name
+    ) as Chest;
+    chest.giveChildOfType(TheFortress.entityConstructors.Sword.name, false);
+    // chest.moveTo(this);
   }
 
   affectedBySpell(author: Character, spell: Spell) {

@@ -1,0 +1,19 @@
+<div class="scenario">
+  <div>scenario ({{scenario.id}})</div>
+  <app-text-input [label]="'name'" [model]="scenario.name" [id]="'scenario-' + scenario.id + '-name'"></app-text-input>
+  <app-select-input [id]="'scenario-' + scenario.id + '-first-chapter'" [label]="'first chapter'"
+    [model]="scenario.firstChapterId" [list]="scenario.chapters"></app-select-input>
+  <div class="chapters">
+    <h2>Chapters</h2>
+    <app-chapter-list [scenario]="scenario" ></app-chapter-list>
+  </div>
+  <div class="objects">
+    <h2>Objects</h2>
+    <app-object-list [scenario]="scenario" ></app-object-list>
+  </div>
+  <div class="characters">
+    <h2>Characters</h2>
+    <app-character-list [scenario]="scenario" ></app-character-list>
+  </div>
+  <app-data-list [model]="scenario"></app-data-list>
+</div>

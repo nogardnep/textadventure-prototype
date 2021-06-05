@@ -6,10 +6,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+  links: { label: string; href: string }[] = [
+    {
+      label: 'Game 1',
+      href: '/game1',
+    },
+    {
+      label: 'Game 2',
+      href: '/game2',
+    },
+    {
+      label: 'Game 3',
+      href: '/game3',
+    },
+  ];
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }
